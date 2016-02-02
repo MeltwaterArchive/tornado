@@ -7,16 +7,16 @@ A GUI to help agencies and non-data scientists to use DataSift's PYLON platform 
 
 ## Documentation
 
-Documentation for the Tornado project can be found in (docs/).
+Documentation for the Tornado project can be found in [the docs directory](docs/).
 
 ## Change Log
 
-Recent changes to the Tornado project can be found in (CHANGELOG.md).
+Recent changes to the Tornado project can be found in [CHANGELOG.md](CHANGELOG.md).
 
 ## Configuration
 
 Configuration for Tornado should be stored in `/etc/tornado/parameters.yml' - an example production configuration (also
-used for the development VM described below) can be found in [resources/config/production/parameters.yml].
+used for the development VM described below) can be found in (parameters.yml)[resources/config/production/parameters.yml].
 
 ## Development VM
 
