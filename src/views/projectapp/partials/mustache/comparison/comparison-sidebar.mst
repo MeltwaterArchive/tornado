@@ -1,0 +1,51 @@
+{% raw %}
+    <script data-tornado-template="comparison-sidebar" type="x-tmpl-mustache">
+        <div class="comparison-sidebar">
+            <div class="page-sidebar__header">
+                <h3 class="page-sidebar__title">COMPARISON</h3>
+                <button data-spinner data-loader="[data-tornado-view='page-content']:Applying" data-comparison-apply-button type="button" class="page-sidebar__action-button page-sidebar__action-button--submit">Apply</button>
+            </div>
+            <div class="scrollfoo__content-wrapper">
+                <span class="scrollfoo__scroller scrollfoo__scroller--comparison"></span>
+                <div class="scrollfoo__parent scrollfoo__parent--comparison">
+                    <div class="page-sidebar__section">
+                        <h4 class="page-sidebar__section-headline">Comparison type</h4>
+                        <select placeholder="Select a comparison method" name="comparison_method">
+                            <option value="none">None</option>
+                            <option value="dataset">DataSift Curated Comparison</option>
+                            <option value="recording">Custom Comparison</option>
+                        </select>
+                    </div>
+                    <div class="page-sidebar__section comparison-options" data-comparison-options="dataset">
+                        <h4 class="page-sidebar__section-headline">Curated Comparison</h4>
+                        <select data-comparison-data-list="datasets" class="filters-select" placeholder="Select a dataset">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                    <div data-comparison-options="recording" class="comparison-options">
+                        <div class="page-sidebar__section">
+                            <h4 class="page-sidebar__section-headline">Comparison recording</h4>
+                            <select data-comparison-data-list="recordings" class="filters-select" placeholder="Select a recording">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                        <div data-tornado-view="filters-options"></div>
+                        <div class="page-sidebar__section">
+                            <h4 class="page-sidebar__section-headline">Action</h4>
+                            <ul class="comparison-modes">
+                                <li class="input-wrapper">
+                                    <input type="radio" class="input-radio" id="comparison-mode-radio-comparison" name="comparison" value="compare">
+                                    <label class="input-label" for="comparison-mode-radio-comparison">Compare</label>
+                                </li>
+                                <li class="input-wrapper">
+                                    <input type="radio" class="input-radio" id="comparison-mode-radio-baseline" name="comparison" value="baseline">
+                                    <label class="input-label" for="comparison-mode-radio-baseline">Baseline</label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+{% endraw %}

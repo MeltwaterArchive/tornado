@@ -1,0 +1,64 @@
+{
+    "DataSet::KEY_MEASURE_INTERACTIONS": {
+        "DataSet::KEY_VALUE": 36300,
+        "DataSet::KEY_REDACTED": false,
+        "dimension:fb.author.age": {
+            "unknown" : {
+                "dimension:fb.author.gender" : {
+                    "unknown" : {
+                        "dimension:fb.region": {
+                            "alabama": {
+                                "DataSet::KEY_VALUE" : 21100,
+                                "DataSet::KEY_REDACTED" : false
+                            },
+                            "alaska": {
+                                "DataSet::KEY_VALUE" : 21100,
+                                "DataSet::KEY_REDACTED" : false
+                            }
+                        }
+                    },
+                    "male" : {
+                        "dimension:fb.region": {
+                            "alabama": {
+                                "DataSet::KEY_VALUE" : 21100,
+                                "DataSet::KEY_REDACTED" : false
+                            },
+                            "alaska": {
+                                "DataSet::KEY_VALUE" : 21100,
+                                "DataSet::KEY_REDACTED" : false
+                            }
+                        }
+                    }
+                }
+            },
+            "18-24" : {
+                "dimension:fb.author.gender" : {
+                    "unknown" : {
+                        "dimension:fb.region": {
+                            "alabama": {
+                                "DataSet::KEY_VALUE" : 21100,
+                                "DataSet::KEY_REDACTED" : false
+                            },
+                            "alaska": {
+                                "DataSet::KEY_VALUE" : 21100,
+                                "DataSet::KEY_REDACTED" : false
+                            }
+                        }
+                    },
+                    "male" : {
+                        "dimension:fb.region": {
+                            "alabama": {
+                                "DataSet::KEY_VALUE" : 21100,
+                                "DataSet::KEY_REDACTED" : false
+                            },
+                            "alaska": {
+                                "DataSet::KEY_VALUE" : 21100,
+                                "DataSet::KEY_REDACTED" : false
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,38 @@
+{% extends 'brand/base.html.twig' %}
+
+{% block page_header_title %}Brand Management - Edit project{% endblock %}
+{% set selectedBrand = data.selectedBrand %}
+
+{% block brand_management_content %}
+    {% include 'brand/projects/partials/header.html.twig' %}
+    <form class="single-item single-item--edit" method="post" action="{{ path('project.update', {'projectId': data.project.id}) }}">
+        {# Header #}
+        <div class="single-item__header">
+            <h6 class="single-item__title"><strong>Editing</strong> &lsquo;{{ data.project.name }}&rsquo;</h6>
+            <div class="single-item__actions">
+                <a data-delete="{{ data.project.name }}" class="single-item__action single-item__action--delete" href="{{ path('project.delete', {'projectId': data.project.id}) }}">Delete</a>
+                <button class="item__action item__action--update" type="submit" data-spinner>Update</button>
+            </div>
+        </div>
+        <hr class="divider">
+
+        {# Project name #}
+        <label class="input-label" for="project-name">Project Name</label>
+        {% if meta.name is defined %}
+            <span class="input-error">{{ meta.name }}</span>
+        {% endif %}
+        <input id="project-name" type="text" name="name" value="{{ data.project.name }}" placeholder="Give your project a name">
+
+        {# Footer #}
+        <hr class="divider">
+        <a href="{{ path('brand.get', {'brandId': selectedBrand.id}) }}">Cancel</a>
+    </form>
+{% endblock %}
+
+{% block javascript_additional %}
+    <script src="/assets/javascript/brand/brand.edit.js"></script>
+
+    {# Templates required for delete-confirm #}
+    {% include 'projectapp/partials/mustache/plugins/modallica.mst' %}
+    {% include 'brand/partials/confirm-delete.mst' %}
+{% endblock %}

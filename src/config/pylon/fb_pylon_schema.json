@@ -1,0 +1,587 @@
+{
+    "version": "2.0",
+    "source": "facebook_allstories",
+    "description": "Primary data schema for Facebook Pylon, deployed at Facebook",
+    "schema": [
+        {
+            "target": "fb.public",
+            "is_filterable": false,
+            "is_analysable": false,
+            "description": "Flag to indicate if interaction is superpublic/private",
+            "perms": []
+        },
+        {
+            "target": "fb.author.id",
+            "is_analysable": false,
+            "is_filterable": false,
+            "description": "The unique id of the author that created the interactions.",
+            "is_author": true,
+            "perms": [],
+            "is_mandatory": true
+        },
+        {
+            "target": "fb.author.age",
+            "is_analysable": true,
+            "is_filterable": true,
+            "requires_threshold": false,
+            "cardinality": 7,
+            "description": "One of '18-24', '25-34', '35-44', '45-54', '55-64', '65+' or 'unknown' (No < 18 ages allowed even in unknown; rows from such actors will be filtered)."
+        },
+        {
+            "target": "fb.author.country",
+            "is_analysable": true,
+            "is_filterable": true,
+            "cardinality": 249,
+            "description": "Country name, populated with a lookup against a table of ISO 3166-1 codes"
+        },
+        {
+            "target": "fb.author.country_code",
+            "is_analysable": true,
+            "is_filterable": true,
+            "cardinality": 249,
+            "description": "ISO 3166-1 alpha-2 two-letter country code in UPPERCASE. Non-NULL only if the actor explicitly tagged a location."
+        },
+        {
+            "target": "fb.author.gender",
+            "is_analysable": true,
+            "is_filterable": true,
+            "requires_threshold": false,
+            "cardinality": 3,
+            "description": "One of 'female', 'male', 'unknown'"
+        },
+        {
+            "target": "fb.author.highest_education",
+            "is_analysable": true,
+            "is_filterable": true,
+            "requires_threshold": false,
+            "cardinality": 4,
+            "description": "One of 'high_school', 'college', 'grad_school' or 'unknown'",
+            "perms": ["premium","internal"]
+        },
+        {
+            "target": "fb.author.region",
+            "is_analysable": true,
+            "is_filterable": true,
+            "cardinality": 4000,
+            "description": "Name of the Region of the actor or NULL. Mapped from the ID. ISO 3166-2"
+        },
+        {
+            "target": "fb.author.country_region",
+            "is_analysable": true,
+            "is_filterable": true,
+            "is_tokenized": true,
+            "description": "A pipe '|' separated concatenation of fb.author.country and fb.author.region"
+        },
+        {
+            "target": "fb.author.relationship_status",
+            "is_analysable": true,
+            "is_filterable": true,
+            "requires_threshold": false,
+            "cardinality": 5,
+            "description": "One of 'single', 'relationship', 'engaged', 'married' or 'unknown'",
+            "perms": ["premium","internal"]
+        },
+        {
+            "target": "fb.author.type",
+            "is_analysable": true,
+            "is_filterable": true,
+            "requires_threshold": false,
+            "cardinality": 2,
+            "description": "One of 'page' or 'user'. All actor_* columns for Pages will be NULL or 'unknown'."
+        },
+        {
+            "target": "fb.language",
+            "is_analysable": true,
+            "is_filterable": true,
+            "description": "Two-letter, lowercase, predicted language code for content_text. For example, 'en'."
+        },
+        {
+            "target": "fb.link",
+            "is_analysable": true,
+            "is_filterable": true,
+            "is_tokenized": true,
+            "description": "A URL contained in a story, for examplehttp://techcrunch.com/2014/09/29/for-those-about-to-rock-the-jamstik-we-salute-you/"
+        },
+        {
+            "target": "fb.og_action_type",
+            "is_analysable": true,
+            "is_filterable": true,
+            "description": "OG verb such as 'Feel'",
+            "perms": ["premium","internal"]
+        },
+        {
+            "target": "fb.og_action_type_id",
+            "is_analysable": true,
+            "is_filterable": true,
+            "description": "Raw FBID of the tagged OG verb such as 'Feel' or NULL.",
+            "perms": ["premium","internal"]
+        },
+        {
+            "target": "fb.og_object",
+            "is_analysable": true,
+            "is_filterable": true,
+            "is_tokenized": true,
+            "description": "OG noun such as 'happy'",
+            "perms": ["premium","internal"]
+        },
+        {
+            "target": "fb.og_object_id",
+            "is_analysable": true,
+            "is_filterable": true,
+            "description": "Raw FBID of the tagged OG noun such as 'happy' or NULL.",
+            "perms": ["premium","internal"]
+        },
+        {
+            "target": "fb.parent.author.age",
+            "is_analysable": true,
+            "is_filterable": true,
+            "requires_threshold": false,
+            "cardinality": 7,
+            "description": "One of '18-24', '25-34', '35-44', '45-54', '55-64', '65+' or 'unknown' (No < 18 ages allowed even in unknown; rows from such actors will be filtered)."
+        },
+        {
+            "target": "fb.parent.author.country",
+            "is_analysable": true,
+            "is_filterable": true,
+            "cardinality": 249,
+            "description": "Country name, populated with a lookup against a table of ISO 3166-1 codes"
+        },
+        {
+            "target": "fb.parent.author.country_code",
+            "is_analysable": true,
+            "is_filterable": true,
+            "cardinality": 249,
+            "description": "ISO 3166-1 alpha-2 two-letter country code in UPPERCASE. Non-NULL only if the actor explicitly tagged a location."
+        },
+        {
+            "target": "fb.parent.author.gender",
+            "is_analysable": true,
+            "is_filterable": true,
+            "requires_threshold": false,
+            "cardinality": 3,
+            "description": "One of 'female', 'male', 'unknown'"
+        },
+        {
+            "target": "fb.parent.author.highest_education",
+            "is_analysable": true,
+            "is_filterable": true,
+            "requires_threshold": false,
+            "cardinality": 4,
+            "description": "One of 'high_school', 'college', 'grad_school' or 'unknown'",
+            "perms": ["premium","internal"]
+        },
+        {
+            "target": "fb.parent.author.region",
+            "is_analysable": true,
+            "is_filterable": true,
+            "cardinality": 4000,
+            "description": "Name of the Region of the actor or NULL. Mapped from the ID. ISO 3166-2"
+        },
+        {
+            "target": "fb.parent.author.country_region",
+            "is_analysable": true,
+            "is_filterable": true,
+            "is_tokenized": true,
+            "description": "A pipe '|' separated concatenation of fb.parent.author.country and fb.parent.author.region"
+        },
+        {
+            "target": "fb.parent.author.relationship_status",
+            "is_analysable": true,
+            "is_filterable": true,
+            "requires_threshold": false,
+            "cardinality": 5,
+            "description": "One of 'single', 'relationship', 'engaged', 'married' or 'unknown'",
+            "perms": ["premium","internal"]
+        },
+        {
+            "target": "fb.parent.author.type",
+            "is_analysable": true,
+            "is_filterable": true,
+            "requires_threshold": false,
+            "cardinality": 2,
+            "description": "One of 'page' or 'user'. All actor_* columns for Pages will be NULL or 'unknown'."
+        },
+        {
+            "target": "fb.parent.content",
+            "is_analysable": false,
+            "is_filterable": true,
+            "type": "string",
+            "is_tokenized": true,
+            "description": "One of 'page' or 'user'. All actor_* columns for Pages will be NULL or 'unknown'."
+        },
+        {
+            "target": "fb.parent.hashtags",
+            "is_analysable": true,
+            "is_filterable": true,
+            "description": "infinite values possible"
+        },
+        {
+            "target": "fb.parent.language",
+            "is_analysable": true,
+            "is_filterable": true,
+            "description": "Two-letter, lowercase, predicted language code for content_text. For example, 'en'."
+        },
+        {
+            "target": "fb.parent.link",
+            "is_analysable": true,
+            "is_filterable": true,
+            "is_tokenized": true,
+            "description": "A URL contained in a story, for examplehttp://techcrunch.com/2014/09/29/for-those-about-to-rock-the-jamstik-we-salute-you/"
+        },
+        {
+            "target": "fb.parent.media_type",
+            "is_analysable": true,
+            "is_filterable": true,
+            "cardinality": 7,
+            "description": "One of 'link', 'photo_album', 'note', 'photo', 'post', 'reshare' or 'video' (No likes or comments)."
+        },
+        {
+            "target": "fb.parent.og_action_type",
+            "is_analysable": true,
+            "is_filterable": true,
+            "description": "OG verb such as 'Feel'",
+            "perms": ["premium","internal"]
+        },
+        {
+            "target": "fb.parent.og_action_type_id",
+            "is_analysable": true,
+            "is_filterable": true,
+            "description": "Raw FBID of the tagged OG verb such as 'Feel' or NULL.",
+            "perms": ["premium","internal"]
+        },
+        {
+            "target": "fb.parent.og_object",
+            "is_analysable": true,
+            "is_filterable": true,
+            "is_tokenized": true,
+            "description": "OG noun such as 'happy'",
+            "perms": ["premium","internal"]
+        },
+        {
+            "target": "fb.parent.og_object_id",
+            "is_analysable": true,
+            "is_filterable": true,
+            "description": "Raw FBID of the tagged OG noun such as 'happy' or NULL.",
+            "perms": ["premium","internal"]
+        },
+        {
+            "target": "fb.parent.topic_ids",
+            "is_analysable": true,
+            "is_filterable": true,
+            "description": "Raw FBIDs of inferred topics. These are usually Pages."
+        },
+        {
+            "target": "fb.parent.topics.category",
+            "is_analysable": true,
+            "is_filterable": true,
+            "is_tokenized": true,
+            "description": "a category assigned to a topic, such as 'company' or 'musician/band'"
+        },
+        {
+            "target": "fb.parent.topics.name",
+            "is_analysable": true,
+            "is_filterable": true,
+            "is_tokenized": true,
+            "description": "Raw FBIDs of inferred topics. These are usually Pages."
+        },
+        {
+            "target": "fb.topic_ids",
+            "is_analysable": true,
+            "is_filterable": true,
+            "description": "URL entered by a Facebook user which may or may not begin with http://. This is usually the website for a company or organization as input by a Facebook Page admin."
+        },
+        {
+            "target": "fb.topics.category",
+            "is_analysable": true,
+            "is_filterable": true,
+            "is_tokenized": true,
+            "description": "a category assigned to a topic, such as 'company' or 'musician/band'"
+        },
+        {
+            "target": "fb.topics.name",
+            "is_analysable": true,
+            "is_filterable": true,
+            "is_tokenized": true,
+            "description": "Raw FBIDs of inferred topics. These are usually Pages."
+        },
+        {
+            "target": "fb.topics.category_name",
+            "is_analysable": true,
+            "is_filterable": true,
+            "is_tokenized": true,
+            "description": "A pipe '|' separated concatenation of fb.topics.category and fb.topics.name"
+        },
+        {
+            "target": "fb.parent.topics.category_name",
+            "is_analysable": true,
+            "is_filterable": true,
+            "is_tokenized": true,
+            "description": "A pipe '|' separated concatenation of fb.parent.topics.category and fb.parent.topics.name"
+        },
+        {
+            "target": "fb.topics.website",
+            "is_analysable": false,
+            "is_filterable": true,
+            "is_tokenized": true,
+            "description": "URL entered by a Facebook user which may or may not begin with http://. This is usually the website for a company or organization as input by a Facebook Page admin."
+        },
+        {
+            "target": "fb.parent.topics.website",
+            "is_analysable": false,
+            "is_filterable": true,
+            "is_tokenized": true,
+            "description": "URL entered by a Facebook user which may or may not begin with http://. This is usually the website for a company or organization as input by a Facebook Page admin."
+        },
+        {
+            "target": "fb.topics.about",
+            "is_analysable": false,
+            "is_filterable": true,
+            "is_tokenized": true,
+            "type": "string",
+            "description": "Free-text description of a topic, usually a Page"
+        },
+        {
+            "target": "fb.parent.topics.about",
+            "is_analysable": false,
+            "is_filterable": true,
+            "is_tokenized": true,
+            "type": "string",
+            "description": "Free-text description of a topic, usually a Page"
+        },
+        {
+            "target": "fb.topics.company_overview",
+            "is_analysable": false,
+            "is_filterable": true,
+            "is_tokenized": true,
+            "type": "string",
+            "description": "Description of a company."
+        },
+        {
+            "target": "fb.parent.topics.company_overview",
+            "is_analysable": false,
+            "is_filterable": true,
+            "is_tokenized": true,
+            "type": "string",
+            "description": "Description of a company."
+        },
+        {
+            "target": "fb.sentiment",
+            "is_analysable": true,
+            "is_filterable": true,
+            "cardinality": 3,
+            "description": "The sentiment of the engagement. One of 'positive', 'negative' and 'neutral'"
+        },
+        {
+            "target": "fb.parent.sentiment",
+            "is_analysable": true,
+            "is_filterable": true,
+            "cardinality": 3,
+            "description": "The sentiment of the parent story. One of 'positive', 'negative' and 'neutral'"
+        },
+        {
+            "target": "interaction.content",
+            "alias": ["fb.content","interaction.raw_content"],
+            "is_analysable": false,
+            "is_filterable": true,
+            "is_tokenized": true,
+            "type": "string",
+            "description": "The content of a Facebook message."
+        },
+        {
+            "target": "fb.all.content",
+            "is_analysable": false,
+            "is_filterable": true,
+            "is_tokenized": true,
+            "type": "string",
+            "description": "Composed from the targets fb.content and fb.parent.content"
+        },
+        {
+            "target": "interaction.created_at",
+            "is_analysable": false,
+            "is_filterable": false,
+            "type": "date",
+            "date_format": "EEE, dd MMM yyyy HH:mm:ss Z",
+            "description": "The date of the fb engagement",
+            "is_primary_date": true,
+            "perms": [],
+            "is_mandatory": true
+        },
+        {
+            "target": "interaction.hashtags",
+            "alias": ["fb.hashtags"],
+            "is_analysable": true,
+            "is_filterable": true,
+            "description": "Contains hashtags inserted by users into posts"
+        },
+        {
+            "target": "interaction.id",
+            "is_analysable": false,
+            "is_filterable": false,
+            "is_primary_key": true,
+            "perms": [],
+            "is_mandatory": true
+        },
+        {
+            "target": "interaction.media_type",
+            "alias": ["fb.media_type"],
+            "is_analysable": true,
+            "is_filterable": true,
+            "cardinality": 7,
+            "description": "One of 'link', 'photo_album', 'note', 'photo', 'post', 'reshare' or 'video' (No likes or comments)."
+        },
+        {
+            "target": "interaction.ml.categories",
+            "is_analysable": true,
+            "is_filterable": true,
+            "description": "argmax analysis of scored tags"
+        },
+        {
+            "target": "interaction.received_at",
+            "is_analysable": false,
+            "is_filterable": false,
+            "type": "unixtimestamp",
+            "description": "The time the interaction was received by the platform",
+            "perms": []
+        },
+        {
+            "target": "interaction.subtype",
+            "alias": ["fb.type"],
+            "is_analysable": true,
+            "is_filterable": true,
+            "cardinality": 4,
+            "description": "One of 'story', 'comment', 'like' or 'reshare' ('story' is inclusive of all messages in All Stories stream)."
+        },
+        {
+            "target": "interaction.tags",
+            "is_analysable": true,
+            "is_filterable": true,
+            "description": "non tag-tree tags"
+        },
+        {
+            "target": "links.code",
+            "is_analysable": true,
+            "is_filterable": true,
+            "description": "The status codes of visiting the links"
+        },
+        {
+            "target": "links.domain",
+            "is_analysable": true,
+            "is_filterable": true,
+            "description": "The domain name of all links"
+        },
+        {
+            "target": "links.normalized_url",
+            "is_analysable": true,
+            "is_filterable": true,
+            "is_tokenized": true,
+            "description": "normalized version of the original URL"
+        },
+        {
+            "target": "links.url",
+            "is_analysable": true,
+            "is_filterable": true,
+            "is_tokenized": true,
+            "description": "normalized version of the original URL"
+        },
+        {
+            "target": "fb.link_title",
+            "is_analysable": false,
+            "is_filterable": true,
+            "is_tokenized": true,
+            "description": "Page titles that Facebook collects when building link previews"
+        },
+        {
+            "target": "fb.parent.link_title",
+            "is_analysable": false,
+            "is_filterable": true,
+            "is_tokenized": true,
+            "description": "Page titles that Facebook collects when building link previews"
+        },
+        {
+            "target": "links.title",
+            "is_analysable": false,
+            "is_filterable": true,
+            "is_tokenized": true,
+            "description": "Page titles that Facebook collects when building link previews"
+        },
+        {
+            "target": "meta.user_id",
+            "is_analysable": false,
+            "is_filterable": false,
+            "description": "field containing the DataSift user id",
+            "is_ds_user_id": true,
+            "is_mandatory": true
+        },
+        {
+            "target": "meta.definition_id",
+            "is_analysable": false,
+            "is_filterable": false,
+            "description": "field containing the DataSift definition_id",
+            "is_ds_definition_id": true,
+            "is_mandatory": true
+        },
+        {
+            "target": "meta.recording_id",
+            "is_analysable": false,
+            "is_filterable": false,
+            "description": "field containing the DataSift recording_id, valid for hotswap",
+            "is_ds_recording_id": true,
+            "is_mandatory": true
+        },
+        {
+            "target": "meta.identity_id",
+            "is_analysable": false,
+            "is_filterable": false,
+            "description": "field containing the DataSift identity",
+            "is_ds_identity": true,
+            "is_mandatory": true
+        },
+        {
+            "target": "interaction.tag_tree_flat.key",
+            "is_analysable": false,
+            "is_filterable": false,
+            "description": "field containing the tag tree keys, used for listing tag_tree",
+            "is_tag_tree_key": true
+        },
+        {
+            "target": "interaction.tag_tree_flat.value",
+            "is_analysable": false,
+            "is_filterable": false,
+            "description": "field containing the tag tree values, used for tag_tree analysis",
+            "is_tag_tree_value": true
+        },
+        {
+            "target": "interaction.tag_tree",
+            "is_analysable": true,
+            "is_filterable": true,
+            "description": "The target that will be prepended to all 'dynamic' tag tree targets ",
+            "is_tag_tree_name_space": true
+        },
+        {
+            "target": "DEFAULT",
+            "alias": ["DEFAULT"],
+            "is_analysable": false,
+            "is_filterable": true,
+            "is_tokenized": false,
+            "index": true,
+            "cardinality": 1000000,
+            "type": "id",
+            "requires_threshold": true,
+            "is_author": false,
+            "description": "unknown",
+            "date_format": "EEE, dd MMM yyyy HH:mm:ss Z",
+            "is_default": true,
+            "is_primary_date": false,
+            "is_primary_key": false,
+            "is_tag_tree_key": false,
+            "is_tag_tree_value": false,
+            "is_tag_tree_name_space": false,
+            "is_ds_user_id": false,
+            "is_ds_recording_id":false,
+            "is_ds_definition_id": false,
+            "is_ds_identity": false,
+            "perms": ["everyone","premium","internal"],
+            "is_mandatory": false
+        }
+    ]
+}

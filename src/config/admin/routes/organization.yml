@@ -1,0 +1,89 @@
+# Single paths
+
+admin.single.organization.overview:
+    path: /admin/organization
+    methods: [GET]
+    defaults:
+        _controller: 'admin.organization.controller:organization'
+        _template: 'admin/organization/overview.html.twig'
+        _permissions: [ROLE_ADMIN]
+
+admin.single.organization.edit: # This doesn't make sense to have, apart from being a workaround for tabs
+    path: /admin/organization/edit
+    methods: [GET]
+    defaults:
+        _controller: 'admin.organization.controller:singleEdit'
+        _template: 'admin/organization/edit.html.twig'
+        _permissions: [ROLE_SUPERADMIN]
+
+# Superadmin paths
+
+admin.organizations:
+    path: /admin/organizations
+    methods: [GET]
+    defaults:
+        _controller: 'admin.organization.controller:index'
+        _template: 'admin/organization/index.html.twig'
+        _permissions: [ROLE_SUPERADMIN]
+
+admin.organizations.create_form:
+    path: /admin/organization/new
+    methods: [GET]
+    defaults:
+        _controller: 'admin.organization.controller:createForm'
+        _template: 'admin/organization/create.html.twig'
+        _permissions: [ROLE_SUPERADMIN]
+
+admin.organizations.create:
+    path: /admin/organization
+    methods: [POST]
+    defaults:
+        _controller: 'admin.organization.controller:create'
+        _template: 'admin/organization/create.html.twig'
+        _permissions: [ROLE_SUPERADMIN]
+
+admin.organization.overview:
+    path: /admin/organization/{id}
+    methods: [GET]
+    defaults:
+        _controller: 'admin.organization.controller:overview'
+        _template: 'admin/organization/overview.html.twig'
+        _permissions: [ROLE_SUPERADMIN]
+    requirements:
+        id: \d+
+
+admin.organization.edit:
+    path: /admin/organization/{id}/edit
+    methods: [GET]
+    defaults:
+        _controller: 'admin.organization.controller:edit'
+        _template: 'admin/organization/edit.html.twig'
+        _permissions: [ROLE_SUPERADMIN]
+    requirements:
+        id: \d+
+
+admin.organizations.update:
+    path: /admin/organization/{organizationId}/edit
+    methods: [POST, PUT]
+    defaults:
+        _controller: 'admin.organization.controller:update'
+        _template: 'admin/organization/edit.html.twig'
+        _permissions: [ROLE_SUPERADMIN]
+    requirements:
+        organizationId: \d+
+
+admin.organizations.delete:
+    path: /admin/organization/{organizationId}/delete
+    methods: [DELETE]
+    defaults:
+        _controller: 'admin.organization.controller:delete'
+        _permissions: [ROLE_SUPERADMIN]
+    requirements:
+        organizationId: \d+
+
+admin.organizations.batch:
+    path: /admin/organizations/batch
+    defaults:
+        _controller: 'admin.organization.controller:batch'
+        _permissions: [ROLE_SUPERADMIN]
+    methods:  [POST]

@@ -1,0 +1,24 @@
+{
+    "interactions": 36300,
+    "unique_authors": 33000,
+    "analysis": {
+        "analysis_type": "freqDist",
+        "parameters": {
+            "target": "fb.author.gender",
+            "threshold": 2
+        },
+        "results": [
+            {
+                "key": "unknown",
+                "interactions": 33000,
+                "unique_authors": 31500
+            },
+            {
+                "key": "male",
+                "interactions": 1600,
+                "unique_authors": 1500
+            }
+        ],
+        "redacted": false
+    }
+}

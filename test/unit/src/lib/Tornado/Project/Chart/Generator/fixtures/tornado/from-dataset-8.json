@@ -1,0 +1,67 @@
+{
+    "Generator::MEASURE_INTERACTIONS": {
+        "female": [
+            [
+                "",
+                132000,
+                0,
+                {
+                    "tooltip": 0,
+                    "explore": {
+                        "Female": {
+                            "fb.author.gender": "female"
+                        }
+                    }
+
+                }
+            ]
+        ],
+        "male": [
+            [
+                "",
+                113400,
+                0,
+                {
+                    "tooltip": 0,
+                    "explore": {
+                        "Male": {
+                            "fb.author.gender": "male"
+                        }
+                    }
+                }
+            ]
+        ]
+    },
+    "Generator::MEASURE_UNIQUE_AUTHORS": {
+        "female": [
+            [
+                "",
+                109400,
+                0,
+                {
+                    "tooltip": 0,
+                    "explore": {
+                        "Female": {
+                            "fb.author.gender": "female"
+                        }
+                    }
+                }
+            ]
+        ],
+        "male": [
+            [
+                "",
+                93300,
+                0,
+                {
+                    "tooltip": 0,
+                    "explore": {
+                        "Male": {
+                            "fb.author.gender": "male"
+                        }
+                    }
+                }
+            ]
+        ]
+    }
+}

@@ -1,0 +1,93 @@
+{# Base file used for the SPA (worksheet/workbook/chart management) #}
+<!DOCTYPE html>
+<html class="no-js" lang="">
+    {% block head %}
+        <head>
+            <meta charset="utf-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width">
+            <meta name="description" content="">
+
+            <title>Tornado</title>
+
+            {# Included CSS Files #}
+            {% block stylesheets %}
+                {% if app.request.attributes.get("skin") %}
+                <link rel="stylesheet" href="/assets/css/skins/{{ app.request.attributes.get("skin") }}.css">
+                {% elseif organization is defined and organization.skin %}
+                <link rel="stylesheet" href="/assets/css/skins/{{ organization.skin }}.css">
+                {% else %}
+                <link rel="stylesheet" href="/assets/css/tornado.css">
+                {% endif %}
+            {% endblock %}
+        </head>
+    {% endblock %}
+
+    <body class="tornado-not-ready">
+        <div class="tornado-loading-overlay">
+            <span data-spinner="spin" class="button tornado-spinner">Loading project</span>
+        </div>
+        <div class="main-container">
+            {% if not sessionUser.isSpaOnly %}
+                {% block header %}
+                    <div class="header">
+                        <a class="logo" href="{{ path('home') }}">Tornado</a>
+                        {% include 'partials/profile.html.twig' %}
+                    </div>
+                {% endblock %}
+            {% endif %}
+
+            <ul data-tornado-view="main-menu" data-main-menu-worksheet-type="" class="main-menu main-menu--disabled">
+                {% block main_menu %}
+                {% endblock %}
+            </ul>
+
+            {# Workbook sidebar on the right #}
+            {% block workbook_sidebar %}
+            {% endblock %}
+
+            {# Page sidebar on the left of the page content #}
+            {% block page_sidebar %}
+                <div data-tornado-view="page-sidebar" class="page-sidebar">
+                    {% block page_sidebar_content %}
+                    {% endblock %}
+                </div>
+            {% endblock %}
+
+            {% block page %}
+                <div class="page{% block page_class %}{% endblock %}">
+                    <div class="page__header">
+                        <h1 class="page__title" data-tornado-view="page-title">{% block page_header_title %}My project{% endblock %}</h1>
+                        <span data-workbook-sidebar-toggle class="workbook-sidebar__button workbook-sidebar__button--open">Workbooks</span>
+                        {% block worksheet_list %}
+                        {% endblock %}
+                    </div>
+                    <div class="content-wrapper">
+                        {% block page_content %}
+                            <div class="content__header">
+                                <h4 class="content__title">Content Title</h4>
+                            </div>
+                            <div class="content"></div>
+                            <div class="content__footer"></div>
+                        {% endblock %}
+                    </div>
+                </div>
+            {% endblock %}
+        </div>
+
+        {# Put Mustache templates here as includes (partials) #}
+        <div class="tornado-templates">
+            {% block mustache_templates %}
+            {% endblock %}
+        </div>
+
+        {# Global Javascript #}
+        {% block javascript %}
+            <script src="/assets/javascript/library/requirejs/require.js" data-main="/assets/javascript/bootstrap.projectapp" async></script>
+        {% endblock %}
+
+        {# View specific Javascript #}
+        {% block javascript_additional %}
+        {% endblock %}
+    </body>
+</html>

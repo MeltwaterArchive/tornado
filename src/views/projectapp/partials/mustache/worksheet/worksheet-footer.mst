@@ -1,0 +1,5 @@
+{% raw %}
+    <script data-tornado-template="worksheet-footer" type="x-tmpl-mustache">
+        <span class="worksheet__updated-at">{{#created}}Created {{ created }};{{/created}} {{#updated}}Last updated {{ updated }}{{/updated}}</span>
+    </script>
+{% endraw %}

@@ -1,0 +1,16 @@
+imports:
+    - { resource: "../services.yml" }
+    - { resource: "./security.yml" }
+    - { resource: "./controllers.yml" }
+
+
+parameters:
+    kernel.name: tornado
+
+services:
+    project.workbook.locker:
+        class: Tornado\Project\Workbook\Locker
+        arguments:
+            - @cache
+            - %workbook.lock.ttl%
+            - %workbook.lock.ttl_reset%

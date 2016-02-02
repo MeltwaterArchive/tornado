@@ -1,0 +1,50 @@
+{% raw %}
+    <script data-tornado-template="workbook-create-modal" type="x-tmpl-mustache">
+        <div data-form="create-workbook" class="modallica__content">
+            <div data-form-field="name">
+                <label class="input-label" for="new-workbook-name">Workbook Name</label>
+                <input type="text" placeholder="Give your workbook a name" id="new-workbook-name" value="" class="create-workbook__name">
+            </div>
+            <div>
+                <label class="input-label" for="new-workbook-recording">Recording</label>
+                <select id="new-workbook-recording" class="create-workbook__select create-workbook__select--disabled create-workbook__select--recording" placeholder="Select a recording">
+                    <option value="">Select a recording</option>
+                </select>
+            </div>
+            <div class="modallica__actions">
+                <button data-modallica-action="close" class="clear-button" type="button">Cancel</button>
+                <button data-modallica-action="submit" data-spinner data-loader=".modallica--workbook-create-modal .modallica__content:Populating data" class="submit-button" type="button">Create</button>
+            </div>
+        </div>
+    </script>
+
+    <script data-tornado-template="workbook-create-modal-select-option-item" type="x-tmpl-mustache">
+        <option value="{{ id }}">{{ name }}</option>
+    </script>
+
+    <script data-tornado-template="workbook-edit-modal" type="x-tmpl-mustache">
+        <div data-form="edit-workbook" class="modallica__content">
+            <div data-form-field="name"></div>
+            <div class="modallica__actions">
+                <button data-modallica-action="expand" class="clear-button" type="button">Delete</button>
+                <button data-spinner data-modallica-action="submit" class="submit-button" type="button">Update</button>
+            </div>
+        </div>
+        <div data-modallica-expandable class="modallica__expandable">
+            <h6 class="modallica__title modallica__title--expandable">Delete Workbook</h6>
+            <p>This action <strong>cannot be undone</strong>, so please ensure you really want to delete this workbook.</p>
+            <div class="styled-checkbox__wrapper">
+                <input class="styled-checkbox" type="checkbox" id="delete-workbook-id" value="1">
+                <label data-input-label-placeholder="Yes, delete this workbook" class="styled-checkbox__label" for="delete-workbook-id"></label>
+            </div>
+            <div class="modallica__actions">
+                <button data-loader=".modallica:Deleting Workbook" data-modallica-action="confirm" class="warning-button" type="button">Delete it</button>
+            </div>
+        </div>
+    </script>
+
+    <script data-tornado-template="workbook-edit-modal-name-input" type="x-tmpl-mustache">
+        <label class="input-label" for="edit-workbook-name">Workbook Name</label>
+        <input type="text" placeholder="Give your workbook a name" id="edit-workbook-name" value="{{ name }}">
+    </script>
+{% endraw %}

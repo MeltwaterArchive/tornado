@@ -1,0 +1,81 @@
+/**
+ * Common ~ Page sidebar
+ *
+ * Sidebar on the left of the page content
+ * Currently used for dimensions
+ */
+
+/**
+ * Page sidebar variables
+ */
+$page-sidebar-width: 345px !default;
+$page-sidebar-background-colour: #fff !default;
+$page-sidebar-border-right-colour: $colour-grey-light !default;
+$page-sidebar-section-heading-colour: #333 !default;
+
+/**
+ * Page sidebar styles
+ */
+.page-sidebar {
+    display: none;
+    position: fixed;
+    top: $header-height;
+    bottom: 0;
+    left: $main-menu-width;
+    width: $page-sidebar-width;
+    padding: 20px;
+    background-color: $page-sidebar-background-colour;
+    border-right: 1px solid $page-sidebar-border-right-colour;
+    z-index: 5;
+    // Push the content a bit further only when we have
+    // views that have an active page sidebar
+    [data-tornado-page="dimensions"] &,
+    [data-tornado-page="timespan"] &,
+    [data-tornado-page="filters"] &,
+    [data-tornado-page="comparison"] & {
+        display: block;
+        ~ .page {
+            padding-left: $main-menu-width + $page-sidebar-width;
+        }
+    }
+}
+
+.page-sidebar__header {
+    margin-top: -20px;
+    margin-bottom: 20px;
+    padding: 10px 0;
+    border-bottom: 1px solid $page-sidebar-border-right-colour;
+}
+
+.page-sidebar__title {
+    display: inline-block;
+    font-size: rem(13);
+    line-height: 12px;
+    font-weight: bold;
+}
+
+.page-sidebar__action-button {
+    float: right;
+    margin-top: 5px;
+    &--submit {
+        @extend %submit-button;
+    }
+}
+
+.page-sidebar__section {
+    position: relative;
+    margin-bottom: 15px;
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.page-sidebar__section-headline {
+    display: inline-block;
+    position: relative;
+    margin: 0 0 10px;
+    color: $page-sidebar-section-heading-colour;
+    font-size: rem(12);
+    line-height: 24px;
+    font-weight: bold;
+}

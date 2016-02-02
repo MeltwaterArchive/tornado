@@ -1,0 +1,57 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block page_header_title %}Organization Management - Edit {{ data.organization.name }}{% endblock %}
+
+{% block page_title %}
+<a href="{{ path('admin') }}">Administration</a>
+        {% if sessionUser.hasRole("ROLE_SUPERADMIN") %}
+            &gt; <a href="{{ path('admin.organizations') }}">Organizations</a>
+        {% endif %}
+        &gt; {{ data.organization.name }}
+{% endblock %}
+
+{% block page_content %}
+    <form class="single-item single-item--edit" method="post" action="{{ path('admin.organizations.update', {'organizationId': data.organization.id}) }}">
+        {# Organization name #}
+        <label class="input-label" for="organization-name">Name</label>
+        {% if meta.name is defined %}
+            <span class="input-error">{{ meta.name }}</span>
+        {% endif %}
+        {{ data.jwt_secret }}
+        <input id="organization-name" type="text" name="name" value="{{ data.organization.name }}" placeholder="Give your Organization a name" />
+
+        {# Organization JWT token #}
+        <label class="input-label" for="organization-jwt-secret">JWT Secret</label>
+        {% if meta.jwtSecret is defined %}
+            <span class="input-error">{{ meta.jwtSecret }}</span>
+        {% endif %}
+        <input id="organization-jwt-secret" type="text" name="jwt_secret" value="{{ data.organization.jwtSecret }}" placeholder="Organization JWT token" />
+
+        {# Organization Skin #}
+        <label class="input-label" for="organization-skin">Skin</label>
+        {% if meta.skin is defined %}
+            <span class="input-error">{{ meta.skin }}</span>
+        {% endif %}
+        <input id="organization-skin" type="text" name="skin" value="{{ data.organization.skin }}" placeholder="Organization Skin" />
+
+        {# Footer #}
+        <hr class="divider">
+
+        <div class="single-item__header">
+            <a href="{{ path('admin.organization.overview', {'id': data.organization.id }) }}">Cancel</a>
+            <div class="single-item__actions">
+                <a data-delete="{{ data.organization.name }}" class="single-item__action single-item__action--delete" href="{{ path('admin.organizations.delete', {'organizationId': data.organization.id}) }}">Delete</a>
+                <button class="single-item__action single-item__action--update" type="submit" data-spinner>Update</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+
+{% block javascript_additional %}
+    data-main="/assets/javascript/brand/brand.edit.js"
+{% endblock %}
+
+{% block delete_template %}
+    {% include 'projectapp/partials/mustache/plugins/modallica.mst' %}
+    {% include 'brand/partials/confirm-delete.mst' %}
+{% endblock %}

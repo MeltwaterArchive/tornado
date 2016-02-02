@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+	bootstrap="test/bootstrap.php"
+	colors="true"
+	verbose="true">
+	<php>
+		<env name="APRE_ENVIRONMENT_OVERRIDE" value="1"/>
+		<env name="APRE_ENVIRONMENT" value="testing"/>
+	</php>
+	<testsuites>
+		<testsuite name="ms-app-tornado Test Suite">
+			<directory>test</directory>
+		</testsuite>
+	</testsuites>
+	<filter>
+		<whitelist>
+			<directory suffix="php">src</directory>
+			<exclude>
+				<directory>src/vendor</directory>
+				<directory>src/application</directory>
+				<directory>src/cli</directory>
+			</exclude>
+		</whitelist>
+	</filter>
+	<logging>
+		<log type="coverage-html" target="target/coverage" charset="UTF-8"/>
+		<log type="coverage-clover" target="target/coverage/coverage.xml" charset="UTF-8"/>
+		<log type="junit" target="target/logs/junit.xml" logIncompleteSkipped="false"/>
+	</logging>
+</phpunit>

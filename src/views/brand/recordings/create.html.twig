@@ -1,0 +1,57 @@
+{% extends 'brand/base.html.twig' %}
+
+{% block body_class %}recording recording--create{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="/assets/javascript/libs/csdl-editor/csdleditor.min.css">
+    <link rel="stylesheet" href="/assets/javascript/libs/vqb-editor/jcsdl.min.css">
+{% endblock %}
+
+{% block page_header_title %}Brand Management - Create a recording{% endblock %}
+{% set selectedBrand = data.selectedBrand %}
+
+{% block brand_management_content %}
+    {% include 'brand/recordings/partials/header.html.twig' %}
+    <form class="single-item" method="post" action="{{ path('recording.create', {'brandId': data.selectedBrand.id}) }}">
+        {# Header #}
+        <div class="single-item__header">
+            <h6 class="single-item__title"><strong>New Recording</strong></h6>
+            <div class="single-item__actions">
+                <button class="single-item__action single-item__action--create" type="submit" data-spinner>Create</button>
+            </div>
+        </div>
+        <hr class="divider">
+
+        {# Recording name #}
+        <div data-form-field="name" class="input-wrapper">
+            <label class="input-label" for="recording-name">Recording Name</label>
+            {% if meta.name is defined %}
+                <span class="input-error">{{ meta.name }}</span>
+            {% endif %}
+            <input id="recording-name" type="text" name="name" value="" placeholder="Give your recording a name">
+        </div>
+
+        {# Recording editor tabs & content #}
+        <script type="text/javascript">
+            var CSDLEditorTargets = {{ data.targets|json_encode|raw }};
+        </script>
+        
+        <div data-recording-editor-tab="csdl" class="recording__editor-tab recording__editor-tab--csdl recording__editor-tab--active">Basic CSDL Editor</div>
+        <div data-recording-editor-tab="vqb" class="recording__editor-tab recording__editor-tab--vqb">Visual Query Builder</div>
+        <div data-form-field="csdl" class="input-wrapper">
+            <div data-recording-editor-csdl class="recording__editor recording__editor--csdl"></div>
+        </div>
+        <div data-form-field="vqb" class="input-wrapper">
+            <div data-recording-editor-vqb class="recording__editor recording__editor--vqb"></div>
+        </div>
+
+        {# Footer #}
+        <hr class="divider">
+        <a href="{{ path("brand.get.recordings", {"brandId": selectedBrand.id}) }}">Cancel</a>
+    </form>
+{% endblock %}
+
+{% block javascript_additional %}
+    data-main="/assets/javascript/brand/recording.create"
+{% endblock %}

@@ -1,0 +1,5 @@
+{% raw %}
+    <script data-tornado-template="comparison-sidebar-item" type="x-tmpl-mustache">
+        <option value="{{ id }}"{{#selected}} selected="selected"{{/selected}}{{#disabled}} disabled="disabled"{{/disabled}}>{{ name }}</option>
+    </script>
+{% endraw %}

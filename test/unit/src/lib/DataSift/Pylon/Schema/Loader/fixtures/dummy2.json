@@ -1,0 +1,14 @@
+{
+    "source": "facebook",
+    "schema": [
+        {
+            "target": "fb.author.gender",
+            "perms": [],
+            "is_mandatory": false
+        },
+        {
+            "target": "fb.author.country",
+            "cardinality": 249
+        }
+    ]
+}

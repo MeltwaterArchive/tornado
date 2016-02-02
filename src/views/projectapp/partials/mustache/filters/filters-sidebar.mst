@@ -1,0 +1,12 @@
+{% raw %}
+    <script data-tornado-template="filters-sidebar" type="x-tmpl-mustache">
+        <div class="page-sidebar__header">
+            <h3 class="page-sidebar__title">FILTERS</h3>
+            <button data-spinner data-loader="[data-tornado-view='page-content']:Applying" type="button" data-filters-apply-button class="page-sidebar__action-button page-sidebar__action-button--submit">Apply</button>
+        </div>
+        <div class="scrollfoo__content-wrapper">
+            <span class="scrollfoo__scroller scrollfoo__scroller--filters"></span>
+            <div class="scrollfoo__parent scrollfoo__parent--filters" data-tornado-view="filters-options"></div>
+        </div>
+    </script>
+{% endraw %}

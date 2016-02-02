@@ -1,0 +1,66 @@
+{% raw %}
+    <script data-tornado-template="filters-options" type="x-tmpl-mustache">
+        <div class="page-sidebar__section page-sidebar__section--timeframe">
+        </div>
+        <div class="page-sidebar__section page-sidebar__section--keywords">
+            <h4 class="page-sidebar__section-headline">Keywords</h4>
+            <a href="#" data-filter-clear="keywords" class="filters-clear">Clear</a>
+            <input type="text" class="filters-select filters-select--keywords" placeholder="Enter keywords">
+        </div>
+        <div class="page-sidebar__section page-sidebar__section--country">
+            <h4 class="page-sidebar__section-headline">Country</h4>
+            <a href="#" data-filter-clear="country" class="filters-clear">Clear</a>
+            <select class="filters-select filters-select--country" placeholder="Select country / countries" multiple></select>
+        </div>
+        <div class="page-sidebar__section page-sidebar__section--region">
+            <h4 class="page-sidebar__section-headline">Region</h4>
+            <a href="#" data-filter-clear="region" class="filters-clear">Clear</a>
+            <select class="filters-select filters-select--region" placeholder="Select region / regions" multiple></select>
+        </div>
+        <div class="page-sidebar__section page-sidebar__section--gender">
+            <h4 class="page-sidebar__section-headline">Gender</h4>
+            <a href="#" data-filter-clear="gender" class="filters-clear">Clear</a>
+            <select class="filters-select filters-select--gender" placeholder="Select gender(s)" multiple></select>
+        </div>
+        <div class="page-sidebar__section page-sidebar__section--links">
+            <h4 class="page-sidebar__section-headline">Links</h4>
+            <a href="#" data-filter-clear="links" class="filters-clear">Clear</a>
+            <input type="text" class="filters-select filters-select--links" placeholder="Enter links">
+        </div>
+        <div class="page-sidebar__section page-sidebar__section--age">
+            <h4 class="page-sidebar__section-headline">Age range</h4>
+            <a href="#" data-filter-clear="age" class="filters-clear">Clear</a>
+            <ul class="filters-checklist filters-checklist--age">
+                <li class="filters-checklist__item styled-checkbox__wrapper">
+                    <input class="filters-checklist__checkbox styled-checkbox" id="age1824" name="age" value="18-24" type="checkbox">
+                    <label data-input-label-placeholder="18-24" class="styled-checkbox__label" for="age1824"></label>
+                </li>
+                <li class="filters-checklist__item">
+                    <input class="filters-checklist__checkbox styled-checkbox" id="age2534" name="age" value="25-34" type="checkbox">
+                    <label data-input-label-placeholder="25-34" class="styled-checkbox__label" for="age2534"></label>
+                </li>
+                <li class="filters-checklist__item">
+                    <input class="filters-checklist__checkbox styled-checkbox" id="age3544" name="age" value="35-44" type="checkbox">
+                    <label data-input-label-placeholder="35-44" class="styled-checkbox__label" for="age3544"></label>
+                </li>
+                <li class="filters-checklist__item">
+                    <input class="filters-checklist__checkbox styled-checkbox" id="age4554" name="age" value="45-54" type="checkbox">
+                    <label data-input-label-placeholder="45-54" class="styled-checkbox__label" for="age4554"></label>
+                </li>
+                <li class="filters-checklist__item">
+                    <input class="filters-checklist__checkbox styled-checkbox" id="age5564" name="age" value="55-64" type="checkbox">
+                    <label data-input-label-placeholder="55-64" class="styled-checkbox__label" for="age5564"></label>
+                </li>
+                <li class="filters-checklist__item">
+                    <input class="filters-checklist__checkbox styled-checkbox" id="age65plus" name="age" value="65+" type="checkbox">
+                    <label data-input-label-placeholder="65+" class="styled-checkbox__label" for="age65plus"></label>
+                </li>
+            </ul>
+        </div>
+        <div class="page-sidebar__section page-sidebar__section--csdl">
+            <h4 class="page-sidebar__section-headline">CSDL</h4>
+            <a href="#" data-filter-clear="csdl" class="filters-clear">Clear</a>
+            <div data-filter-csdl-input class="filters-csdl-input"></div>
+        </div>
+    </script>
+{% endraw %}

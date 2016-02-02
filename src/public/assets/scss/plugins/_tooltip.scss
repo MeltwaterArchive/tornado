@@ -1,0 +1,45 @@
+/**
+ * Plugins ~ Tooltip
+ */
+
+/**
+ * Tooltip variables
+ */
+$tooltip-colour: #fff !default;
+$tooltip-background-colour: #3b404c !default;
+$tooltip-arrow-background-colour: $tooltip-background-colour !default;
+
+/**
+ * Tooltip styles
+ */
+.tooltip {
+    display: block;
+    position: fixed;
+    max-width: 200px;
+    margin: -10px 0 0;
+    padding: 12px 14px;
+    font-size: rem(12);
+    color: $tooltip-colour;
+    word-break: break-word;
+    background-color: $tooltip-background-colour;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    z-index: 10;
+    @include transform(translate(0, 5px) scale(0.9));
+    @include transition(0.2s opacity $slick-ease 0.05s, 0.2s visibility $slick-ease 0.05s, 0.2s transform $slick-ease 0.05s);
+    &::before {
+        position: absolute;
+        bottom: -6px;
+        left: 50%;
+        margin-left: -6px;
+        @include triangle(12px, $tooltip-arrow-background-colour, down);
+        content: "";
+    }
+    &--active {
+        opacity: 1;
+        visibility: visible;
+        @include transform(translate(0, 0) scale(1));
+        @include transition-delay(0s);
+    }
+}

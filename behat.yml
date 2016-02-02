@@ -1,0 +1,8 @@
+default:
+    filters:
+      tags: "~@ignore"
+    paths:
+        features: test/features
+        bootstrap: %behat.paths.features%/bootstrap
+    context:
+        class: 'FeatureContext'

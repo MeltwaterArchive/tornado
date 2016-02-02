@@ -1,0 +1,40 @@
+{
+    "interactions": 36300,
+    "unique_authors": 33000,
+    "analysis": {
+        "analysis_type": "freqDist",
+        "parameters": {
+            "target": "fb.author.gender",
+            "threshold": 2
+        },
+        "results": [
+            {
+                "key": "unknown",
+                "interactions": 33000,
+                "unique_authors": 31500,
+                "child": {
+                    "analysis_type": "freqDist",
+                    "parameters": {
+                        "target": "fb.author.age",
+                        "threshold": 2
+                    },
+                    "redacted": true
+                }
+            },
+            {
+                "key": "male",
+                "interactions": 1600,
+                "unique_authors": 1500,
+                "child": {
+                    "analysis_type": "freqDist",
+                    "parameters": {
+                            "target": "fb.author.age",
+                            "threshold": 2
+                    },
+                    "redacted": true
+                }
+            }
+        ],
+        "redacted": false
+    }
+}

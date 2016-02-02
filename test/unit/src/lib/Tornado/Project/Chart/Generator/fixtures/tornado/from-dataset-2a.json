@@ -1,0 +1,134 @@
+{
+    "Generator::MEASURE_INTERACTIONS": {
+        "male": [
+            [
+                "18-24",
+                61100,
+                0,
+                {
+                    "tooltip": 0,
+                    "explore": {
+                        "Alabama, Male, 18-24": {
+                            "fb.region": "alabama",
+                            "fb.author.gender": "male",
+                            "fb.author.age": "18-24"
+                        }
+                    }
+                }
+            ],
+            [
+                "unknown",
+                31100,
+                0,
+                {
+                    "tooltip": 0,
+                    "explore": {
+                        "Alabama, Male, Unknown": {
+                            "fb.region": "alabama",
+                            "fb.author.gender": "male",
+                            "fb.author.age": "unknown"
+                        }
+                    }
+                }
+            ]
+        ],
+        "unknown": [
+            [
+                "18-24",
+                5100,
+                0,
+                {
+                    "tooltip": 0,
+                    "explore": {
+                        "Alabama, Unknown, 18-24": {
+                            "fb.region": "alabama",
+                            "fb.author.gender": "unknown",
+                            "fb.author.age": "18-24"
+                        }
+                    }
+                }
+            ],
+            [
+                "unknown",
+                6100,
+                0,
+                {
+                    "tooltip": 0,
+                    "explore": {
+                        "Alabama, Unknown, Unknown": {
+                            "fb.region": "alabama",
+                            "fb.author.gender": "unknown",
+                            "fb.author.age": "unknown"
+                        }
+                    }
+                }
+            ]
+        ]
+    },
+    "Generator::MEASURE_UNIQUE_AUTHORS": {
+        "male": [
+            [
+                "18-24",
+                62100,
+                0,
+                {
+                    "tooltip": 0,
+                    "explore": {
+                        "Alabama, Male, 18-24": {
+                            "fb.region": "alabama",
+                            "fb.author.gender": "male",
+                            "fb.author.age": "18-24"
+                        }
+                    }
+                }
+            ],
+            [
+                "unknown",
+                32100,
+                0,
+                {
+                    "tooltip": 0,
+                    "explore": {
+                        "Alabama, Male, Unknown": {
+                            "fb.region": "alabama",
+                            "fb.author.gender": "male",
+                            "fb.author.age": "unknown"
+                        }
+                    }
+                }
+            ]
+        ],
+        "unknown": [
+            [
+                "18-24",
+                5200,
+                0,
+                {
+                    "tooltip": 0,
+                    "explore": {
+                        "Alabama, Unknown, 18-24": {
+                            "fb.region": "alabama",
+                            "fb.author.gender": "unknown",
+                            "fb.author.age": "18-24"
+                        }
+                    }
+                }
+            ],
+            [
+                "unknown",
+                6200,
+                0,
+                {
+                    "tooltip": 0,
+                    "explore": {
+                        "Alabama, Unknown, Unknown": {
+                            "fb.region": "alabama",
+                            "fb.author.gender": "unknown",
+                            "fb.author.age": "unknown"
+                        }
+                    }
+                }
+            ]
+        ]
+    }
+}

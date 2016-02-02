@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block page_class %} brand-management{% endblock %}
+{% block page_header_title %}Brand Management{% endblock %}
+
+{% block page_content %}
+    {% if data.brands is empty %}
+        <div class="brand-management__no-brands">
+            <h2>No Brands</h2>
+            <p>You don't have access to any Brands yet. Contact your agency manager to give you access.</p>
+        </div>
+    {% else %}
+        <div class="brand-management__sidebar">
+            {% block brand_management_sidebar %}
+                {% include 'brand/brands/index.html.twig' %}
+            {% endblock %}
+        </div>
+        <div class="brand-management__content">
+            {% block brand_management_content %}
+            {% endblock %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block javascript_additional %}
+    data-main="/assets/javascript/brand/brand"
+{% endblock %}
+
+{% block delete_templates %}
+    {# Templates required for delete-confirm #}
+    {% include 'projectapp/partials/mustache/plugins/modallica.mst' %}
+    {% include 'brand/partials/confirm-delete.mst' %}
+{% endblock %}

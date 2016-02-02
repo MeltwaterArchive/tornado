@@ -1,0 +1,59 @@
+services:
+    admin.index.controller:
+        class: Controller\Admin\IndexController
+        arguments:
+            - @session
+            - @url_generator
+
+    admin.organization.controller:
+        class: Controller\Admin\OrganizationController
+        arguments:
+            - @organization.repository
+            - @url_generator
+            - @organization.form.create
+            - @organization.form.update
+            - @session.user.organization
+            - @session
+        tags:
+            - { name: flash_aware }
+
+    admin.user.controller:
+        class: Controller\Admin\UserController
+        arguments:
+            - @organization.repository
+            - @organization.user.repository
+            - @url_generator
+            - @session
+            - @organization.user.form.create
+            - @organization.user.form.update
+            - @organization.role.repository
+            - @organization.agency.repository
+            - @organization.brand.repository
+        tags:
+            - { name: flash_aware }
+
+    admin.agency.controller:
+        class: Controller\Admin\AgencyController
+        arguments:
+            - @organization.repository
+            - @organization.agency.repository
+            - @organization.brand.repository
+            - @url_generator
+            - @session
+            - @organization.agency.form.create
+            - @organization.agency.form.update
+        tags:
+            - { name: flash_aware }
+
+    admin.brand.controller:
+        class: Controller\Admin\BrandController
+        arguments:
+            - @organization.repository
+            - @organization.agency.repository
+            - @organization.brand.repository
+            - @url_generator
+            - @session
+            - @organization.brand.form.create
+            - @organization.brand.form.update
+        tags:
+            - { name: flash_aware }

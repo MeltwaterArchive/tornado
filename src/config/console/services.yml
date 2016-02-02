@@ -1,0 +1,10 @@
+imports:
+    - { resource: "../services.yml" }
+    - { resource: "./commands.yml" }
+
+parameters:
+    kernel.name: console
+
+services:
+    session:
+        synthetic: true

@@ -1,0 +1,66 @@
+/**
+ * Plugin ~ Context Menu
+ */
+
+/**
+ * Context menu variables
+ */
+$context-menu-background-colour: #fff !default;
+$context-menu-border-colour: $colour-grey-light !default;
+$context-menu-box-shadow-colour: rgba(0, 0, 0, 0.15) !default;
+$context-menu-item-background-colour: #f9f9f9 !default;
+
+/**
+ * Context menu styles
+ */
+.context-menu {
+    @extend %no-list-style;
+    position: fixed;
+    margin-top: 25px;
+    margin-left: -85px;
+    padding: 0;
+    background-color: $context-menu-background-colour;
+    border: 1px solid $context-menu-border-colour;
+    box-shadow: 0 2px 3px -1px $context-menu-box-shadow-colour;
+    z-index: 10;
+    opacity: 0;
+    visibility: hidden;
+    @include user-select(none);
+    @include transform-origin(left top);
+    @include transform(scale(0.8));
+    @include transition(all 0.3s $slick-ease);
+    &::before,
+    &::after {
+        position: absolute;
+        top: -6px;
+        left: 50%;
+        margin-left: -4px;
+        content: "";
+    }
+    &::before {
+        @include triangle(12px, $context-menu-background-colour, up);
+        z-index: 0;
+    }
+    &::after {
+        top: -7px;
+        left: 50%;
+        margin-left: -5px;
+        @include triangle(14px, $context-menu-border-colour, up);
+        z-index: -1;
+    }
+    &--active {
+        opacity: 1;
+        visibility: visible;
+        @include transform(scale(1));
+        @include transition(0.2s all $bouncy);
+    }
+}
+
+.context-menu__item {
+    padding: 10px;
+    font-size: rem(12);
+    cursor: pointer;
+    &:hover {
+        background-color: $context-menu-item-background-colour;
+    }
+}

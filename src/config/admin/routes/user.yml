@@ -1,0 +1,128 @@
+# Single paths
+
+admin.single.organization.users:
+    path: /admin/organization/users
+    methods: [GET]
+    defaults:
+        _controller: 'admin.user.controller:singleIndex'
+        _template: 'admin/user/index.html.twig'
+        _permissions: [ROLE_ADMIN]
+
+admin.single.organization.users.batch:
+    path: /admin/organization/users/batch
+    defaults:
+        _controller: 'admin.user.controller:singleBatch'
+        _permissions: [ROLE_ADMIN]
+    methods:  [POST]
+
+admin.single.organization.user.create:
+    path: /admin/organization/user/new
+    methods: [GET,POST]
+    defaults:
+        _controller: 'admin.user.controller:singleCreate'
+        _template: 'admin/user/create.html.twig'
+        _permissions: [ROLE_ADMIN]
+
+admin.single.organization.user.edit:
+    path: /admin/organization/user/{id}
+    methods: [GET,POST]
+    defaults:
+        _controller: 'admin.user.controller:singleEdit'
+        _template: 'admin/user/edit.html.twig'
+        _permissions: [ROLE_ADMIN]
+    requirements:
+        id: \d+
+
+admin.single.organization.user.agencies:
+    path: /admin/organization/user/{id}/agencies
+    methods: [GET,POST]
+    defaults:
+        _controller: 'admin.user.controller:singleAgencies'
+        _template: 'admin/user/agencies.html.twig'
+        _permissions: [ROLE_ADMIN]
+    requirements:
+        id: \d+
+
+admin.single.organization.user.brands:
+    path: /admin/organization/user/{id}/brands
+    methods: [GET,POST]
+    defaults:
+        _controller: 'admin.user.controller:singleBrands'
+        _template: 'admin/user/brands.html.twig'
+        _permissions: [ROLE_ADMIN]
+    requirements:
+        id: \d+
+
+# Superadmin paths
+
+admin.organization.users:
+    path: /admin/organization/{id}/users
+    methods: [GET]
+    defaults:
+        _controller: 'admin.user.controller:index'
+        _template: 'admin/user/index.html.twig'
+        _permissions: [ROLE_SUPERADMIN]
+    requirements:
+        id: \d+
+
+admin.organization.users.batch:
+    path: /admin/organization/{id}/users/batch
+    defaults:
+        _controller: 'admin.user.controller:batch'
+        _permissions: [ROLE_SUPERADMIN]
+    methods:  [POST]
+    requirements:
+        id: \d+
+
+admin.organization.user.create:
+    path: /admin/organization/{id}/users/new
+    methods: [GET,POST]
+    defaults:
+        _controller: 'admin.user.controller:create'
+        _template: 'admin/user/create.html.twig'
+        _permissions: [ROLE_SUPERADMIN]
+    requirements:
+        id: \d+
+
+admin.organization.user.edit:
+    path: /admin/organization/{organizationId}/user/{id}
+    methods: [GET,POST]
+    defaults:
+        _controller: 'admin.user.controller:edit'
+        _template: 'admin/user/edit.html.twig'
+        _permissions: [ROLE_SUPERADMIN]
+    requirements:
+        organizationId: \d+
+        id: \d+
+
+admin.organization.user.agencies:
+    path: /admin/organization/{organizationId}/user/{id}/agencies
+    methods: [GET,POST]
+    defaults:
+        _controller: 'admin.user.controller:agencies'
+        _template: 'admin/user/agencies.html.twig'
+        _permissions: [ROLE_SUPERADMIN]
+    requirements:
+        organizationId: \d+
+        id: \d+
+
+admin.organization.user.brands:
+    path: /admin/organization/{organizationId}/user/{id}/brands
+    methods: [GET,POST]
+    defaults:
+        _controller: 'admin.user.controller:brands'
+        _template: 'admin/user/brands.html.twig'
+        _permissions: [ROLE_SUPERADMIN]
+    requirements:
+        organizationId: \d+
+        id: \d+
+
+admin.organization.user.delete:
+    path: /admin/organization/{organizationId}/user/{id}
+    methods: [DELETE]
+    defaults:
+        _controller: 'admin.user.controller:delete'
+        _permissions: [ROLE_SUPERADMIN]
+    requirements:
+        organizationId: \d+
+        id: \d+

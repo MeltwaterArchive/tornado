@@ -1,0 +1,41 @@
+services:
+    test.controller:
+        class: Test\DataSift\Silex\Fixtures\TestController
+
+    # these synthetic services are injected to the container in runtime
+    # usually copied from Silex
+    request:
+        synthetic: true
+
+    monolog:
+        synthetic: true
+
+    session:
+        synthetic: true
+
+    twig:
+        synthetic: true
+
+    event_dispatcher:
+        synthetic: true
+
+    validator:
+        synthetic: true
+
+    url_generator:
+        synthetic: true
+
+    dummy:
+        synthetic: true
+
+    cache.memcached:
+        synthetic: true
+
+    flash:
+        synthetic: true
+
+    memcache.server:
+        synthetic: true
+
+    doctrine.dbal.connection:
+        synthetic: true

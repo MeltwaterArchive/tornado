@@ -1,0 +1,15 @@
+{% raw %}
+    <script data-tornado-template="chart" type="x-tmpl-mustache">
+        <div class="chart-wrapper chart-wrapper--{{ type }}" data-chart-id="{{ id }}">
+            <h6 class="chart__title">{{ name }}</h6>
+            <div class="chart__actions">
+                <span data-dropdown-toggle class="chart__action__button chart__action__button--options"></span>
+                <ul class="dropdown__content">
+                    <li class="dropdown__item" data-dropdown-action="rename">Rename chart</li>
+                    <li class="dropdown__item" data-dropdown-action="delete">Delete chart</li>
+                </ul>
+            </div>
+            <div data-tornado-chart="{{ id }}" class="chart"></div>
+        </div>
+    </script>
+{% endraw %}

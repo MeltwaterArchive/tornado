@@ -1,0 +1,134 @@
+{
+    "Generator::MEASURE_INTERACTIONS": {
+        "male": [
+            [
+                "18-24",
+                81100,
+                43000,
+                {
+                    "tooltip": 43000,
+                    "explore": {
+                        "Alaska, Male, 18-24": {
+                            "fb.region": "alaska",
+                            "fb.author.gender": "male",
+                            "fb.author.age": "18-24"
+                        }
+                    }
+                }
+            ],
+            [
+                "unknown",
+                21100,
+                33000,
+                {
+                    "tooltip": 33000,
+                    "explore": {
+                        "Alaska, Male, Unknown": {
+                            "fb.region": "alaska",
+                            "fb.author.gender": "male",
+                            "fb.author.age": "unknown"
+                        }
+                    }
+                }
+            ]
+        ],
+        "unknown": [
+            [
+                "18-24",
+                4100,
+                23000,
+                {
+                    "tooltip": 23000,
+                    "explore": {
+                        "Alaska, Unknown, 18-24": {
+                            "fb.region": "alaska",
+                            "fb.author.gender": "unknown",
+                            "fb.author.age": "18-24"
+                        }
+                    }
+                }
+            ],
+            [
+                "unknown",
+                91100,
+                13000,
+                {
+                    "tooltip": 13000,
+                    "explore": {
+                        "Alaska, Unknown, Unknown": {
+                            "fb.region": "alaska",
+                            "fb.author.gender": "unknown",
+                            "fb.author.age": "unknown"
+                        }
+                    }
+                }
+            ]
+        ]
+    },
+    "Generator::MEASURE_UNIQUE_AUTHORS": {
+        "male": [
+            [
+                "18-24",
+                82100,
+                43500,
+                {
+                    "tooltip": 43500,
+                    "explore": {
+                        "Alaska, Male, 18-24": {
+                            "fb.region": "alaska",
+                            "fb.author.gender": "male",
+                            "fb.author.age": "18-24"
+                        }
+                    }
+                }
+            ],
+            [
+                "unknown",
+                22100,
+                33500,
+                {
+                    "tooltip": 33500,
+                    "explore": {
+                        "Alaska, Male, Unknown": {
+                            "fb.region": "alaska",
+                            "fb.author.gender": "male",
+                            "fb.author.age": "unknown"
+                        }
+                    }
+                }
+            ]
+        ],
+        "unknown": [
+            [
+                "18-24",
+                4200,
+                23500,
+                {
+                    "tooltip": 23500,
+                    "explore": {
+                        "Alaska, Unknown, 18-24": {
+                            "fb.region": "alaska",
+                            "fb.author.gender": "unknown",
+                            "fb.author.age": "18-24"
+                        }
+                    }
+                }
+            ],
+            [
+                "unknown",
+                92100,
+                13500,
+                {
+                    "tooltip": 13500,
+                    "explore": {
+                        "Alaska, Unknown, Unknown": {
+                            "fb.region": "alaska",
+                            "fb.author.gender": "unknown",
+                            "fb.author.age": "unknown"
+                        }
+                    }
+                }
+            ]
+        ]
+    }
+}

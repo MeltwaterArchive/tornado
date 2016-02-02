@@ -1,0 +1,74 @@
+{
+    "groups": [
+        {
+            "name": "People",
+            "targets": [
+                "fb.author.age",
+                "fb.author.gender",
+                "fb.author.country",
+                "fb.author.region",
+                "fb.author.highest_education",
+                "fb.author.relationship_status",
+                "fb.author.type",
+                "fb.parent.author.age",
+                "fb.parent.author.country",
+                "fb.parent.author.gender",
+                "fb.parent.author.highest_education",
+                "fb.parent.author.region",
+                "fb.parent.author.relationship_status",
+                "fb.parent.author.type"
+            ]
+        },
+        {
+            "name": "Stories",
+            "targets": [
+                "fb.language",
+                "fb.link",
+                "fb.topics.category",
+                "fb.topics.name",
+                "fb.sentiment",
+                "interaction.media_type",
+                "interaction.subtype",
+                "fb.og_action_type",
+                "fb.og_object",
+                "fb.topic_ids",
+                "interaction.hashtags"
+            ]
+        },
+        {
+            "name": "VEDO Tags",
+            "special": "vedo_tags",
+            "targets": []
+        },
+        {
+            "name": "Engagements",
+            "targets": [
+                "fb.parent.hashtags",
+                "fb.parent.language",
+                "fb.parent.link",
+                "fb.parent.media_type",
+                "fb.parent.topics.name",
+                "fb.parent.sentiment",
+                "fb.parent.og_action_type",
+                "fb.parent.og_object",
+                "fb.parent.topic_ids",
+                "fb.parent.topics.category"
+
+            ]
+        },
+        {
+            "name": "Stories & Engagements",
+            "targets": [
+                "interaction.subtype",
+                "interaction.tags",
+                "links.domain",
+                "links.normalized_url",
+                "links.url"
+            ]
+        },
+         {
+            "name": "Other",
+            "special": "catchall"
+        }
+    ]
+}

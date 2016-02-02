@@ -1,0 +1,45 @@
+{% extends 'brand/base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="/assets/javascript/libs/csdl-editor/csdleditor.min.css">
+{% endblock %}
+
+{% block page_header_title %}Brand Management - Edit Recording{% endblock %}
+{% set selectedBrand = data.selectedBrand %}
+
+{% block brand_management_content %}
+    {% include 'brand/recordings/partials/header.html.twig' %}
+    <form class="single-item single-item--edit" method="post" action="{{ path('recording.update', {'recordingId': data.recording.id}) }}">
+        {# Header #}
+        <div class="single-item__header">
+            <h6 class="single-item__title"><strong>Editing</strong> &lsquo;{{ data.recording.name }}&rsquo;</h6>
+            <div class="single-item__actions">
+                <a data-delete="{{ data.recording.name }}" class="single-item__action single-item__action--delete" href="{{ path('recording.delete', {'recordingId': data.recording.id}) }}">Delete</a>
+                <button class="single-item__action single-item__action--update" type="submit" data-spinner>Update</button>
+            </div>
+        </div>
+        <hr class="divider">
+
+        {# Recording name #}
+        <label class="input-label" for="recording-name">Recording Name</label>
+        {% if meta.name is defined %}
+            <span class="input-error">{{ meta.name }}</span>
+        {% endif %}
+        <input id="recording-name" type="text" name="name" value="{{ data.recording.name }}" placeholder="Give your recording a name">
+
+        {# Footer #}
+        <hr class="divider">
+        <a href="{{ path('brand.get.recordings', {'brandId': selectedBrand.id}) }}">Cancel</a>
+    </form>
+{% endblock %}
+
+{% block javascript_additional %}
+    data-main="/assets/javascript/brand/brand.edit"
+{% endblock %}
+
+{% block delete_templates %}
+    {# Templates required for delete-confirm #}
+    {% include 'projectapp/partials/mustache/plugins/modallica.mst' %}
+    {% include 'brand/partials/confirm-delete.mst' %}
+{% endblock %}

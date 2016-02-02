@@ -1,0 +1,207 @@
+/**
+ * Module ~ Workbook Sidebar
+ */
+
+/**
+ * Workbook sidebar variables
+ */
+$workbook-sidebar-content-padding: 0 15px !global !default;
+$workbook-sidebar-background-colour: #fff !default;
+$workbook-sidebar-border-left-colour: $colour-grey-light !default;
+$workbook-sidebar-box-shadow-colour: rgba(20, 20, 20, 0.15) !default;
+$workbook-sidebar-title-colour: #333 !default;
+$workbook-sidebar-section-colour: #fff !default;
+
+$workbook-title-color: #333;
+
+$workbook-item-colour: #afbdd4 !default;
+$workbook-item-border-colour: #313540 !default;
+$workbook-item-hovered-background-colour: darken(#3b404d, 1%) !default;
+$workbook-item-active-background-colour: #313540 !default;
+
+/**
+ * Workbook sidebar styles
+ */
+.workbook-sidebar {
+    display: block;
+    position: fixed;
+    top: $header-height;
+    right: 0;
+    bottom: 0;
+    width: 301px;
+    margin: 0;
+    padding: 0;
+    background-color: $workbook-sidebar-background-colour;
+    border-left: 1px solid $workbook-sidebar-border-left-colour;
+    box-shadow: -1px 0 4px -1px $workbook-sidebar-box-shadow-colour;
+    z-index: 5;
+    @extend %no-list-style;
+    opacity: 0;
+    visibility: hidden;
+    @include transform-origin(right top);
+    @include transform(translate(50px, 0));
+    @include transition(0.25s all $slick-ease);
+    .workbook-sidebar__button {
+        opacity: 0;
+        @include transform(translate(5px, 0) scale(0.7));
+        @include transition(0.5s opacity $slick-ease 0.1s, 0.6s transform $slick-ease 0.1s);
+        &:last-child {
+            @include transition(0.5s opacity $slick-ease 0.2s, 0.6s transform $slick-ease 0.2s);
+        }
+    }
+}
+
+.workbook-sidebar--open {
+    opacity: 1;
+    visibility: visible;
+    @include transform(translate(0, 0));
+    @include transition(0.3s all $slick-ease);
+    .workbook-sidebar__header {
+        .workbook-sidebar__title,
+        .workbook-sidebar__button {
+            opacity: 1;
+            @include transform(translate(0, 0) scale(1));
+        }
+    }
+    .workbook-sidebar__section {
+        opacity: 1;
+        @include transform(translate(0, 0));
+        @include transition(0.3s opacity $slick-ease 0.3s, 0.5s transform $slick-ease 0.3s);
+    }
+}
+
+.workbook-sidebar__header {
+    padding: $workbook-sidebar-content-padding;
+}
+
+.workbook-sidebar__title {
+    display: inline-block;
+    margin: 0;
+    font-size: rem(18);
+    line-height: 60px;
+    color: $workbook-sidebar-title-colour;
+    opacity: 0;
+    @include transform(translate(15px, 0) scale(0.9));
+    @include transition(0.5s opacity $slick-ease 0.1s, 0.5s transform $slick-ease 0.1s);
+}
+
+.workbook-sidebar__section {
+    padding: 0 15px;
+    color: $workbook-sidebar-section-colour;
+    opacity: 0;
+    @include transform(translate(0, 10px));
+    .scrollfoo__scroller--workbooks {
+        right: -11px;
+    }
+}
+
+.workbook-sidebar__button {
+    @extend %button;
+    display: inline-block;
+    padding: 0;
+    top: 15px;
+    width: 30px;
+    height: 30px;
+    background: {
+        size: 10px auto;
+        position: center center;
+        repeat: no-repeat;
+    }
+    &--open {
+        float: right;
+        right: 15px;
+        width: auto;
+        padding: 10px 30px 10px 10px;
+        background: {
+            size: 14px auto;
+            image: url("#{$image-path}/common/sidebar/trigger.svg");
+            position: right 10px center;
+        }
+    }
+    &--close {
+        float: right;
+        background-image: url("#{$image-path}/common/sidebar/close.svg");
+    }
+    &--create {
+        @extend %submit-button;
+        float: right;
+        margin-right: 10px;
+        background-image: url("#{$image-path}/common/actions/create-light.svg");
+    }
+}
+
+.workbooks {
+    @extend %list-items;
+    @extend %no-list-style;
+    display: inline-block;
+}
+
+.workbook {
+    @extend %list-item;
+    display: inline-block;
+    float: left;
+    padding: 0;
+    &:first-child {
+        .workbook__info,
+        .workbook__actions {
+            border-top: 1px solid $colour-grey-light;
+        }
+    }
+    &--active,
+    &--active:hover {
+        .workbook__info {
+            border-left-color: $colour-green-bright;
+            pointer-events: none;
+            cursor: default;
+        }
+    }
+}
+
+.workbook__info,
+.workbook__actions {
+    @extend %list-item-cell;
+    padding: 15px 10px;
+}
+
+.workbook__info {
+    width: 205px;
+    border-left: 2px solid transparent;
+    cursor: pointer;
+}
+
+.workbook__title {
+    @extend %list-item-title;
+    max-width: 185px;
+    font-size: rem(12);
+    color: $workbook-title-color;
+}
+
+.workbook__date-created {
+    @extend %list-item-date-created;
+}
+
+.workbook__actions {
+    width: 65px;
+}
+
+.workbook__action {
+    @extend %list-item-action;
+}
+
+.workbook__actions {
+    .workbook-list__item-actions__toggle {
+        @include dropdown-button(12px, 1px, false);
+        right: -35px;
+        background-image: url("#{$image-path}/modules/charts/options.svg");
+        cursor: pointer;
+        opacity: 0.5;
+
+    }
+
+    .dropdown__content {
+            margin: 7px 2px 0 0;
+            color: $main-font-colour;
+            background: white;
+            z-index: 1;
+    }
+}

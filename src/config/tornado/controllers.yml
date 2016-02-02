@@ -1,0 +1,143 @@
+services:
+    index.controller:
+        class: Controller\IndexController
+        arguments:
+            - @session
+            - @organization.brand.repository
+            - @project.repository
+
+    analyze.controller:
+        class: Controller\AnalyzerController
+        arguments:
+            - @project.recording.repository
+            - @project.chart.repository
+            - @analyze.dataset.repository
+            - @analyze.analysis.form.create
+            - @analyze
+            - @analyze.dataset.generator
+            - @project.chart.factory
+            - @project.workbook.locker
+            - @session.user
+        tags:
+            - { name: project_data_aware }
+
+    dataset.controller:
+        class: Controller\DataSetController
+        arguments:
+            - @analyze.dataset.repository
+
+    region.controller:
+        class: Controller\RegionController
+        arguments:
+            - @pylon.regions
+
+    brand.controller:
+        class: \Controller\BrandController
+        arguments:
+            - @session
+            - @security.authorization.access_decision_manager
+            - @organization.brand.repository
+            - @project.repository
+            - @project.recording.repository
+            - @project.recording.datasift_recording
+            - @datasift.pylon
+            - @url_generator
+
+    settings.controller:
+        class: \Controller\SettingsController
+        arguments:
+            - @session
+            - @organization.user.form.changeemail
+            - @organization.user.form.changepassword
+            - @organization.user.repository
+            - @url_generator
+        tags:
+            - { name: flash_aware }
+
+    # PROJECT CONTROLLERS
+    project.controller:
+        class: Controller\ProjectController
+        arguments:
+            - @session
+            - @url_generator
+            - @organization.brand.repository
+            - @project.form.create
+            - @project.form.update
+        tags:
+            - { name: project_data_aware }
+
+    project.recording.controller:
+        class: Controller\RecordingController
+        arguments:
+            - @session
+            - @url_generator
+            - @project.recording.datasift_recording
+            - @project.recording.repository
+            - @project.recording.form.create
+            - @project.recording.form.update
+            - @pylon.schema.provider
+        tags:
+            - { name: brand_data_aware }
+
+    # PROJECT SPA APP CONTROLLERS
+    project.app.controller:
+        class: Controller\ProjectApp\AppController
+        tags:
+            - { name: project_data_aware }
+
+    project.app.worksheet.controller:
+        class: Controller\ProjectApp\WorksheetController
+        arguments:
+            - @project.chart.repository
+            - @project.worksheet.form.create
+            - @project.worksheet.form.explore
+            - @project.worksheet.form.update
+            - @project.worksheet.explorer
+            - @project.worksheet.exporter
+            - @project.workbook.locker
+            - @session.user
+            - @project.recording.repository
+        tags:
+            - { name: project_data_aware }
+
+    project.app.workbook.controller:
+        class: Controller\ProjectApp\WorkbookController
+        arguments:
+            - @project.workbook.form.create
+            - @project.workbook.form.update
+            - @project.recording.repository
+            - @project.worksheet.generator
+            - @analyze.templated
+            - @project.workbook.locker
+            - @session.user
+            - @project.worksheet.exporter
+            - %analyzer.templates.default%
+        tags:
+            - { name: project_data_aware }
+
+    project.app.chart.controller:
+        class: Controller\ProjectApp\ChartController
+        arguments:
+            - @project.chart.repository
+            - @project.chart.form.update
+            - @project.workbook.locker
+            - @session.user
+        tags:
+            - { name: project_data_aware }
+
+    project.app.dimension.controller:
+        class: Controller\ProjectApp\DimensionController
+        arguments:
+            - @project.recording.repository
+            - @organization.brand.repository
+            - @pylon.schema.provider
+            - @pylon.schema.grouper
+        tags:
+            - { name: project_data_aware }
+
+    project.app.recording.controller:
+        class: Controller\ProjectApp\RecordingController
+        arguments:
+            - @project.recording.repository
+        tags:
+            - { name: project_data_aware }

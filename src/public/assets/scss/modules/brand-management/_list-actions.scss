@@ -1,0 +1,96 @@
+/**
+ * Module ~ List Actions
+ */
+
+/**
+ * List Actions variables
+ */
+$list-action-new-colour: #fff !default;
+$list-action-bulk-hovered-border-colour: $colour-grey-light !default;
+$list-action-bulk-delete-colour: $colour-blue-facebook !default;
+$list-action-bulk-delete-background-colour: #fff !default;
+
+/**
+ * List Actions (Bulk actions on recordings and projects)
+ */
+.list-actions {
+    display: inline-block;
+    width: 100%;
+    margin-top: 0;
+    padding: 0;
+    @extend %no-list-style;
+    @include user-select(none);
+}
+
+.list-action {
+    @extend %brand-management__content-action;
+    margin-right: 0;
+    &--new-project {
+        float: right;
+        a {
+            @extend %submit-button;
+            color: $list-action-new-colour;
+        }
+    }
+    &--bulk {
+        @extend %clear-button;
+        margin-left: 0;
+        padding: 0;
+        cursor: default;
+        &:hover {
+            color: inherit;
+            background-color: inherit;
+            border-color: $list-action-bulk-hovered-border-colour;
+        }
+        .styled-checkbox__wrapper {
+            display: inline-block;
+            float: left;
+            padding: 7px;
+            border-right: 1px solid $colour-grey-light;
+        }
+        // Bulk checkbox
+        .styled-checkbox__label {
+            cursor: pointer;
+            &::after {
+                position: absolute;
+                top: 3px;
+                bottom: 3px;
+                left: 3px;
+                right: 3px;
+                background: {
+                    image: url("#{$image-path}/common/forms/checkbox-semi.svg");
+                    size: 100% auto;
+                    position: center center;
+                    repeat: no-repeat;
+                }
+                border-radius: 2px;
+                content: "";
+                opacity: 0;
+                @include transform(scale(0.3));
+                @include transition(0.2s all $slick-ease);
+            }
+        }
+        .styled-checkbox:checked + .styled-checkbox__label {
+            &::after {
+                opacity: 0;
+                @include transform(scale(0.3));
+            }
+        }
+        .styled-checkbox--semi + .styled-checkbox__label {
+            &::after {
+                opacity: 1;
+                @include transform(scale(1));
+            }
+        }
+        .list-action--bulk-delete {
+            display: inline-block;
+            width: auto;
+            margin: 0;
+            padding: 10px;
+            color: $list-action-bulk-delete-colour;
+            background-color: $list-action-bulk-delete-background-colour;
+            border-radius: 3px;
+            border: none;
+        }
+    }
+}

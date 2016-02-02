@@ -1,0 +1,72 @@
+/**
+ * Module ~ Login page
+ */
+
+/**
+ * Login variables
+ */
+$login-error-colour: #fff !default;
+$login-error-background-colour: $colour-red-error !default;
+$login-error-hovered-background-colour: $colour-red-error !default;
+$login-forgot-colour: $colour-blue-facebook !default;
+$login-form-background-colour: #fff;
+$login-form-border-colour: $colour-grey-light;
+
+/**
+ * Login styles
+ */
+.view--login {
+    .content {
+        left: 50%;
+        width: 400px;
+        margin-left: -200px;
+        padding: none;
+        background-color: transparent;
+        border: none;
+    }
+    form {
+        padding: 40px;
+        background-color: $login-form-background-colour;
+        border: 1px solid $login-form-border-colour;
+    }
+}
+
+.login__heading {
+    margin: 0 0 35px;
+    font-size: rem(20);
+    line-height: 20px;
+    text-align: center;
+}
+
+.login__error {
+    width: 100%;
+    margin: 0 0 10px;
+    padding: 10px;
+    font-size: rem(12);
+    background-color: $login-error-background-colour;
+    color: $login-error-colour;
+    cursor: default;
+    &:hover {
+        background-color: $login-error-hovered-background-colour;
+    }
+}
+
+.login__input {
+    margin-bottom: 8px;
+    @include placeholder {
+        font-style: italic;
+    }
+}
+
+.login__submit {
+    @extend %submit-button;
+    width: 100%;
+}
+
+.login__forgot {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: rem(12);
+    line-height: 12px;
+    color: $login-forgot-colour;
+}

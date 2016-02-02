@@ -1,0 +1,19 @@
+/**
+ * Base imports
+ */
+
+/* Settings that need to be set globally ***********************/
+$image-path: "/assets/images" !global;
+
+/* Bourbon & Neat Libraries ***********************/
+@import "bourbon/bourbon";
+@import "neat/neat";
+@import "base/grid-settings";
+
+/* Base styles ***********************/
+@import "base/colours";
+@import "base/easings";
+@import "base/normalize";
+@import "base/type";
+@import "base/forms";
+@import "base/base";

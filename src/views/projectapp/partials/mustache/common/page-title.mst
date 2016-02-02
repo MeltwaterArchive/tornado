@@ -1,0 +1,6 @@
+{% raw %}
+    <script data-tornado-template="page-title" type="x-tmpl-mustache">
+        <span class="page__title__project-name">{{ #projectName }}{{ projectName }}{{ /projectName }}</span>
+        <span class="page__title__workbook-name">{{ workbookName }}</span>
+    </script>
+{% endraw %}

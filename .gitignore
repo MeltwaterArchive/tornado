@@ -1,0 +1,26 @@
+**/.cache
+**/target
+**/vendor
+phpunit.xml
+phpunit.cov.xml
+**/auth.json
+**/*.lock
+src/test/storyplayer/dsbuildparams.*
+src/test/storyplayer/*.log
+src/logs/*.log
+
+.vagrant
+**/auth.json
+**/.kitchen
+**/node_modules
+/target
+/nbproject
+.idea
+**/bower_components
+
+# Frontend
+**/.sass-cache
+src/public/assets/**/*.map
+
+# JavaScript
+src/public/assets/javascript/library/*

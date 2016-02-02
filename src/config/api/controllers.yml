@@ -1,0 +1,40 @@
+services:
+    pylon_api.identity.controller:
+        class: Controller\PylonApi\IdentityController
+        arguments:
+            - @datasift.user
+            - @datasift.identity
+            - @datasift.identity.token
+            - @datasift.identity.limit
+            - @organization.brand.repository
+            - @organization.user.repository
+
+    pylon_api.pylon.controller:
+        class: Controller\PylonApi\PylonController
+        arguments:
+            - @datasift.user
+            - @datasift.pylon
+            - @project.recording.repository
+            - @project.recording.datasift_recording
+            - @project.recording.form.create
+            - @project.repository
+            - @project.form.create
+            - @project.workbook.repository
+            - @project.workbook.form.create
+
+    tornado_api.project.controller:
+        class: Controller\TornadoApi\ProjectController
+        arguments:
+            - @project.recording.repository
+            - @project.repository
+            - @project.form.create
+            - @project.form.update
+            - @project.recording.form.create
+            - @datasift.pylon
+
+    tornado_api.recording.controller:
+        class: Controller\TornadoApi\RecordingController
+        arguments:
+            - @project.recording.repository
+            - @project.recording.form.create
+            - @datasift.pylon

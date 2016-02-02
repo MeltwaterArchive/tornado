@@ -1,0 +1,21 @@
+{% extends 'base.unsecured.html.twig' %}
+
+{% block body_class %}view--login{% endblock %}
+
+{% block main_menu %}{% endblock %}
+{% block header %}{% endblock %}
+
+{% block page_class %} page--full-width{% endblock %}
+{% block page_content %}
+    <div class="content">
+        {% include 'partials/notifications.html.twig' %}
+
+        <form method="post">
+            <h1 class="login__heading">Reset your password</h1>
+            <input class="login__input" type="password" name="password" value="" placeholder="New password" />
+            <input class="login__input" type="password" name="confirm_password" value="" placeholder="Confirm new password" />
+            <button class="login__submit" type="submit">Reset Password</button>
+            <a class="login__forgot" href="{{ path('login') }}">Go to Sign In</a>
+        </form>
+    </div>
+{% endblock %}

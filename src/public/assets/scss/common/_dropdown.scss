@@ -1,0 +1,208 @@
+/**
+ * Common ~ Dropdown
+ *
+ * Generic dropdown styles
+ */
+
+/**
+ * Dropdown variables
+ */
+$dropdown-content-background-colour: #fff !global !default;
+$dropdown-content-border-colour: #d3d6db !global !default;
+
+$dropdown-item-border-colour: $dropdown-content-border-colour !default;
+$dropdown-item-hovered-background-colour: #f9f9f9 !default;
+
+$dropdown-styled-toggle-colour: #9197a3 !default;
+$dropdown-styled-toggle-background-colour: #fff !default;
+$dropdown-styled-toggle-selected-colour: #333 !default;
+
+$dropdown-styled-item-link-colour: #333 !default;
+$dropdown-styled-item-link-active-colour: #bbb !default;
+$dropdown-styled-item-link-active-background-colour: #fff !default;
+
+/**
+ * Dropdown styles
+ */
+%dropdown,
+.dropdown {
+    position: relative;
+    cursor: pointer;
+    > * {
+        @include user-select(none);
+    }
+}
+
+%dropdown-content,
+.dropdown__content {
+    display: block;
+    position: absolute;
+    margin: 7px -5px 0 0;
+    padding: 0;
+    right: 0;
+    white-space: nowrap;
+    background-color: $dropdown-content-background-colour;
+    border: 1px solid $dropdown-content-border-colour;
+    @extend %no-list-style;
+    opacity: 0;
+    visibility: hidden;
+    @include transform-origin(right top);
+    @include transform(translate(0, -7px) scale(0.9));
+    @include transition(0.25s all $bouncy);
+    &::before,
+    &::after {
+        position: absolute;
+        top: -4px;
+        right: 7px;
+        content: "";
+    }
+    &::before {
+        @include triangle(8px, $dropdown-content-background-colour, up);
+        z-index: 0;
+    }
+    &::after {
+        top: -5px;
+        right: 6px;
+        @include triangle(10px, $dropdown-content-border-colour, up);
+        z-index: -1;
+    }
+    &--open {
+        opacity: 1;
+        visibility: visible;
+        @include transform(translate(0, 0) scale(1));
+    }
+}
+
+/**
+ * Mixin to generate different dropdown
+ * icon size and position it properly
+ *
+ * @type {Number}           $size   Width & height in px
+ * @type {Number/Boolen}    $top    Top offset
+ * @type {Number/Boolen}    $left   Left offset
+ */
+@mixin dropdown-button($size: 16px, $top: false, $left: false) {
+    display: inline-block;
+    position: relative;
+    width: $size;
+    height: $size;
+    background: {
+        image: url("#{$image-path}/common/dropdown.svg");
+        size: auto $size;
+        position: center center;
+        repeat: no-repeat;
+    }
+    cursor: pointer;
+
+    @if $top != false {
+       top: $top;
+    }
+
+    @if $left != false {
+       left: $left;
+    }
+}
+
+%dropdown-button,
+.dropdown__button {
+    @include dropdown-button();
+}
+
+%dropdown-toggle,
+.dropdown__toggle {
+    cursor: pointer;
+}
+
+.dropdown__item {
+    padding: 6px 10px;
+    border-bottom: 1px solid $dropdown-item-border-colour;
+    &:last-child {
+        border: none;
+    }
+    &:hover {
+        background-color: $dropdown-item-hovered-background-colour;
+    }
+}
+
+/**
+ * Special dropdown style
+ *
+ * Full custom dropdown bundle for the masses
+ */
+.dropdown--styled {
+    display: inline-block;
+    text-align: left;
+    .dropdown__toggle {
+        position: relative;
+        display: inline-block;
+        min-width: 100px;
+        margin: 0;
+        padding: 10px 40px 10px 10px;
+        font-size: rem(12);
+        line-height: 12px;
+        color: $dropdown-styled-toggle-colour;
+        background-color: $dropdown-styled-toggle-background-colour;
+        border-radius: 3px;
+        box-shadow: 0 0 0 1px $colour-grey-light;
+        &::before {
+            @include dropdown-button(10px, $top: 50%);
+            position: absolute;
+            right: 12px;
+            margin-top: -5px;
+            opacity: 0.5;
+            content: "";
+        }
+    }
+    // The selected and highlighted `string`
+    .dropdown__toggle__selected {
+        color: $dropdown-styled-toggle-selected-colour;
+        pointer-events: none;
+    }
+    .dropdown__content {
+        left: -1px;
+        right: -1px;
+        margin: 0;
+        z-index: 2;
+        @include transform(translate(0, 0) scale(0.9));
+        &::before {
+            top: -5px;
+            right: 12px;
+            @include triangle(10px, $dropdown-content-background-colour, up);
+        }
+        &::after {
+            top: -6px;
+            right: 11px;
+            @include triangle(12px, $dropdown-content-border-colour, up);
+        }
+        &.dropdown__content--open {
+            @include transform(translate(0, 0) scale(1));
+        }
+        .dropdown__item {
+            padding: 0;
+            cursor: default;
+        }
+        .dropdown__item__link {
+            display: block;
+            padding: 6px 10px;
+            color: $dropdown-styled-item-link-colour;
+            &--active {
+                color: $dropdown-styled-item-link-active-colour;
+                background-color: $dropdown-styled-item-link-active-background-colour;
+                pointer-events: none;
+            }
+        }
+    }
+}
+
+/**
+ * Disabled when a workbook is locked
+ *
+ * @todo This shouldn't be in CSS, ideally a button class will have a disabled
+ * attribute and we should use the JS to toggle the disabled attribute on element
+ *
+ * That way we can keep in all the configuration in one place.
+ */
+.disabled .dropdown__item:not([data-worksheet-action="export"]) {
+    opacity: 0.2;
+    cursor: default;
+}

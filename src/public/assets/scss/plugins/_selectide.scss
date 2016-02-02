@@ -1,0 +1,113 @@
+/**
+ * Plugins ~ Selectide
+ */
+
+/**
+ * Selectide variables
+ */
+$selectide-item-colour: #fff !default;
+$selectide-item-remove-colour: $selectide-item-colour !default;
+$selectide-item-background-colour: $colour-blue-facebook !default;
+
+/**
+ * Selectide styles
+ */
+.selectide-selection {
+    position: relative;
+    margin: 0;
+    margin-top: 10px;
+    padding: 0;
+    @extend %no-list-style;
+    overflow: hidden;
+}
+
+.selectide-selection__item {
+    @extend %button;
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    margin: 0 8px 8px 0;
+    padding: 10px;
+    padding-right: 40px;
+    text-overflow: ellipsis;
+    color: $selectide-item-colour;
+    white-space: nowrap;
+    background-color: $selectide-item-background-colour;
+    @include transition(0.3s background-color $slick-ease);
+}
+
+.selectide-selection__item-remove {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: inline-block;
+    width: 28px;
+    height: 100%;
+    color: $selectide-item-remove-colour;
+    background: {
+        image: url("#{$image-path}/modules/dimensions/remove.svg");
+        position: center center;
+        size: 8px 8px;
+        repeat: no-repeat;
+    }
+    &::before {
+        content: "\000B7";
+        position: absolute;
+        line-height: 32px;
+        top: 0;
+        right: 100%;
+    }
+}
+
+/**
+ * Overwritten Selectize styles
+ */
+.selectize-control.selectided {
+    // Single select specific styles
+    &.single {
+        .selectize-input {
+            // Add some padding to the right
+            // for the arrow...
+            padding-right: 30px;
+            .item {
+                max-width: 97%;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+        }
+        .selectize-dropdown [data-selectable] {
+            line-height: 16px;
+        }
+    }
+    // Multiselect specific styles
+    &.multi {
+        .selectize-input {
+            min-height: 34px;
+            height: auto;
+            > input {
+                top: 0;
+            }
+            .item {
+                display: none;
+            }
+        }
+    }
+    .selectize-input {
+        border-radius: 3px;
+        &.dropdown-active {
+            border-radius: 3px 3px 0 0;
+        }
+        > input {
+            position: relative;
+            top: -2px;
+        }
+    }
+    .selectize-dropdown {
+        border-radius: 0 0 3px 3px;
+
+        .create.active {
+            color: $selectide-item-colour;
+        }
+    }
+}

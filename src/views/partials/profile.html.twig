@@ -1,0 +1,19 @@
+<div class="profile">
+    <div class="dropdown">
+        <img class="profile__image" src="{{ sessionUser.image }}" alt="">
+        <span data-dropdown-toggle class="profile__name">{{ sessionUser.username }}</span>
+        <ul class="dropdown__content dropdown__content--profile">
+            <li class="dropdown__item">
+                <a href="{{ path("settings") }}">Settings</a>
+            </li>
+            {% if sessionUser.isAdmin %}
+                <li class="dropdown__item">
+                    <a href="{{ path("admin") }}">Administration</a>
+                </li>
+            {% endif %}
+            <li class="dropdown__item">
+                <a href="{{ path("logout") }}">Sign out</a>
+            </li>
+        </ul>
+    </div>
+</div>

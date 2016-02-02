@@ -1,0 +1,9 @@
+source 'https://supermarket.chef.io'
+
+metadata
+
+cookbook 'php', '~> 1.5.0'
+cookbook 'php-fpm', '~> 0.7.4'
+cookbook 'supervisor', '~> 0.4.12'
+cookbook 'nginx', '~> 2.7.6'
+cookbook 'memcached', '~> 1.8.0'

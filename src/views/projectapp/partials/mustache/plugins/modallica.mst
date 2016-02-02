@@ -1,0 +1,13 @@
+{% raw %}
+    <script data-tornado-template="modallica" type="x-tmpl-mustache">
+        <div data-modallica-wrapper class="modallica-wrapper">
+            <div data-modallica-template-name="{{ templateName }}" class="modallica modallica--{{ templateName }}">
+                <div class="modallica__header">
+                    <h6 class="modallica__title">{{ title }}</h6>
+                    <button data-modallica-action="close" class="modallica__close" type="button"></button>
+                </div>
+                <div data-modallica-content-wrapper class="modallica__content-wrapper"></div>
+            </div>
+        </script>
+    </script>
+{% endraw %}

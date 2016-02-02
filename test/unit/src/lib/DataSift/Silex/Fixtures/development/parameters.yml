@@ -1,0 +1,14 @@
+parameters:
+    example: true
+
+    routes.path:      %root_dir%/../test/unit/src/lib/DataSift/Silex/Fixtures
+    twig.path:        %root_dir%/views
+    monolog.log_file: %root_dir%/../target/logs/%env%.log
+
+    tornado.cache.namespace: "datasift.tornado"
+    api.cache.namespace: "datasift.tornado.api"
+
+    memcache.server:
+        - 127.0.0.1
+        - 11211
+    no_db: true

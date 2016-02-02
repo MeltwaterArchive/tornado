@@ -1,0 +1,7 @@
+{% if meta.tabs %}
+<ul class="admin-tabs">
+    {% for id, item in meta.tabs %}
+        <li id="admin-tab-{{ id }}"{% if item.selected %} class="selected"{% endif %}><a href="{{ item.url }}" class="admin-tabs">{{ item.label }}</a>
+    {% endfor %}
+</ul>
+{% endif %}

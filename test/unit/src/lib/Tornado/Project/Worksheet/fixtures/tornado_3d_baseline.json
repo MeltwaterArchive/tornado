@@ -1,0 +1,413 @@
+[
+    {
+        "type": "tornado",
+        "data": {
+            "interactions": {
+                "male": [
+                    [
+                        "18-24",
+                        0,
+                        151100,
+                        {
+                            "tooltip": 151100,
+                            "explore": {
+                                "Alabama, Male, 18-24": {
+                                    "fb.region": "alabama",
+                                    "fb.author.gender": "male",
+                                    "fb.author.age": "18-24"
+                                }
+                            }
+                        }
+                    ],
+                    [
+                        "unknown",
+                        31100,
+                        11100,
+                        {
+                            "tooltip": 11100,
+                            "explore": {
+                                "Alabama, Male, Unknown": {
+                                    "fb.region": "alabama",
+                                    "fb.author.gender": "male",
+                                    "fb.author.age": "unknown"
+                                }
+                            }
+                        }
+                    ]
+                ],
+                "unknown": [
+                    [
+                        "18-24",
+                        5100,
+                        15100,
+                        {
+                            "tooltip": 15100,
+                            "explore": {
+                                "Alabama, Unknown, 18-24": {
+                                    "fb.region": "alabama",
+                                    "fb.author.gender": "unknown",
+                                    "fb.author.age": "18-24"
+                                }
+                            }
+                        }
+                    ],
+                    [
+                        "unknown",
+                        6100,
+                        4100,
+                        {
+                            "tooltip": 4100,
+                            "explore": {
+                                "Alabama, Unknown, Unknown": {
+                                    "fb.region": "alabama",
+                                    "fb.author.gender": "unknown",
+                                    "fb.author.age": "unknown"
+                                }
+                            }
+                        }
+                    ]
+                ]
+            },
+            "unique_authors": {
+                "male": [
+                    [
+                        "18-24",
+                        62100,
+                        151200,
+                        {
+                            "tooltip": 151200,
+                            "explore": {
+                                "Alabama, Male, 18-24": {
+                                    "fb.region": "alabama",
+                                    "fb.author.gender": "male",
+                                    "fb.author.age": "18-24"
+                                }
+                            }
+                        }
+                    ],
+                    [
+                        "unknown",
+                        32100,
+                        11200,
+                        {
+                            "tooltip": 11200,
+                            "explore": {
+                                "Alabama, Male, Unknown": {
+                                    "fb.region": "alabama",
+                                    "fb.author.gender": "male",
+                                    "fb.author.age": "unknown"
+                                }
+                            }
+                        }
+                    ]
+                ],
+                "unknown": [
+                    [
+                        "18-24",
+                        5200,
+                        15200,
+                        {
+                            "tooltip": 15200,
+                            "explore": {
+                                "Alabama, Unknown, 18-24": {
+                                    "fb.region": "alabama",
+                                    "fb.author.gender": "unknown",
+                                    "fb.author.age": "18-24"
+                                }
+                            }
+                        }
+                    ],
+                    [
+                        "unknown",
+                        6200,
+                        4200,
+                        {
+                            "tooltip": 4200,
+                            "explore": {
+                                "Alabama, Unknown, Unknown": {
+                                    "fb.region": "alabama",
+                                    "fb.author.gender": "unknown",
+                                    "fb.author.age": "unknown"
+                                }
+                            }
+                        }
+                    ]
+                ]
+            }
+        }
+    },
+    {
+        "type": "tornado",
+        "data": {
+            "interactions": {
+                "male": [
+                    [
+                        "18-24",
+                        0,
+                        151100,
+                        {
+                            "tooltip": 151100,
+                            "explore": {
+                                "alaska, Male, 18-24": {
+                                    "fb.region": "alaska",
+                                    "fb.author.gender": "male",
+                                    "fb.author.age": "18-24"
+                                }
+                            }
+                        }
+                    ],
+                    [
+                        "unknown",
+                        31100,
+                        11100,
+                        {
+                            "tooltip": 11100,
+                            "explore": {
+                                "alaska, Male, Unknown": {
+                                    "fb.region": "alaska",
+                                    "fb.author.gender": "male",
+                                    "fb.author.age": "unknown"
+                                }
+                            }
+                        }
+                    ]
+                ],
+                "unknown": [
+                    [
+                        "18-24",
+                        5100,
+                        15100,
+                        {
+                            "tooltip": 15100,
+                            "explore": {
+                                "alaska, Unknown, 18-24": {
+                                    "fb.region": "alaska",
+                                    "fb.author.gender": "unknown",
+                                    "fb.author.age": "18-24"
+                                }
+                            }
+                        }
+                    ],
+                    [
+                        "unknown",
+                        6100,
+                        4100,
+                        {
+                            "tooltip": 4100,
+                            "explore": {
+                                "alaska, Unknown, Unknown": {
+                                    "fb.region": "alaska",
+                                    "fb.author.gender": "unknown",
+                                    "fb.author.age": "unknown"
+                                }
+                            }
+                        }
+                    ]
+                ]
+            },
+            "unique_authors": {
+                "male": [
+                    [
+                        "18-24",
+                        62100,
+                        151200,
+                        {
+                            "tooltip": 151200,
+                            "explore": {
+                                "alaska, Male, 18-24": {
+                                    "fb.region": "alaska",
+                                    "fb.author.gender": "male",
+                                    "fb.author.age": "18-24"
+                                }
+                            }
+                        }
+                    ],
+                    [
+                        "unknown",
+                        32100,
+                        11200,
+                        {
+                            "tooltip": 11200,
+                            "explore": {
+                                "alaska, Male, Unknown": {
+                                    "fb.region": "alaska",
+                                    "fb.author.gender": "male",
+                                    "fb.author.age": "unknown"
+                                }
+                            }
+                        }
+                    ]
+                ],
+                "unknown": [
+                    [
+                        "18-24",
+                        5200,
+                        15200,
+                        {
+                            "tooltip": 15200,
+                            "explore": {
+                                "alaska, Unknown, 18-24": {
+                                    "fb.region": "alaska",
+                                    "fb.author.gender": "unknown",
+                                    "fb.author.age": "18-24"
+                                }
+                            }
+                        }
+                    ],
+                    [
+                        "unknown",
+                        6200,
+                        4200,
+                        {
+                            "tooltip": 4200,
+                            "explore": {
+                                "alaska, Unknown, Unknown": {
+                                    "fb.region": "alaska",
+                                    "fb.author.gender": "unknown",
+                                    "fb.author.age": "unknown"
+                                }
+                            }
+                        }
+                    ]
+                ]
+            }
+        }
+    },
+    {
+        "type": "tornado",
+        "data": {
+            "interactions": {
+                "male": [
+                    [
+                        "18-24",
+                        0,
+                        151100,
+                        {
+                            "tooltip": 151100,
+                            "explore": {
+                                "detroit, Male, 18-24": {
+                                    "fb.region": "detroit",
+                                    "fb.author.gender": "male",
+                                    "fb.author.age": "18-24"
+                                }
+                            }
+                        }
+                    ],
+                    [
+                        "unknown",
+                        31100,
+                        11100,
+                        {
+                            "tooltip": 11100,
+                            "explore": {
+                                "detroit, Male, Unknown": {
+                                    "fb.region": "detroit",
+                                    "fb.author.gender": "male",
+                                    "fb.author.age": "unknown"
+                                }
+                            }
+                        }
+                    ]
+                ],
+                "unknown": [
+                    [
+                        "18-24",
+                        5100,
+                        15100,
+                        {
+                            "tooltip": 15100,
+                            "explore": {
+                                "detroit, Unknown, 18-24": {
+                                    "fb.region": "detroit",
+                                    "fb.author.gender": "unknown",
+                                    "fb.author.age": "18-24"
+                                }
+                            }
+                        }
+                    ],
+                    [
+                        "unknown",
+                        6100,
+                        4100,
+                        {
+                            "tooltip": 4100,
+                            "explore": {
+                                "detroit, Unknown, Unknown": {
+                                    "fb.region": "detroit",
+                                    "fb.author.gender": "unknown",
+                                    "fb.author.age": "unknown"
+                                }
+                            }
+                        }
+                    ]
+                ]
+            },
+            "unique_authors": {
+                "male": [
+                    [
+                        "18-24",
+                        62100,
+                        151200,
+                        {
+                            "tooltip": 151200,
+                            "explore": {
+                                "detroit, Male, 18-24": {
+                                    "fb.region": "detroit",
+                                    "fb.author.gender": "male",
+                                    "fb.author.age": "18-24"
+                                }
+                            }
+                        }
+                    ],
+                    [
+                        "unknown",
+                        32100,
+                        11200,
+                        {
+                            "tooltip": 11200,
+                            "explore": {
+                                "detroit, Male, Unknown": {
+                                    "fb.region": "detroit",
+                                    "fb.author.gender": "male",
+                                    "fb.author.age": "unknown"
+                                }
+                            }
+                        }
+                    ]
+                ],
+                "unknown": [
+                    [
+                        "18-24",
+                        5200,
+                        15200,
+                        {
+                            "tooltip": 15200,
+                            "explore": {
+                                "detroit, Unknown, 18-24": {
+                                    "fb.region": "detroit",
+                                    "fb.author.gender": "unknown",
+                                    "fb.author.age": "18-24"
+                                }
+                            }
+                        }
+                    ],
+                    [
+                        "unknown",
+                        6200,
+                        4200,
+                        {
+                            "tooltip": 4200,
+                            "explore": {
+                                "detroit, Unknown, Unknown": {
+                                    "fb.region": "detroit",
+                                    "fb.author.gender": "unknown",
+                                    "fb.author.age": "unknown"
+                                }
+                            }
+                        }
+                    ]
+                ]
+            }
+        }
+    }
+]

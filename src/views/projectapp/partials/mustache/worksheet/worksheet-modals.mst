@@ -1,0 +1,99 @@
+{% raw %}
+    <!-- Worksheet Create modal -->
+    <script data-tornado-template="worksheet-create-modal" type="x-tmpl-mustache">
+        <div data-form="create-worksheet" class="modallica__content">
+            <div data-form-field="name">
+                <label class="input-label" for="new-worksheet-name">Worksheet Name</label>
+                <input type="text" placeholder="Give your worksheet a name" id="new-worksheet-name" class="create-worksheet__name">
+            </div>
+            <div>
+                <span class="input-label">Select a chart type</span>
+                <ul class="create-worksheet__chart-types">
+                    <li data-create-worksheet-chart-type="tornado" data-create-worksheet-analysis-type="freqDist" class="create-worksheet__chart-type create-worksheet__chart-type--tornado"></li>
+                    <li data-create-worksheet-chart-type="histogram" data-create-worksheet-analysis-type="freqDist" class="create-worksheet__chart-type create-worksheet__chart-type--histogram"></li>
+                    <li data-create-worksheet-chart-type="timeseries" data-create-worksheet-analysis-type="timeSeries" class="create-worksheet__chart-type create-worksheet__chart-type--time-series"></li>
+                </ul>
+            </div>
+            <div class="modallica__actions">
+                <button data-modallica-action="close" class="clear-button" type="button">Cancel</button>
+                <button data-spinner data-modallica-action="submit" class="submit-button" type="button">Create</button>
+            </div>
+        </div>
+    </script>
+
+    <!-- Worksheet Create modal (Exploration) -->
+    <script data-tornado-template="worksheet-create-exploration-modal" type="x-tmpl-mustache">
+        <div data-form="create-worksheet" class="modallica__content">
+            <div data-form-field="name">
+                <label class="input-label" for="new-worksheet-name">Worksheet Name</label>
+                <input type="text" placeholder="Give your worksheet a name" id="new-worksheet-name" class="create-worksheet__name">
+            </div>
+            <div>
+                <span class="input-label">Select a chart type</span>
+                <ul class="create-worksheet__chart-types">
+                    <li data-create-worksheet-chart-type="tornado" data-create-worksheet-analysis-type="freqDist" class="create-worksheet__chart-type create-worksheet__chart-type--tornado"></li>
+                    <li data-create-worksheet-chart-type="histogram" data-create-worksheet-analysis-type="freqDist" class="create-worksheet__chart-type create-worksheet__chart-type--histogram"></li>
+                    <li data-create-worksheet-chart-type="timeseries" data-create-worksheet-analysis-type="timeSeries" class="create-worksheet__chart-type create-worksheet__chart-type--time-series"></li>
+                </ul>
+            </div>
+            <div class="modallica__actions">
+                <button data-modallica-action="close" class="clear-button" type="button">Cancel</button>
+                <button data-spinner data-modallica-action="submit" class="submit-button" type="button">Create</button>
+            </div>
+        </div>
+    </script>
+
+    <!-- Worksheet Edit modal -->
+    <script data-tornado-template="worksheet-edit-modal" type="x-tmpl-mustache">
+        <div data-form="edit-worksheet" class="modallica__content">
+            <div data-form-field="name"></div>
+            <div class="modallica__actions">
+                <button data-modallica-action="expand" class="clear-button" type="button">Delete</button>
+                <button data-spinner data-modallica-action="submit" class="submit-button" type="button">Update</button>
+            </div>
+        </div>
+        <div data-modallica-expandable class="modallica__expandable">
+            <h6 class="modallica__title modallica__title--expandable">Delete Worksheet</h6>
+            <p>This action <strong>cannot be undone</strong>, so please ensure you really want to delete this worksheet.</p>
+            <div class="styled-checkbox__wrapper">
+                <input class="styled-checkbox" type="checkbox" id="delete-worksheet-id" value="1">
+                <label data-input-label-placeholder="Yes, delete this worksheet" class="styled-checkbox__label" for="delete-worksheet-id"></label>
+            </div>
+            <div class="modallica__actions">
+                <button data-loader=".modallica:Deleting Worksheet" data-modallica-action="confirm" class="warning-button" type="button">Delete it</button>
+            </div>
+        </div>
+    </script>
+
+    <!-- Worksheet Edit modal (name input partial) -->
+    <script data-tornado-template="worksheet-edit-modal-name-input" type="x-tmpl-mustache">
+        <label class="input-label" for="edit-worksheet-name">Worksheet Name</label>
+        <input type="text" placeholder="Give your worksheet a name" id="edit-worksheet-name" value="{{ name }}">
+    </script>
+
+    <!-- Worksheet Options modal -->
+    <script data-tornado-template="worksheet-options-modal" type="x-tmpl-mustache">
+        <div data-form="worksheet-options" class="modallica__content">
+            <div data-form="outliers">
+                <div class="input-label">Outliers</div>
+                <div class="styled-checkbox__wrapper">
+                    <input class="styled-checkbox" type="checkbox" id="worksheet-outliers-toggle" name="outliers" value="1">
+                    <label data-input-label-placeholder="Display outliers" class="styled-checkbox__label" for="worksheet-outliers-toggle"></label>
+                </div>
+            </div>
+            <div data-form="sort">
+                <div class="input-label">Sort chart legends by</div>
+                <select name="sort-dimensions" placeholder="Select a sorting method">
+                    <option value="label:asc">&downarrow; Alphabetical</option>
+                    <option value="label:desc">&uparrow; Alphabetical</option>
+                    <option value="size:desc">&downarrow; Size</option>
+                    <option value="size:asc">&uparrow; Size</option>
+                </select>
+            </div>
+            <div class="modallica__actions">
+                <button data-modallica-action="close" class="clear-button" type="button">Cancel</button>
+                <button data-spinner data-modallica-action="submit" class="submit-button" type="button">Apply</button>
+            </div>
+        </div>
+    </script>
+{% endraw %}

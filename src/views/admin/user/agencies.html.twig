@@ -1,0 +1,81 @@
+{% extends 'admin/base.html.twig' %}
+
+{% set pagination = meta.pagination %}
+
+{% block page_header_title %}Organization Management{% endblock %}
+
+{% block page_title %}
+    <a href="{{ path('admin') }}">Administration</a>
+    {% if sessionUser.hasRole("ROLE_SUPERADMIN") %}
+        &gt; <a href="{{ path('admin.organizations') }}">Organizations</a>
+    {% endif %}
+    &gt; <a href="{{ orgPath('overview', data.organization.id) }}">{{ data.organization.name }}</a>
+    &gt; <a href="{{ orgPath('users', data.organization.id) }}">Users</a>
+    &gt; <a href="{{ orgPath('user.edit', data.user.id, data.organization.id) }}">{{ data.user.username }}</a>
+    &gt; Agencies
+{% endblock %}
+
+{% block page_content %}
+    <div class="brand-management__column-content">
+        <ul class="list-actions">
+            <li>Agency access for <a href="{{ orgPath('user.edit', data.user.id, data.organization.id) }}" style="font-size: inherit;">{{ data.user.username }}</a></li>
+        </ul>
+           {# Display items when there are items #}
+            {% if pagination.totalItemsCount > 0 %}
+                <ul class="list-items">
+                    {% for agency in pagination.currentItems %}
+                        <li class="list-item">
+                            <div class="list-item__cell list-item__cell--checkbox">
+                                <div class="list-item__select styled-checkbox__wrapper">
+
+                                </div>
+                            </div>
+                            <div class="list-item__cell list-item__cell--info">
+                                <span style="font-size: 0.75em">{{ agency.name }}</span>
+                            </div>
+                            <div class="list-item__cell list-item__cell--actions">
+                                <div class="list-item__actions">
+                                    <form action="{{ orgPath('user.agencies', data.user.id, data.organization.id) }}" method="POST">
+                                        {% set remove = (data.user_agencies[agency.id] is defined) %}
+                                        <input type="hidden" name="action" value="{% if remove %}remove{% else %}grant{% endif %}" />
+                                        <input type="hidden" name="agency_id" value="{{ agency.id }}" />
+                                        <input type="submit" class="list-item__action button" value="{% if remove %}Remove{% else %}Grant{% endif %} access" style="margin-bottom: 0;" />
+                                    </form>
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <hr class="divider">
+                <div class="list-items list-items--no-results">
+                    <h6>THERE ARE NO AGENCIES FOR THIS USER'S ORGANIZATION</h6>
+                    <p>To get started <a href="{{ orgPath('agency.create', data.organization.id) }}">Create An Agency</a></p>
+                </div>
+            {% endif %}
+            <div class="pagination">
+                {% if pagination.totalPages > 1 %}
+                    <a class="pagination-direction pagination-direction--previous{% if pagination.currentPage == pagination.firstPage %} pagination-direction--disabled{% endif %}" href="{{ orgPath('user.agencies', data.user.id, data.organization.id, {'page': pagination.previousPage, 'perPage': pagination.perPage, 'sort': pagination.sortBy, 'order': pagination.order }) }}"></a>
+                    <span class="pagination-current">{{ pagination.currentPage }}/{{ pagination.totalPages }}</span>
+                    <a class="pagination-direction pagination-direction--next {% if pagination.currentPage == pagination.totalPages %} pagination-direction--disabled{% endif %}" href="{{ orgPath('user.agencies', data.user.id, data.organization.id, {'page': pagination.nextPage, 'perPage': pagination.perPage, 'sort': pagination.sortBy, 'order': pagination.order }) }}"></a>
+                {% endif %}
+                {# Don't show the sorting dropdown when there are no projects #}
+                {% if pagination.totalItemsCount > 0 %}
+                    <div class="dropdown dropdown--styled pagination-dropdown">
+                        <span data-dropdown-toggle class="dropdown__toggle">Display: <span class="dropdown__toggle__selected">{{ pagination.perPage }}</span></span>
+                        <ul class="dropdown__content">
+                            <li class="dropdown__item">
+                                <a class="dropdown__item__link{% if pagination.perPage == 5 %} dropdown__item__link--active{% endif %}" href="{{ orgPath('user.agencies', data.user.id, data.organization.id, {'page': pagination.previousPage, 'perPage': 5, 'sort': pagination.sortBy, 'order': pagination.order }) }}">5</a>
+                            </li>
+                            <li class="dropdown__item">
+                                <a class="dropdown__item__link{% if pagination.perPage == 20 %} dropdown__item__link--active{% endif %}" href="{{ orgPath('user.agencies', data.user.id, data.organization.id, {'page': pagination.previousPage, 'perPage': 20, 'sort': pagination.sortBy, 'order': pagination.order }) }}">20</a>
+                            </li>
+                            <li class="dropdown__item">
+                                <a class="dropdown__item__link{% if pagination.perPage == 50 %} dropdown__item__link--active{% endif %}" href="{{ orgPath('user.agencies', data.user.id, data.organization.id, {'page': pagination.previousPage, 'perPage': 50, 'sort': pagination.sortBy, 'order': pagination.order }) }}">50</a>
+                            </li>
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+    </div>
+{% endblock %}

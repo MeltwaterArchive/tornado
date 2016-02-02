@@ -1,0 +1,76 @@
+{% extends 'admin/base.html.twig' %}
+
+{% set usersLink = orgPath('users', data.organization.id) %}
+
+{% block body_class %}recording recording--create{% endblock %}
+
+{% block page_header_title %}Organization Management - Create an Organization{% endblock %}
+
+{% block page_title %}
+    <a href="{{ path('admin') }}">Administration</a>
+    {% if sessionUser.hasRole("ROLE_SUPERADMIN") %}
+        &gt; <a href="{{ path('admin.organizations') }}">Organizations</a>
+    {% endif %}
+    &gt; <a href="{{ orgPath('overview', data.organization.id) }}">{{ data.organization.name }}</a>
+    &gt; <a href="{{ usersLink }}">Users</a>
+    &gt; {{ data.user.username }}
+{% endblock %}
+
+{% block page_content %}
+    <form class="single-item" method="post" action="{{ orgPath('user.edit', data.user.id, data.organization.id) }}">
+
+        <label class="input-label" for="user-username">Username</label>
+        {% if meta.username is defined %}
+            <span class="input-error">{{ meta.username }}</span>
+        {% endif %}
+        <input id="user-username" type="text" name="username" value="{{ data.user.username }}" placeholder="" />
+
+        <label class="input-label" for="user-email">Email address</label>
+        {% if meta.email is defined %}
+            <span class="input-error">{{ meta.email }}</span>
+        {% endif %}
+        <input id="user-email" type="email" name="email" value="{{ data.user.email }}" placeholder="Email address" />
+
+        <label class="input-label" for="user-password">Change Password</label>
+        {% if meta.password is defined %}
+            <span class="input-error">{{ meta.password }}</span>
+        {% endif %}
+        <input id="user-password" type="password" name="password" value="{{ data.password }}" placeholder="Password" />
+
+        <label class="input-label" for="user-confirm-password">Confirm Password</label>
+        {% if meta.confirm_password is defined %}
+            <span class="input-error">{{ meta.confirm_password }}</span>
+        {% endif %}
+        <input id="user-confirm-password" type="password" name="confirm_password" value="" placeholder="Confirm password" />
+
+        <label class="input-label" for="user-permissions">Permissions</label>
+        {% if meta.confirm_password is defined %}
+            <span class="input-error">{{ meta.confirm_password }}</span>
+        {% endif %}
+        <div class="radio-list">
+            <input id="user-permissions-none" type="radio" name="permissions" value="none"{% if (not data.user.isAdmin and not data.user.isSuperAdmin and not data.user.isSpaOnly) or data.user.permissions == "none" %} checked="checked"{% endif %} /><label for="user-permissions-none">Normal</label>
+            <input id="user-permissions-spaonly" type="radio" name="permissions" value="spaonly"{% if data.user.isSpaOnly or data.user.permissions == "spaonly" %} checked="checked"{% endif %} /><label for="user-permissions-spaonly">Visualization-only</label>
+            <input id="user-permissions-admin" type="radio" name="permissions" value="admin"{% if (data.user.isAdmin and not data.user.isSuperAdmin) or data.user.permissions == "admin" %} checked="checked"{% endif %} /><label for="user-permissions-admin">Admin</label>
+            {% if sessionUser.isSuperAdmin %}
+            <input id="user-permissions-superadmin" type="radio" name="permissions" value="superadmin"{% if data.user.isSuperAdmin or data.user.permissions == "none" %} checked="checked"{% endif %} /><label for="user-permissions-superadmin">Superadmin</label>
+            {% endif %}
+        </div>
+        {# Footer #}
+        <hr class="divider">
+        <div class="single-item__header">
+            <a href="{{ usersLink }}">Cancel</a>
+            <div class="single-item__actions">
+                <button class="single-item__action single-item__action--create" type="submit" data-spinner>Save</button>
+            </div>
+        </div>
+
+        <hr class="divider">
+        <div class="manage-link">
+            This User currently has access to {{ data.agencyCount }} Agenc{% if data.agencyCount == 1 %}y{% else %}ies{% endif %}. <a href="{{ orgPath('user.agencies', data.user.id, data.organization.id) }}">Manage</a>
+        </div>
+        <hr class="divider" style="margin-top: 20px;">
+        <div class="manage-link">
+            This User currently has access to {{ data.brandCount }} Brand{% if data.brandCount != 1 %}s{% endif %}. <a href="{{ orgPath('user.brands', data.user.id, data.organization.id) }}">Manage</a>
+        </div>
+    </form>
+{% endblock %}

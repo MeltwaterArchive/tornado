@@ -1,0 +1,11 @@
+imports:
+    - { resource: "../services.yml" }
+    - { resource: "./security.yml" }
+    - { resource: "./controllers.yml" }
+
+parameters:
+    kernel.name: api
+
+services:
+    session:
+        synthetic: true

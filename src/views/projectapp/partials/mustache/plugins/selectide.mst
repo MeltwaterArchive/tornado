@@ -1,0 +1,12 @@
+{% raw %}
+    <script data-tornado-template="selectide-selection" type="x-tmpl-mustache">
+        <ul class="selectide-selection"></ul>
+    </script>
+
+    <script data-tornado-template="selectide-selection__item" type="x-tmpl-mustache">
+        <li class="selectide-selection__item" data-value="{{ value }}" data-text="{{ text }}">
+            {{ text }}
+            <a href="#" class="selectide-selection__item-remove"></a>
+        </li>
+    </script>
+{% endraw %}

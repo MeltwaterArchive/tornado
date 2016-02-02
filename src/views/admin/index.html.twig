@@ -1,0 +1,15 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block page_class %} admin{% endblock %}
+{% block page_header_title %}Tornado Administration{% endblock %}
+
+{% block page_content %}
+    <div class="content__header">
+        <h1 class="content__title">Administration</h1>
+    </div>
+    <div class="content">
+        {% for key, item in data.items %}
+        <a href="{{ item.url }}" class="admin-item admin-item-{{ key }}" title="{{ item.label }}">{{ item.label }}</a>
+        {% endfor %}
+    </div>
+{% endblock %}

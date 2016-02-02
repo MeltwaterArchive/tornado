@@ -1,0 +1,49 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block body_class %}recording recording--create{% endblock %}
+
+{% block page_header_title %}Organization Management - Create an Organization{% endblock %}
+
+{% block page_title %}
+    <a href="{{ path('admin') }}">Administration</a>
+    {% if sessionUser.isSuperAdmin %}
+        &gt; <a href="{{ path('admin.organizations') }}">Organizations</a>
+    {% endif %}
+    &gt; <a href="{{ orgPath('overview', data.organization.id) }}">{{ data.organization.name }}</a>
+    &gt; <a href="{{ orgPath('agencies', data.organization.id) }}">Agencies</a>
+    &gt; <a href="{{ orgPath('agency.edit', data.agency.id, data.organization.id) }}">{{ data.agency.name }}</a>
+    &gt; <a href="{{ orgPath('brands', data.agency.id, data.organization.id) }}">Brands</a>
+    &gt; New Brand
+{% endblock %}
+
+{% block page_content %}
+    <form class="single-item" method="post" action="{{ orgPath('brand.create', data.agency.id, data.organization.id) }}">
+
+        <label class="input-label" for="brand-name">Name</label>
+        {% if meta.name is defined %}
+            <span class="input-error">{{ meta.name }}</span>
+        {% endif %}
+        <input id="brand-name" type="text" name="name" value="{{ data.brand.name }}" placeholder="" />
+
+        <label class="input-label" for="brand-datasiftIdentityId">DataSift Identity Id</label>
+        {% if meta.datasiftIdentityId is defined %}
+            <span class="input-error">{{ meta.datasiftIdentityId }}</span>
+        {% endif %}
+        <input id="brand-datasiftIdentityId" type="text" name="datasiftIdentityId" value="{{ data.brand.datasiftIdentityId }}" placeholder="DataSift Identity Id" />
+
+        <label class="input-label" for="brand-datasiftApikey">DataSift API Key</label>
+        {% if meta.datasiftApikey is defined %}
+            <span class="input-error">{{ meta.datasiftApikey }}</span>
+        {% endif %}
+        <input id="brand-datasiftApikey" type="text" name="datasiftApikey" value="{{ data.brand.datasiftApikey }}" placeholder="DataSift API Key" />
+
+        {# Footer #}
+        <hr class="divider">
+        <div class="single-item__header">
+            <a href="{{ orgPath('brands', data.agency.id, data.organization.id) }}">Cancel</a>
+            <div class="single-item__actions">
+                <button class="single-item__action single-item__action--create" type="submit" data-spinner>Save</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}

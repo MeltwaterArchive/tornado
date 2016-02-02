@@ -1,0 +1,34 @@
+{
+    "DataSet::KEY_MEASURE_INTERACTIONS": {
+        "dimension:time": {
+            "1435536000": {
+                "DataSet::KEY_VALUE": 2000,
+                "DataSet::KEY_REDACTED": false
+            },
+            "1435622400": {
+                "DataSet::KEY_VALUE": 3000,
+                "DataSet::KEY_REDACTED": false
+            },
+            "1435708800": {
+                "DataSet::KEY_VALUE": 1000,
+                "DataSet::KEY_REDACTED": false
+            }
+        }
+    },
+    "DataSet::KEY_MEASURE_UNIQUE_AUTHORS": {
+        "dimension:time": {
+            "1435536000": {
+                "DataSet::KEY_VALUE": 1000,
+                "DataSet::KEY_REDACTED": false
+            },
+            "1435622400": {
+                "DataSet::KEY_VALUE": 2000,
+                "DataSet::KEY_REDACTED": false
+            },
+            "1435708800": {
+                "DataSet::KEY_VALUE": 1500,
+                "DataSet::KEY_REDACTED": false
+            }
+        }
+    }
+}

@@ -1,0 +1,78 @@
+{% raw %}
+    <script data-tornado-template="main-menu" type="x-tmpl-mustache">
+        <li data-main-menu-item="worksheet" class="main-menu__item main-menu__item--overview">
+            <a data-page-load data-main-menu-link="/projects/{projectId}/worksheet/{worksheetId}" class="main-menu__item__link" href="/projects/{{ projectId }}/worksheet/{{ worksheetId }}">
+                <svg version="1.1" id="main-menu-item-icon-overview" class="main-menu__item-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="200px" height="200px" viewBox="0 0 200 200" enable-background="new 0 0 200 200" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#AFBDD4" d="M180.928,31.835v113.917c0,6.298-5.096,11.393-11.392,11.393
+                    h-40.851l14.729,14.729c4.45,4.449,4.45,11.658,0,16.108c-4.45,4.449-11.658,4.449-16.108,0l-26.121-26.121l-26.121,26.121
+                    c-4.45,4.449-11.659,4.449-16.109,0c-4.449-4.45-4.449-11.659,0-16.108l14.73-14.729h-40.85c-6.291,0-11.392-5.095-11.392-11.393
+                    V31.835c-6.291,0-11.392-5.101-11.392-11.392c0-6.291,5.101-11.392,11.392-11.392h159.485c6.297,0,11.392,5.101,11.392,11.392
+                    C192.319,26.734,187.225,31.835,180.928,31.835z M158.145,31.835H44.227v102.526h113.918V31.835z M78.402,122.969H55.619V88.793
+                    h22.784V122.969z M112.577,122.969H89.793v-68.35h22.784V122.969z M146.752,122.969h-22.783V77.402h22.783V122.969z"/>
+                </svg>
+                Overview
+            </a>
+        </li>
+        <li data-main-menu-item="dimensions" class="main-menu__item main-menu__item--dimensions">
+            <a data-page-load data-main-menu-link="/projects/{projectId}/worksheet/{worksheetId}/dimensions" class="main-menu__item__link" href="/projects/{{ projectId }}/worksheet/{{ worksheetId }}/dimensions">
+                <svg version="1.1" id="main-menu-item-icon-dimensions" class="main-menu__item-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="200px" height="200px" viewBox="0 0 200 200" enable-background="new 0 0 200 200" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#AFBDD4" d="M181.991,98.068l-80.15-80.151
+                    C95.138,11.209,86.343,7.854,77.554,7.854h-68.7v68.7c0,8.789,3.355,17.583,10.063,24.287l80.151,80.15
+                    c13.417,13.418,35.166,13.418,48.574,0l34.35-34.35C195.409,133.233,195.409,111.485,181.991,98.068z M165.801,130.45
+                    l-34.351,34.351c-4.473,4.472-11.719,4.472-16.191,0L35.109,84.65c-2.237-2.236-3.355-5.166-3.355-8.096v-45.8h45.8
+                    c2.929,0,5.859,1.118,8.096,3.355l80.151,80.15C170.272,118.731,170.272,125.978,165.801,130.45z M54.654,42.204
+                    c-6.323,0-11.45,5.126-11.45,11.45s5.127,11.45,11.45,11.45c6.324,0,11.45-5.126,11.45-11.45S60.978,42.204,54.654,42.204z"/>
+                </svg>
+                Dimensions
+            </a>
+        </li>
+        <li data-main-menu-item="timespan" class="main-menu__item main-menu__item--timespan">
+            <a data-page-load data-main-menu-link="/projects/{projectId}/worksheet/{worksheetId}/timespan" class="main-menu__item__link" href="/projects/{{ projectId }}/worksheet/{{ worksheetId }}/timespan">
+                <svg version="1.1" id="main-menu-item-icon-timespan" class="main-menu__item-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="200px" height="200px" viewBox="0 0 200 200" enable-background="new 0 0 200 200" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#AFBDD4" d="M99.777,191.055c-50.966,0-92.277-41.317-92.277-92.277
+                    C7.5,47.812,48.812,6.5,99.777,6.5c50.96,0,92.277,41.312,92.277,92.277C192.055,149.737,150.737,191.055,99.777,191.055z
+                     M99.777,29.569c-38.22,0-69.208,30.988-69.208,69.208c0,38.22,30.988,69.208,69.208,69.208c38.22,0,69.208-30.988,69.208-69.208
+                    C168.985,60.557,137.997,29.569,99.777,29.569z M114.691,130.001l-23.069-23.068l0,0c-1.065-1.059-1.904-2.332-2.49-3.745
+                    c-0.585-1.414-0.89-2.906-0.89-4.41l0,0V64.173c0-6.371,5.164-11.535,11.535-11.535c6.376,0,11.534,5.164,11.534,11.535v29.828
+                    l19.689,19.69c4.506,4.506,4.506,11.805,0,16.31C126.496,134.507,119.197,134.507,114.691,130.001z"/>
+                </svg>
+                Timespan
+            </a>
+        </li>
+        <li data-main-menu-item="filters" class="main-menu__item main-menu__item--filters">
+            <a data-page-load data-main-menu-link="/projects/{projectId}/worksheet/{worksheetId}/filters" class="main-menu__item__link" href="/projects/{{ projectId }}/worksheet/{{ worksheetId }}/filters">
+                <svg version="1.1" id="main-menu-item-icon-filters" class="main-menu__item-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="200px" height="200px" viewBox="0 0 200 200" enable-background="new 0 0 200 200" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#AFBDD4" d="M181.13,145.739H98.781
+                    c-4.741-13.322-17.335-22.927-32.286-22.927c-14.951,0-27.545,9.604-32.286,22.927H20.64c-6.331,0-11.463,5.128-11.463,11.464
+                    s5.132,11.463,11.463,11.463h13.568c4.741,13.323,17.335,22.928,32.286,22.928c14.951,0,27.545-9.604,32.286-22.928h82.349
+                    c6.337,0,11.464-5.127,11.464-11.463S187.467,145.739,181.13,145.739z M66.495,168.666c-6.331,0-11.463-5.127-11.463-11.463
+                    s5.133-11.464,11.463-11.464c6.331,0,11.463,5.128,11.463,11.464S72.826,168.666,66.495,168.666z M20.64,54.031h13.568
+                    c4.741,13.327,17.335,22.927,32.286,22.927c14.951,0,27.545-9.6,32.286-22.927h82.349c6.337,0,11.464-5.133,11.464-11.464
+                    c0-6.331-5.127-11.463-11.464-11.463H98.781C94.04,17.776,81.446,8.177,66.495,8.177c-14.951,0-27.545,9.6-32.286,22.927H20.64
+                    c-6.331,0-11.463,5.132-11.463,11.463C9.177,48.898,14.309,54.031,20.64,54.031z M66.495,31.104
+                    c6.331,0,11.463,5.132,11.463,11.463c0,6.331-5.132,11.464-11.463,11.464c-6.331,0-11.463-5.133-11.463-11.464
+                    C55.031,36.236,60.164,31.104,66.495,31.104z M181.13,88.422h-13.568c-4.735-13.328-17.329-22.927-32.286-22.927
+                    c-14.956,0-27.55,9.6-32.285,22.927H20.64c-6.331,0-11.463,5.133-11.463,11.463s5.132,11.463,11.463,11.463h82.35
+                    c4.735,13.322,17.329,22.927,32.285,22.927c14.957,0,27.551-9.604,32.286-22.927h13.568c6.337,0,11.464-5.133,11.464-11.463
+                    S187.467,88.422,181.13,88.422z M135.275,111.349c-6.336,0-11.463-5.133-11.463-11.463s5.127-11.463,11.463-11.463
+                    c6.337,0,11.464,5.133,11.464,11.463S141.612,111.349,135.275,111.349z"/>
+                </svg>
+                Filters
+            </a>
+        </li>
+        <li data-main-menu-item="comparison" class="main-menu__item main-menu__item--comparison">
+            <a data-page-load data-main-menu-link="/projects/{projectId}/worksheet/{worksheetId}/comparison" class="main-menu__item__link" href="/projects/{{ projectId }}/worksheet/{{ worksheetId }}/comparison">
+                <svg version="1.1" id="main-menu-item-icon-comparison" class="main-menu__item-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="200px" height="200px" viewBox="0 0 200 200" enable-background="new 0 0 200 200" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#AFBDD4" d="M157.8,66.099H71.634L86.32,80.786
+                    c4.437,4.438,4.437,11.625,0,16.062c-4.438,4.438-11.625,4.438-16.062,0L36.182,62.772c-2.218-2.219-3.328-5.125-3.328-8.031
+                    c0-2.907,1.11-5.813,3.328-8.031l34.076-34.077c4.438-4.436,11.625-4.436,16.062,0c4.437,4.438,4.437,11.625,0,16.062L71.634,43.382
+                    H157.8c6.278,0,11.359,5.086,11.359,11.359C169.159,61.013,164.078,66.099,157.8,66.099z M44.213,134.251h86.166l-14.686-14.686
+                    c-4.438-4.438-4.438-11.626,0-16.062c4.437-4.437,11.625-4.437,16.062,0l34.076,34.076c2.218,2.219,3.328,5.125,3.328,8.031
+                    s-1.11,5.812-3.328,8.03l-34.076,34.076c-4.437,4.438-11.625,4.438-16.062,0c-4.438-4.437-4.438-11.625,0-16.062l14.686-14.687
+                    H44.213c-6.273,0-11.359-5.08-11.359-11.358S37.94,134.251,44.213,134.251z"/>
+                </svg>
+                Comparison
+            </a>
+        </li>
+    </script>
+{% endraw %}

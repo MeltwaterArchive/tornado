@@ -1,0 +1,184 @@
+/**
+ * Module ~ Worksheet
+ *
+ * Also includes the sidebar styles on worksheet page
+ */
+
+/**
+ * Worksheet variables
+ */
+$worksheet-actions-separator-colour: #9197a3 !default;
+$worksheet-action-link-colour: #9197a3 !default;
+$worksheet-action-link-hovered-colour: #878d99 !default;
+$worksheet-action-link-active-colour: #313540 !default;
+$worksheet-updated-at-colour: #999 !default;
+$worksheet-hint-button-background-colour: #9197a2 !default;
+$worksheet-hint-background-colour: #fff !default;
+$worksheet-hint-border-colour: $colour-grey-light !default;
+
+/**
+ * Worksheet styles
+ */
+.worksheet__actions-groups {
+    @include clearfix;
+}
+
+// A group (column) that wraps a set (or more) of actions
+.worksheet__actions-group {
+    @include span-columns(4.5);
+    min-height: 1px;
+    margin-top: 6px;
+    &--hints {
+        margin-top: 0;
+    }
+    &--pagination {
+        @include span-columns(3);
+        text-align: center;
+    }
+    &:last-child {
+        text-align: right;
+    }
+}
+
+// Each set of actions
+.worksheet__actions {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    // We will want to move this over to the core
+    // dropdown styles - if the sizes are going
+    // to be consistent throughout the app
+    font-size: rem(12);
+    line-height: 20px;
+    @extend %no-list-style;
+    &::before {
+        float: left;
+        margin-left: 2px;
+        color: $worksheet-actions-separator-colour;
+        font-size: rem(14);
+        line-height: 20px;
+        content: "\2219";
+    }
+    &:first-child {
+        &::before {
+            display: none;
+        }
+    }
+}
+
+.worksheet__action {
+    position: relative;
+    display: inline-block;
+    margin-left: 6px;
+    z-index: 3;
+    cursor: pointer;
+    &--active {
+        .worksheet__action__link,
+        .worksheet__action__link:hover {
+            color: $worksheet-action-link-active-colour;
+        }
+    }
+}
+
+.worksheet__action__link {
+    color: $worksheet-action-link-colour;
+    &:hover {
+        color: $worksheet-action-link-hovered-colour;
+    }
+}
+
+.worksheet__action__button {
+    display: inline-block;
+    position: relative;
+    top: 3px;
+    width: 16px;
+    height: 16px;
+    background: {
+        size: auto 16px;
+        position: center center;
+        repeat: no-repeat;
+    }
+    opacity: 0.4;
+    &:hover {
+        opacity: 0.7;
+    }
+    &--active {
+        opacity: 1;
+        &:hover {
+            opacity: 1;
+        }
+    }
+    &--multiple-charts {
+        background-image: url("#{$image-path}/common/content/actions/multiple-charts.svg");
+    }
+    &--single-chart {
+        background-image: url("#{$image-path}/common/content/actions/single-chart.svg");
+    }
+    &--refresh {
+        opacity: 1;
+        background-image: url("#{$image-path}/common/actions/refresh.svg");
+    }
+}
+
+.worksheet__hint-button {
+    @extend %button;
+    background-color: $worksheet-hint-button-background-colour;
+    &:hover {
+        background-color: $worksheet-hint-button-background-colour;
+    }
+
+    &--active {
+        background-color: $button-background-colour;
+        &:hover {
+            background-color: $button-background-colour;
+        }
+    }
+}
+
+.worksheet__hints-wrapper {
+    @include clearfix;
+}
+
+.worksheet__hint {
+    display: none;
+    position: relative;
+    margin-top: 15px;
+    padding: 10px;
+    font-size: rem(12);
+    background-color: $worksheet-hint-background-colour;
+    border: 1px solid $worksheet-hint-border-colour;
+    border-radius: 3px;
+    &::before,
+    &::after {
+        position: absolute;
+        top: -6px;
+        left: 43px;
+        content: "";
+    }
+    &::before {
+        @include triangle(12px, $worksheet-hint-background-colour, up);
+        z-index: 0;
+    }
+    &::after {
+        top: -7px;
+        left: 42px;
+        @include triangle(14px, $worksheet-hint-border-colour, up);
+        z-index: -1;
+    }
+    &--has-filters[data-worksheet-hint="comparison"] {
+        &::before {
+            left: 155px;
+        }
+        &::after {
+            left: 154px;
+        }
+    }
+    &--active {
+        display: block;
+    }
+}
+
+.worksheet__updated-at {
+    font-size: rem(12);
+    color: $worksheet-updated-at-colour;
+}

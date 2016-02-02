@@ -1,0 +1,154 @@
+services:
+    ##
+    # ORGANIZATION SERVICES
+    ##
+    organization.repository:
+        class: Tornado\Organization\Organization\DataMapper
+        arguments:
+            - @doctrine.dbal.connection
+            - Tornado\Organization\Organization
+            - "organization"
+
+    organization.form.create:
+        class: Tornado\Organization\Organization\Form\Create
+        arguments:
+            - @validator
+            - @organization.repository
+
+    organization.form.update:
+        class: Tornado\Organization\Organization\Form\Update
+        arguments:
+            - @validator
+            - @organization.repository
+
+    ##
+    # AGENCY SERVICES
+    ##
+    organization.agency.repository:
+        class: Tornado\Organization\Agency\DataMapper
+        arguments:
+            - @doctrine.dbal.connection
+            - Tornado\Organization\Agency
+            - "agency"
+
+    organization.agency.form.create:
+        class: Tornado\Organization\Agency\Form\Create
+        arguments:
+            - @validator
+            - @organization.repository
+            - @organization.agency.repository
+
+    organization.agency.form.update:
+        class: Tornado\Organization\Agency\Form\Update
+        arguments:
+            - @validator
+            - @organization.repository
+            - @organization.agency.repository
+
+    ##
+    # BRAND SERVICES
+    ##
+    organization.brand.repository:
+        class: Tornado\Organization\Brand\DataMapper
+        arguments:
+            - @doctrine.dbal.connection
+            - Tornado\Organization\Brand
+            - "brand"
+
+    organization.brand.form.create:
+        class: Tornado\Organization\Brand\Form\Create
+        arguments:
+            - @validator
+            - @organization.agency.repository
+            - @organization.brand.repository
+
+    organization.brand.form.update:
+        class: Tornado\Organization\Brand\Form\Update
+        arguments:
+            - @validator
+            - @organization.agency.repository
+            - @organization.brand.repository
+
+    organization.brand.user_acccess_voter:
+        class: Tornado\Organization\Brand\UserAccessVoter
+        arguments:
+            - @session
+            - @organization.brand.repository
+        tags:
+            - { name: voter }
+
+    organization.brand.http.resolver:
+        class: Tornado\Organization\Brand\Http\Resolver
+        arguments:
+            - @organization.brand.repository
+            - @project.repository
+            - @project.recording.repository
+            - @project.workbook.repository
+            - @project.worksheet.repository
+            - @session.user
+        calls:
+            - ['setLogger', ['@monolog']]
+
+    ##
+    # USER SERVICES
+    ##
+    organization.user.repository:
+        class: Tornado\Organization\User\DataMapper
+        arguments:
+            - @doctrine.dbal.connection
+            - Tornado\Organization\User
+            - "user"
+
+    organization.role.repository:
+        class: Tornado\Organization\Role\DataMapper
+        arguments:
+            - @doctrine.dbal.connection
+            - Tornado\Organization\Role
+            - "role"
+
+    organization.user.form.login:
+        class: Tornado\Organization\User\Form\Login
+        arguments:
+            - @validator
+            - @organization.user.repository
+
+    organization.user.form.create:
+        class: Tornado\Organization\User\Form\Create
+        arguments:
+            - @validator
+            - @organization.repository
+            - @organization.user.repository
+            - @organization.user.factory
+
+    organization.user.form.update:
+        parent: organization.user.form.create
+        class: Tornado\Organization\User\Form\Update
+
+    organization.user.form.forgotpassword:
+        parent: organization.user.form.create
+        class: Tornado\Organization\User\Form\ForgotPassword
+
+    organization.user.form.resetpassword:
+        parent: organization.user.form.create
+        class: Tornado\Organization\User\Form\ResetPassword
+
+    organization.user.form.changeemail:
+        parent: organization.user.form.create
+        class: Tornado\Organization\User\Form\ChangeEmail
+
+    organization.user.form.changepassword:
+        parent: organization.user.form.create
+        class: Tornado\Organization\User\Form\ChangePassword
+
+    organization.user.factory:
+        class: Tornado\Organization\User\Factory
+
+    organization.user.passwordmanager:
+        class: Tornado\Organization\User\PasswordManager
+        arguments:
+            - @cache
+            - @organization.user.repository
+            - @mailer
+            - @twig
+            - "security/email/forgot.html.twig"
+            - "security/email/reset.html.twig"

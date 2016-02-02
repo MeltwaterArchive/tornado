@@ -1,0 +1,140 @@
+[
+    {
+        "type": "histogram",
+        "data": {
+            "interactions": {
+                "18-24": [
+                    [
+                        "male",
+                        5100,
+                        0,
+                        {
+                            "tooltip": 0,
+                            "explore": {
+                                "18-24, Male": {
+                                    "fb.author.age": "18-24",
+                                    "fb.author.gender": "male"
+                                }
+                            }
+                        }
+                    ],
+                    [
+                        "unknown",
+                        4100,
+                        0,
+                        {
+                            "tooltip": 0,
+                            "explore": {
+                                "18-24, Unknown": {
+                                    "fb.author.age": "18-24",
+                                    "fb.author.gender": "unknown"
+                                }
+                            }
+                        }
+                    ]
+                ]
+            },
+            "unique_authors": {
+                "18-24": [
+                    [
+                        "male",
+                        3000,
+                        0,
+                        {
+                            "tooltip": 0,
+                            "explore": {
+                                "18-24, Male": {
+                                    "fb.author.age": "18-24",
+                                    "fb.author.gender": "male"
+                                }
+                            }
+                        }
+                    ],
+                    [
+                        "unknown",
+                        3100,
+                        0,
+                        {
+                            "tooltip": 0,
+                            "explore": {
+                                "18-24, Unknown": {
+                                    "fb.author.age": "18-24",
+                                    "fb.author.gender": "unknown"
+                                }
+                            }
+                        }
+                    ]
+                ]
+            }
+        }
+    },
+    {
+        "type": "histogram",
+        "data": {
+            "interactions": {
+                "unknown": [
+                    [
+                        "male",
+                        31100,
+                        0,
+                        {
+                            "tooltip": 0,
+                            "explore": {
+                                "Unknown, Male": {
+                                    "fb.author.age": "unknown",
+                                    "fb.author.gender": "male"
+                                }
+                            }
+                        }
+                    ],
+                    [
+                        "unknown",
+                        21100,
+                        0,
+                        {
+                            "tooltip": 0,
+                            "explore": {
+                                "Unknown, Unknown": {
+                                    "fb.author.age": "unknown",
+                                    "fb.author.gender": "unknown"
+                                }
+                            }
+                        }
+                    ]
+                ]
+            },
+            "unique_authors": {
+                "unknown": [
+                    [
+                        "male",
+                        19500,
+                        0,
+                        {
+                            "tooltip": 0,
+                            "explore": {
+                                "Unknown, Male": {
+                                    "fb.author.age": "unknown",
+                                    "fb.author.gender": "male"
+                                }
+                            }
+                        }
+                    ],
+                    [
+                        "unknown",
+                        20500,
+                        0,
+                        {
+                            "tooltip": 0,
+                            "explore": {
+                                "Unknown, Unknown": {
+                                    "fb.author.age": "unknown",
+                                    "fb.author.gender": "unknown"
+                                }
+                            }
+                        }
+                    ]
+                ]
+            }
+        }
+    }
+]

@@ -1,0 +1,114 @@
+/**
+ * Common ~ Main
+ *
+ * General styles that are commonly used but can't be
+ * added to a specific file. Currently used for the main
+ * container and core page styles.
+ */
+
+/**
+ * Main variables
+ */
+$tornado-loading-overlay-background-colour: #e9eaee !default;
+$page-header-background-colour: #fff !default;
+$page-header-border-bottom-colour: $colour-grey-light !default;
+$page-title-colour: #9197a3 !default;
+$page-title-workbook-colour: #333 !default;
+
+/**
+ * Main styles
+ */
+.tornado-not-ready {
+    .tornado-loading-overlay {
+        pointer-events: auto;
+        opacity: 1;
+        visibility: visible;
+        @include transition(0s all $slick-ease);
+    }
+    .tornado-spinner {
+        @include transform(scale(1));
+        @include transition(0s all $slick-ease);
+    }
+}
+
+.tornado-loading-overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    background-color: $tornado-loading-overlay-background-colour;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    z-index: 20;
+    content: "";
+    @include transition(0.7s opacity $slick-ease 0.1s, 0.7s visibility $slick-ease 0.1s);
+}
+
+.tornado-spinner {
+    position: absolute;
+    top: 50%;
+    margin: -26px 0 0 -86px;
+    padding: 20px 30px;
+    @include transform(scale(1.2));
+    @include transition(0.8s all $slick-ease);
+}
+
+.main-container {
+    @include outer-container();
+    // Adding extra margin because our header is fixed position
+    margin-top: $header-height;
+}
+
+.page {
+    @include outer-container();
+    &--full-width,
+    .main-menu.main-menu--disabled ~ & {
+        padding-left: 0;
+    }
+    .main-menu ~ & {
+        padding: 0 0 0 $main-menu-width;
+    }
+}
+
+.page__header {
+    display: inline-block;
+    width: 100%;
+    padding: 0;
+    background-color: $page-header-background-colour;
+    border-bottom: 1px solid $page-header-border-bottom-colour;
+}
+
+.page__title {
+    display: inline-block;
+    margin: 0;
+    padding-left: 17px;
+    font-size: rem(16);
+    line-height: 60px;
+    color: $page-title-colour;
+}
+
+.page__title__project-name {
+    float: left;
+    @include ellipsis(200px);
+}
+
+.page__title__workbook-name {
+    color: $page-title-workbook-colour;
+    &::before {
+        display: inline-block;
+        position: relative;
+        top: 4px;
+        width: 26px;
+        height: 20px;
+        background: {
+            image: url("#{$image-path}/common/page-title/arrow.svg");
+            size: auto 10px;
+            position: center;
+            repeat: no-repeat;
+        }
+        content: "";
+    }
+}

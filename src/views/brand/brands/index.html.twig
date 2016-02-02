@@ -1,0 +1,13 @@
+<div class="brands__header">
+    <h6>BRANDS</h6>
+</div>
+<hr class="divider">
+<ul class="brands">
+    {% for brand in data.brands %}
+        <li class="brand{% if brand.id == selectedBrand.id %} brand--active{% endif %}">
+            <a class="brand__link" href="{{ path('brand.get', {'brandId': brand.id}) }}{% if meta.recordings is defined or data.recording is defined %}/recordings{% endif %}">
+                {{ brand.name }}
+            </a>
+        </li>
+    {% endfor %}
+</ul>

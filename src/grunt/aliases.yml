@@ -1,0 +1,17 @@
+default: []
+
+test:
+    description: 'Run all the JS unit tests'
+    tasks:
+      -  http-server
+      -  qunit
+
+build:
+  # run the unit tests
+  - test
+  # build the sass
+  - 'sass:dist'
+
+watch:
+  # check for changes in the sass and rebuild
+  - 'watch:sass:dev'

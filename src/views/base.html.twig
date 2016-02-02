@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html class="no-js" lang="">
+    {% block head %}
+        <head>
+            <meta charset="utf-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width">
+            <meta name="description" content="">
+
+            <title>Tornado</title>
+
+            {# Included Font Files #}
+
+            {# Included CSS Files #}
+            {% block stylesheets %}
+                {% if app.request.attributes.get("skin") %}
+                <link rel="stylesheet" href="/assets/css/skins/{{ app.request.attributes.get("skin") }}.css">
+                {% elseif organization is defined and organization.skin %}
+                <link rel="stylesheet" href="/assets/css/skins/{{ organization.skin }}.css">
+                {% else %}
+                <link rel="stylesheet" href="/assets/css/tornado.css">
+                {% endif %}
+            {% endblock %}
+        </head>
+    {% endblock %}
+    <body class="{% block body_class %}{% endblock %}">
+        <div class="main-container">
+            {% block header %}
+                <div class="header">
+                    <a class="logo" href="{{ path("home") }}">Tornado</a>
+                    {% include 'partials/profile.html.twig' %}
+                </div>
+            {% endblock %}
+
+            {% block page %}
+                <div class="page{% block page_class %}{% endblock %}">
+                    <div class="content-wrapper">
+                        {% block notifications %}
+                            {% if flash.flash %}
+                                <div class="notification notification-{{ flash.flash.level }}">
+                                    {{ flash.flash.message }}
+                                </div>
+                            {% elseif meta.__notification is defined %}
+                                <div class="notification notification-{{ meta.__notification.level }}">
+                                    {{ meta.__notification.message }}
+                                </div>
+                            {% endif %}
+                        {% endblock %}
+                        {% block page_content %}
+                            <div class="content__header">
+                                <h4 class="content__title">Content Title</h4>
+                            </div>
+                            <div class="content"></div>
+                        {% endblock %}
+                    </div>
+                </div>
+            {% endblock %}
+        </div>
+
+        {# Global Javascript #}
+        {% block javascript %}
+            <script
+                src="/assets/javascript/library/requirejs/require.js"
+                async
+                {% block javascript_additional %}{% endblock %}
+            ></script>
+        {% endblock %}
+
+        {% block delete_templates %}
+        {% endblock %}
+    </body>
+</html>

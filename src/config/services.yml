@@ -1,0 +1,124 @@
+imports:
+    - { resource: "parameters.yml" }
+    - { resource: "cache.yml" }
+    - { resource: "datamapper.yml" }
+    - { resource: "pylon.yml" }
+    - { resource: "analyze.yml" }
+    - { resource: "organization.yml" }
+    - { resource: "project.yml" }
+    - { resource: "analyze.yml" }
+
+services:
+    ########################
+    # synthetic
+    ########################
+    # these synthetic services are injected to the container in runtime
+    # usually copied from Silex
+    request:
+        synthetic: true
+
+    monolog:
+        synthetic: true
+
+    twig:
+        synthetic: true
+
+    event_dispatcher:
+        synthetic: true
+
+    url_generator:
+        synthetic: true
+
+    validator:
+        synthetic: true
+
+    flash:
+        synthetic: true
+
+    ########################
+    # other services
+    ########################
+    controller_result_converter:
+        class: Tornado\Controller\ResultConverter
+        arguments: ["@twig"]
+
+    filesystem:
+        class: Symfony\Component\Filesystem\Filesystem
+
+    mailer.swift.transport:
+        class: Swift_SendmailTransport
+        factory: [Swift_SendmailTransport, newInstance]
+        arguments:
+            - "/usr/sbin/sendmail -bs"
+
+    mailer.swift:
+        class: Swift_Mailer
+        factory: [Swift_Mailer, newInstance]
+        arguments:
+            - @mailer.swift.transport
+
+    mailer:
+        class: \Tornado\Mailer\Mailer
+        arguments:
+            - @mailer.swift
+            - %mailer.from%
+
+    # Session services
+    session.user:
+        class: Tornado\Organization\User
+        factory: [@session, get]
+        arguments:
+            - "user"
+
+    session.user.organization:
+        class: Tornado\Organization\Organization
+        factory: [@organization.repository, findOneByUser]
+        arguments:
+            - @session.user
+
+    stats.collector.null:
+        class: DataSift\Stats\NullCollector
+
+    
+    stats:
+        alias: stats.collector.null
+
+    stats.http_collector:
+        class: DataSift\Http\StatsCollector
+        arguments:
+            - @stats
+
+    ########################
+    # datasift services
+    ########################
+    datasift.api.user_provider:
+        class: DataSift\Api\UserProvider
+        calls:
+            - ['setLogger', ['@monolog']]
+            - ['setApiUrl', ['%datasift.public_api_url%']]
+            - ['setApiSsl', ['%datasift.public_api_ssl%']]
+
+    # it must works as a synthetic service in order to set a DataSift username and api key
+    # in an application runtime
+    datasift.user:
+        synthetic: true
+
+    datasift.identity:
+        class: DataSift_Account_Identity
+        arguments:
+            - @datasift.user
+
+    datasift.identity.token:
+        class: DataSift_Account_Identity_Token
+        arguments:
+            - @datasift.user
+
+    datasift.identity.limit:
+        class: DataSift_Account_Identity_Limit
+        arguments:
+            - @datasift.user
+
+    datasift.pylon:
+        class: DataSift\Pylon\Pylon
+        arguments:
+            - @datasift.user

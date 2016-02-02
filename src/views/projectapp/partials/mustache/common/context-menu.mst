@@ -1,0 +1,9 @@
+{% raw %}
+    <script data-tornado-template="context-menu" type="x-tmpl-mustache">
+        <ul class="context-menu">
+            {{ #menus }}
+                <li data-context-menu-item="{{ name }}" class="context-menu__item">{{ text }}</li>
+            {{ /menus }}
+        </ul>
+    </script>
+{% endraw %}

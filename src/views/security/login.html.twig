@@ -1,0 +1,22 @@
+{% extends 'base.unsecured.html.twig' %}
+
+{% block body_class %}view--login{% endblock %}
+
+{% block main_menu %}{% endblock %}
+{% block header %}{% endblock %}
+
+{% block page_class %} page--full-width{% endblock %}
+{% block page_content %}
+    <div class="content">
+
+        {% include 'partials/notifications.html.twig' %}
+
+        <form method="post" action="{{ path("login") }}">
+            <h1 class="login__heading">Tornado Sign In</h1>
+            <input class="login__input" type="text" name="login" value="" placeholder="Email Address">
+            <input class="login__input" type="password" name="password" value="" placeholder="Password">
+            <button class="login__submit" type="submit">Sign In</button>
+            <a class="login__forgot" href="{{ path('login.forgotpassword') }}">Forgot password?</a>
+        </form>
+    </div>
+{% endblock %}

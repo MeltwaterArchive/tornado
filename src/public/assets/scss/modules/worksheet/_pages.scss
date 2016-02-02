@@ -1,0 +1,71 @@
+/**
+ * Module ~ Worksheet Pages
+ *
+ * `No workbook` & `No worksheet` pages
+ */
+
+/**
+ * Worksheet Pages variables
+ */
+
+$worksheet-pages-heading-color: #aebcd3;
+
+/**
+ * Worksheet Pages styles
+ */
+[data-tornado-page="no-workbook"] {
+    .content {
+        max-width: 100%;
+        background-color: transparent;
+        border: none;
+    }
+    .workbook-sidebar__button--open {
+        display: none;
+    }
+}
+
+[data-tornado-page="no-worksheet"] {
+    .content {
+        max-width: 100%;
+        background-color: transparent;
+        border: none;
+    }
+    .content__header,
+    .content__footer {
+        display: none;
+    }
+}
+
+%worksheet-pages-heading {
+    margin: 0;
+    color: $worksheet-pages-heading-color;
+}
+
+%worksheet-pages-description {
+    margin: 20px 0 25px;
+    font-size: rem(12);
+}
+
+%worksheet-pages-action {
+    @extend %submit-button;
+}
+
+.no-workbooks,
+.no-worksheet {
+    text-align: center;
+}
+
+.no-workbooks__title,
+.no-worksheet__title {
+    @extend %worksheet-pages-heading;
+}
+
+.no-workbooks__message,
+.no-worksheet__message {
+    @extend %worksheet-pages-description;
+}
+
+.no-workbooks__action,
+.no-worksheet__action {
+    @extend %worksheet-pages-action;
+}

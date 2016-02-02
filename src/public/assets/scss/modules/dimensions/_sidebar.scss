@@ -1,0 +1,64 @@
+/**
+ * Module ~ Dimensions sidebar
+ */
+
+
+/**
+ * Dimensions sidebar variables
+ */
+$dimensions-border-top-colour: $colour-grey-light !default;
+$dimension-background-colour: $colour-blue-facebook !default;
+$dimension-selected-background-colour: $colour-green-bright !default;
+$dimension-dragging-background-colour: #e9eaee !default;
+$dimension-dragging-colour: #333 !default;
+$dimension-colour: #fff !default;
+$dimension-dragging-clone-background-colour: #3B404D !default;
+
+/**
+ * Dimensions sidebar styles
+ */
+
+.dimensions {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    @extend %no-list-style;
+    overflow: hidden;
+}
+
+%dimension,
+.dimension {
+    @extend %button;
+    float: left;
+    margin: 0 8px 8px 0;
+    padding: 10px;
+    color: $dimension-colour;
+    white-space: nowrap;
+    background-color: $dimension-background-colour;
+    cursor: -webkit-grab;
+    cursor: -moz-grab;
+    @include transition(0.3s background-color $slick-ease);
+    &--selected,
+    &--selected:hover {
+        background-color: $dimension-selected-background-colour;
+        pointer-events: none;
+        cursor: default;
+    }
+    &[data-draggaball-item="dragging"] {
+        color: $dimension-dragging-colour;
+        background-color: $dimension-dragging-background-colour;
+        z-index: 100;
+    }
+    &[data-draggaball-item="clone"] {
+        z-index: 100;
+        background-color: $dimension-dragging-clone-background-colour;
+    }
+}
+
+.dimensions-search {
+    @extend %input;
+}
+
+.dimension-clones-wrapper {
+    position: fixed;
+}

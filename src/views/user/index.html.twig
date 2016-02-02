@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block page_header_title %}{{ data.organization.name }} Users ({{ meta.users.count }}){% endblock %}
+
+{% block page_content %}
+    <table style="width:100%">
+        <tr>
+            <td>#</td>
+            <td>Username</td>
+            <td>Email</td>
+            <td>Actions</td>
+        </tr>
+        {% for user in data.users %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>
+                    <a href="{{ path("user.delete", {userId: user.id}) }}">DELETE</a>
+                    <a href="{{ path("user.get", {userId: user.id}) }}">EDIT</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

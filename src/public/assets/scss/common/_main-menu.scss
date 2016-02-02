@@ -1,0 +1,118 @@
+/**
+ * Common ~ Main menu
+ */
+
+/**
+ * Main menu variables
+ */
+$white: #fff;
+$main-menu-width: 200px !default;
+$main-menu-background-colour: #3b404c !default;
+$main-menu-item-colour: #afbdd4 !default;
+$main-menu-item-hovered-background-colour: #383c47 !default;
+$main-menu-item-active-colour: #afbdd4 !default;
+$main-menu-item-active-background-colour: #313540 !default;
+$main-menu-item-icon-fill: #afbdd4 !default;
+$main-menu-item-disabled-colour: #697286;
+
+/**
+ * Main menu styles
+ */
+.main-menu {
+    position: fixed;
+    top: $header-height;
+    left: 0;
+    bottom: 0;
+    width: $main-menu-width;
+    margin: 0;
+    padding: 0;
+    background-color: $main-menu-background-colour;
+    @extend %no-list-style;
+    &--disabled {
+        display: none;
+    }
+}
+
+.main-menu__item {
+    position: relative;
+    background: {
+        size: auto 15px;
+        position: center center;
+        repeat: no-repeat;
+    }
+    overflow: hidden;
+    text-transform: uppercase;
+    &:hover {
+        background-color: $main-menu-item-hovered-background-colour;
+
+        .disabled & {
+            background-color: $main-menu-background-colour;
+            cursor: default;
+        }
+    }
+    &::before {
+        position: absolute;
+        top: 50%;
+        right: -5px;
+        margin-top: -5px;
+        @include triangle(10px, $white, left);
+        content: "";
+        @include transition(0.3s right $slick-ease);
+    }
+    &--active {
+        &::before {
+            right: 0;
+        }
+        .main-menu__item__link {
+            color: $main-menu-item-active-colour;
+            background-color: $main-menu-item-active-background-colour;
+        }
+    }
+}
+
+.main-menu__item-icon {
+    display: inline-block;
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    width: 16px;
+    height: 16px;
+    margin-top: -8px;
+    path {
+        fill: $main-menu-item-icon-fill;
+
+        .disabled li:not(.main-menu__item--overview) & {
+            fill: $main-menu-item-disabled-colour;
+        }
+    }
+}
+
+.main-menu__item__link {
+    display: inline-block;
+    width: 100%;
+    padding: 0 15px 0 38px;
+    font-size: rem(12);
+    line-height: 46px;
+    font-weight: bold;
+    color: $main-menu-item-colour;
+
+    .disabled li:not(.main-menu__item--overview) & {
+        color: $main-menu-item-disabled-colour;
+        cursor: default;
+    }
+}
+
+// Worksheet-type specific styles
+[data-main-menu-item="timespan"] {
+    display: none;
+}
+
+[data-main-menu-worksheet-type="timeseries"] {
+    [data-main-menu-item="dimensions"] {
+        display: none;
+    }
+
+    [data-main-menu-item="timespan"] {
+        display: list-item;
+    }
+}

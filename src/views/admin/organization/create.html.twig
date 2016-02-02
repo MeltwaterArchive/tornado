@@ -1,0 +1,48 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block body_class %}recording recording--create{% endblock %}
+
+{% block page_header_title %}Organization Management - Create an Organization{% endblock %}
+
+{% block page_title %}
+<a href="{{ path('admin') }}">Administration</a>
+        {% if sessionUser.hasRole("ROLE_SUPERADMIN") %}
+            &gt; <a href="{{ path('admin.organizations') }}">Organizations</a>
+        {% endif %}
+        &gt; New Organization
+{% endblock %}
+
+{% block page_content %}
+    <form class="single-item" method="post" action="{{ path('admin.organizations.create') }}">
+        {# Header #}
+        {# Organization name #}
+        <label class="input-label" for="organization-name">Organization Name</label>
+        {% if meta.name is defined %}
+            <span class="input-error">{{ meta.name }}</span>
+        {% endif %}
+        <input id="organization-name" type="text" name="name" value="{{ data.organization.name }}" placeholder="Give your Organization a name" />
+
+        {# Organization JWT token #}
+        <label class="input-label" for="organization-jwt-secret">Organization JWT Secret</label>
+        {% if meta.jwtSecret is defined %}
+            <span class="input-error">{{ meta.jwtSecret }}</span>
+        {% endif %}
+        <input id="organization-jwt-secret" type="text" name="jwt_secret" value="{{ data.organization.jwtSecret }}" placeholder="Organization JWT token" />
+
+        {# Organization Skin #}
+        <label class="input-label" for="organization-skin">Organization Skin</label>
+        {% if meta.skin is defined %}
+            <span class="input-error">{{ meta.skin }}</span>
+        {% endif %}
+        <input id="organization-skin" type="text" name="skin" value="{{ data.organization.skin }}" placeholder="Organization Skin" />
+
+        {# Footer #}
+        <hr class="divider">
+        <div class="single-item__header">
+            <a href="{{ path('admin.organizations') }}">Cancel</a>
+            <div class="single-item__actions">
+                <button class="single-item__action single-item__action--create" type="submit" data-spinner>Create</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}

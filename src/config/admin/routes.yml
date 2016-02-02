@@ -1,0 +1,56 @@
+organization:
+    resource: "./routes/organization.yml"
+
+user:
+    resource: "./routes/user.yml"
+
+agency:
+    resource: "./routes/agency.yml"
+
+brand:
+    resource: "./routes/brand.yml"
+
+##
+# Some of the route may be duplicated from config/tornado/routes.yml in favor of using twig path
+##
+home:
+    path: /
+    defaults:
+        _controller: 'index.controller:index'
+        _template: 'index/index.html.twig'
+
+jwt:
+    path: /jwt
+    methods: [GET]
+    defaults:
+        _controller: 'security.controller:jwt'
+        _template: 'security/login.html.twig'
+
+login:
+    path: /login
+    methods: [GET, POST]
+    defaults:
+        _controller: 'security.controller:login'
+        _template: 'security/login.html.twig'
+
+logout:
+    path: /logout
+    methods: [GET, DELETE]
+    defaults:
+        _controller: 'security.controller:logout'
+
+# Base
+admin:
+    path: /admin
+    methods: [GET]
+    defaults:
+        _controller: 'admin.index.controller:index'
+        _template: 'admin/index.html.twig'
+        _permissions: [ROLE_ADMIN]
+
+settings:
+    path: /settings
+    methods: [GET,POST]
+    defaults:
+        _template: 'settings/settings.html.twig'
+        _controller: 'settings.controller:settings'

@@ -1,0 +1,50 @@
+/**
+ * Module ~ Projects brands
+ *
+ * Project listing page ~ Brand listing
+ */
+
+/**
+ * Brands variables
+ */
+$brand-active-colour: #333 !default;
+$brand-active-background-colour: $colour-grey-light !default;
+
+/**
+ * Projects styles
+ */
+.brands__header {
+    @extend %brand-management__column-header;
+}
+
+.brands {
+    margin: 0;
+    padding: 0;
+    @extend %no-list-style;
+}
+
+.brand {
+    display: inline-block;
+    width: 100%;
+    margin: 5px 0;
+    &:first-child {
+        margin-top: 0;
+    }
+    &--active {
+        margin: 0;
+        .brand__link {
+            padding: 7px 10px;
+            color: $brand-active-colour;
+            background-color: $brand-active-background-colour;
+            border-radius: 3px;
+        }
+    }
+}
+
+.brand__link {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    padding: 0 10px;
+    @include ellipsis(100%);
+}

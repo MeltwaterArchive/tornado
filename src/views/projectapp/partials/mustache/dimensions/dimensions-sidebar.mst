@@ -1,0 +1,28 @@
+{% raw %}
+    <script data-tornado-template="dimensions-sidebar" type="x-tmpl-mustache">
+        <input class="dimensions-search" type="text" value="" placeholder="Refine dimensions">
+        <div class="scrollfoo__content-wrapper">
+            <span class="scrollfoo__scroller scrollfoo__scroller--dimensions"></span>
+            <div class="scrollfoo__parent scrollfoo__parent--dimensions" style="position: relative;">
+                {{ #groups }}
+                    <div class="page-sidebar__section">
+                        <h4 class="page-sidebar__section-headline">{{ name }}</h4>
+                        <ul class="dimensions">
+                            {{ #items }}
+                                <li
+                                    data-tooltip="<strong>{{ label }}</strong><br><br>{{ description }}"
+                                    data-draggaball-item
+                                    data-dimension-item="{{ label }}"
+                                    data-dimension-target="{{ target }}"
+                                    data-dimension-description="{{ description }}"
+                                    class="dimension"
+                                >{{ label }}</li>
+                            {{ /items }}
+                        </ul>
+                    </div>
+                {{ /groups }}
+            </div>
+        </div>
+        <ul class="dimension-clones-wrapper no-list-style"></ul>
+    </script>
+{% endraw %}

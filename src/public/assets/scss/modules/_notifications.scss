@@ -1,0 +1,28 @@
+/**
+ * Module ~ Login page
+ */
+
+$notification-notice-background-color: #3C5A96;
+$notification-success-background-color: #549617;
+$notification-error-background-color: #f8363b;
+
+.notification {
+    width: 100%;
+    text-align: center;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    color: #fff;
+    background-color: $notification-notice-background-color;
+    border-radius: 4px;
+    float: left;
+    font-size: 0.9rem;
+
+    &-error {
+        background-color: $notification-error-background-color;
+    }
+
+    &-success {
+        background-color: $notification-success-background-color;
+    }
+}

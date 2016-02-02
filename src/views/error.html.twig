@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block body_class %}view--error{% endblock %}
+
+{% block main_menu %}{% endblock %}
+{% block header %}{% endblock %}
+
+{% block page_content %}
+    <div class="error-box">
+        <h1 class="error-box__heading">{{ statusCode }}</h1>
+        <p class="error-box__message">{{ errorMessage }}</p>
+        {% if not sessionUser.isSpaOnly %}<a class="submit-button" href="{{ path('home') }}">Return home</a>{% endif %}
+    </div>
+{% endblock %}
+
+{% block javascript_additional %}
+    <script src="/assets/javascript/brand/brand.js"></script>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% raw %}
+    <script data-tornado-template="no-worksheet" type="x-tmpl-mustache">
+        <div class="no-worksheet">
+            <h5 class="no-worksheet__title">NOTHING TO SEE HERE</h5>
+            <p class="no-worksheet__message">This workbook doesn't have worksheets. Go ahead and create one!</p>
+            <button data-modallica="New Worksheet:worksheet-create-modal" class="no-worksheet__action" type="button">Create a worksheet</button>
+        </div>
+    </script>
+{% endraw %}

@@ -1,0 +1,101 @@
+{% extends 'admin/base.html.twig' %}
+
+{% set pagination = meta.pagination %}
+
+{% block page_header_title %}Organization Management{% endblock %}
+
+{% block page_title %}<a href="{{ path('admin') }}">Administration</a> &gt; Organizations{% endblock %}
+
+{% block page_content %}
+    <div class="brand-management__column-content">
+        <form data-batch-form action="{{ path('admin.organizations.batch') }}" method="post">
+            <ul class="list-actions">
+                {# Don't show sorting or bulk actions when there are no projects #}
+                {% if pagination.totalItemsCount > 0 %}
+                    <li class="list-action list-action--bulk">
+                        <div class="styled-checkbox__wrapper">
+                            <input data-checkmate="brand-recordings" class="styled-checkbox" type="checkbox" id="projects-delete" name="projects-delete">
+                            <label class="styled-checkbox__label" for="projects-delete"></label>
+                        </div>
+                        <button data-batch-delete class="list-action list-action--bulk-delete" type="button">Delete</button>
+                    </li>
+                    <li class="list-action dropdown dropdown--styled">
+                        {% set sortByTitle = 'Sort by' %}
+                        {% if pagination.sortBy == 'name' or pagination.sortBy == '' %}
+                            {% set sortByTitle = 'Sorted by: <span class="dropdown__toggle__selected">Name</span>'  %}
+                        {% else %}
+                            {% set sortByTitle = 'Sorted by: <span class="dropdown__toggle__selected">Date created</span>' %}
+                        {% endif %}
+                        <span data-dropdown-toggle class="dropdown__toggle">{{ sortByTitle|striptags('<span>') | raw }}</span>
+                        <ul class="dropdown__content">
+                            <li class="dropdown__item">
+                                <a class="dropdown__item__link{% if pagination.sortBy == 'name' or pagination.sortBy == '' %} dropdown__item__link--active{% endif %}" href="{{ path('admin.organizations', {'sort': 'name', 'perPage': pagination.perPage, 'order': 'asc'}) }}">Name</a>
+                            </li>
+                            <li class="dropdown__item">
+                                <a class="dropdown__item__link{% if pagination.sortBy == 'created_at' %} dropdown__item__link--active{% endif %}" href="{{ path('admin.organizations', {'sort': 'id', 'perPage': pagination.perPage, 'order': 'desc' }) }}">Date created</a>
+                            </li>
+                        </ul>
+                    </li>
+                {% endif %}
+                <li class="list-action list-action--new-project">
+                    <a href="{{ path('admin.organizations.create_form') }}">New Organization</a>
+                </li>
+            </ul>
+            {# Display items when there are items #}
+            {% if pagination.totalItemsCount > 0 %}
+                <ul class="list-items">
+                    {% for organization in data.organizations %}
+                        <li class="list-item">
+                            <div class="list-item__cell list-item__cell--checkbox">
+                                <div class="list-item__select styled-checkbox__wrapper">
+                                    <input data-checkmate-child="brand-recordings" class="styled-checkbox" type="checkbox" id="organization{{ organization.id }}" name="ids[]" value="{{ organization.id }}">
+                                    <label class="styled-checkbox__label" for="organization{{ organization.id }}"></label>
+                                </div>
+                            </div>
+                            <div class="list-item__cell list-item__cell--info">
+                                <a class="list-item__link" href="{{ path('admin.organization.overview', {'id': organization.id}) }}">
+                                    {{ organization.name }}
+                                </a>
+                            </div>
+                            <div class="list-item__cell list-item__cell--actions">
+                                <div class="list-item__actions">
+                                    <a class="list-item__action button" href="{{ path('admin.organization.overview', {'id': organization.id}) }}">Edit</a>
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <hr class="divider">
+                <div class="list-items list-items--no-results">
+                    <h6>YOU DON'T HAVE ANY ORGANIZATION</h6>
+                    <p>To get started <a href="{{ path('admin.organizations.create_form') }}">Create An Organization</a></p>
+                </div>
+            {% endif %}
+            <div class="pagination">
+                {% if pagination.totalPages > 1 %}
+                    <a class="pagination-direction pagination-direction--previous{% if pagination.currentPage == pagination.firstPage %} pagination-direction--disabled{% endif %}" href="{{ path('admin.organizations', {'page': pagination.previousPage, 'perPage': pagination.perPage, 'sort': pagination.sortBy, 'order': pagination.order }) }}"></a>
+                    <span class="pagination-current">{{ pagination.currentPage }}/{{ pagination.totalPages }}</span>
+                    <a class="pagination-direction pagination-direction--next {% if pagination.currentPage == pagination.totalPages %} pagination-direction--disabled{% endif %}" href="{{ path('admin.organizations', {'page': pagination.nextPage, 'perPage': pagination.perPage, 'sort': pagination.sortBy, 'order': pagination.order }) }}"></a>
+                {% endif %}
+                {# Don't show the sorting dropdown when there are no projects #}
+                {% if pagination.totalItemsCount > 0 %}
+                    <div class="dropdown dropdown--styled pagination-dropdown">
+                        <span data-dropdown-toggle class="dropdown__toggle">Display: <span class="dropdown__toggle__selected">{{ pagination.perPage }}</span></span>
+                        <ul class="dropdown__content">
+                            <li class="dropdown__item">
+                                <a class="dropdown__item__link{% if pagination.perPage == 5 %} dropdown__item__link--active{% endif %}" href="{{ path('admin.organizations', {'page': pagination.previousPage, 'perPage': 5, 'sort': pagination.sortBy, 'order': pagination.order }) }}">5</a>
+                            </li>
+                            <li class="dropdown__item">
+                                <a class="dropdown__item__link{% if pagination.perPage == 20 %} dropdown__item__link--active{% endif %}" href="{{ path('admin.organizations', {'page': pagination.previousPage, 'perPage': 20, 'sort': pagination.sortBy, 'order': pagination.order }) }}">20</a>
+                            </li>
+                            <li class="dropdown__item">
+                                <a class="dropdown__item__link{% if pagination.perPage == 50 %} dropdown__item__link--active{% endif %}" href="{{ path('admin.organizations', {'page': pagination.previousPage, 'perPage': 50, 'sort': pagination.sortBy, 'order': pagination.order }) }}">50</a>
+                            </li>
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+{% endblock %}

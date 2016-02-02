@@ -1,0 +1,20 @@
+{% raw %}
+    <script data-tornado-template="dimensions" type="x-tmpl-mustache">
+        <div class="dimension-content">
+            <div data-draggaball-dropzone data-dimension-dropzone data-dimension-axis="x" data-dimension-dropzone-label="X AXIS" class="dimension-dropzone dimension-dropzone--top"></div>
+            <div data-draggaball-dropzone data-dimension-dropzone data-dimension-axis="y" data-dimension-dropzone-label="Y AXIS" class="dimension-dropzone dimension-dropzone--left"></div>
+            <div data-draggaball-dropzone data-dimension-dropzone data-dimension-axis="z" data-dimension-dropzone-label="Z AXIS" class="dimension-dropzone dimension-dropzone--bottom"></div>
+            <div class="dimension-actions">
+                <button data-dimension-build-button data-loader="[data-tornado-view='page-content']:Building" type="button" class="dimension-build-button" disabled>Build a {{ worksheet.chart_type }} chart</button> or <a data-page-load href="{{ cancelLink }}">Cancel</a>
+            </div>
+        </div>
+    </script>
+
+    <script data-tornado-template="dimensions-item" type="x-tmpl-mustache">
+        <div class="dimension dimension--dropzone" data-tooltip="{{ dimension.tooltip }}" data-dimension-axis="{{ axis }}" data-dimension-target="{{ dimension.target }}" data-dimension-options-info="Threshold: {{ dimension.threshold }}">
+            {{ dimension.name }}
+            <a href="#" class="dimension__options"></a>
+            <a href="#" class="dimension__remove"></a>
+        </div>
+    </script>
+{% endraw %}

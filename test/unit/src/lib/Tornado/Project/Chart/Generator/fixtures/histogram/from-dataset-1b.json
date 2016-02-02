@@ -1,0 +1,66 @@
+{
+    "Generator::MEASURE_INTERACTIONS": {
+        "unknown": [
+            [
+                "18-24",
+                4100,
+                0,
+                {
+                    "tooltip": 0,
+                    "explore": {
+                        "Unknown, 18-24": {
+                            "fb.author.gender": "unknown",
+                            "fb.author.age": "18-24"
+                        }
+                    }
+                }
+            ],
+            [
+                "unknown",
+                21100,
+                0,
+                {
+                    "tooltip": 0,
+                    "explore": {
+                        "Unknown, Unknown": {
+                            "fb.author.gender": "unknown",
+                            "fb.author.age": "unknown"
+                        }
+                    }
+                }
+            ]
+        ]
+    },
+    "Generator::MEASURE_UNIQUE_AUTHORS": {
+        "unknown": [
+            [
+                "18-24",
+                3100,
+                0,
+                {
+                    "tooltip": 0,
+                    "explore": {
+                        "Unknown, 18-24": {
+                            "fb.author.gender": "unknown",
+                            "fb.author.age": "18-24"
+                        }
+                    }
+                }
+            ],
+            [
+                "unknown",
+                20500,
+                0,
+                {
+                    "tooltip": 0,
+                    "explore": {
+                        "Unknown, Unknown": {
+                            "fb.author.gender": "unknown",
+                            "fb.author.age": "unknown"
+                        }
+                    }
+                }
+            ]
+        ]
+    }
+}

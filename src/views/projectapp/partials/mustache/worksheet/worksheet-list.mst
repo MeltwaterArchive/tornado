@@ -1,0 +1,17 @@
+{% raw %}
+    <script data-tornado-template="worksheet-list" type="x-tmpl-mustache">
+        <li data-loader="[data-tornado-view='page-content']" data-worksheet-id="{{ worksheet.id }}" class="worksheet-list__item">
+            {{ worksheet.name }}
+            <div class="worksheet-list__item-actions">
+                <span data-dropdown-toggle="" class="worksheet-list__item-actions__toggle"></span>
+                <ul class="dropdown__content">
+                    {{ #showOptions }}
+                        <li data-worksheet-action="options" data-modallica="Display options:worksheet-options-modal" class="dropdown__item">Display options</li>
+                    {{ /showOptions }}
+                    <li data-worksheet-action="edit" data-modallica="Edit Worksheet:worksheet-edit-modal" class="dropdown__item">Edit worksheet</li>
+                    <li data-spinner data-worksheet-action="export" class="dropdown__item">Export worksheet</li>
+                </ul>
+            </li>
+        </li>
+    </script>
+{% endraw %}

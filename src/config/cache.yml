@@ -1,0 +1,28 @@
+services:
+    cache:
+        class: Doctrine\Common\Cache\Cache
+        factory: ['@cache_provider', 'provideCache']
+
+    cache_provider:
+        class: DataSift\Cache\CacheProvider
+        arguments:
+            - @service_container
+            - %cache.service_name%
+
+    cache.null:
+        class: DataSift\Cache\NullCache
+
+    cache.array:
+        class: Doctrine\Common\Cache\ArrayCache
+
+    cache.file:
+        class: Doctrine\Common\Cache\FilesystemCache
+        arguments:
+            - %cache_dir%
+
+    # works as synthetic to be declared in runntime
+    cache.memcached:
+        synthetic: true
+
+    memcache.server:
+        synthetic: true

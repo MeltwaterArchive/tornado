@@ -1,0 +1,144 @@
+/**
+ * Filters sidebar variables
+ */
+$filter-scrollbar-unhovered-background-colour: #e9eaee !default;
+$filter-tab-border-colour: $colour-grey-light !default;
+$filter-tab-active-font-colour: #333 !default;
+$filter-header-clear-colour: $colour-blue-facebook !default;
+$filter-timeframe-colour: $colour-blue-facebook !default;
+$filter-timeframe-disabled-overlay-colour: rgba(255, 255, 255, 0.7) !default;
+
+/**
+ * Filters sidebar styles
+ */
+.page-sidebar__section--timeframe {
+    .irs-bar,
+    .irs-from,
+    .irs-to,
+    .irs-single {
+        background: $filter-timeframe-colour;
+    }
+    .irs-bar {
+        box-sizing: content-box;
+        margin-left: -8px;
+        border-left: 8px solid $filter-timeframe-colour;
+        border-right: 8px solid $filter-timeframe-colour;
+    }
+    .irs-slider {
+        background: transparent;
+        &.from {
+            border-left: 2px solid $filter-timeframe-colour;
+        }
+        &.to {
+            border-right: 2px solid $filter-timeframe-colour;
+        }
+    }
+    .irs-from,
+    .irs-to,
+    .irs-single {
+        &::after {
+            border-top-color: $filter-timeframe-colour;
+        }
+    }
+    &--disabled {
+        cursor: pointer;
+        // white overlay
+        &::after {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background-color: $filter-timeframe-disabled-overlay-colour;
+            content: "";
+        }
+        // enable timeframe filter button
+        &::before {
+            @extend %button;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            white-space: nowrap;
+            z-index: 1;
+            @include transform(translate(-50%, -50%));
+            content: "Enable timeframe filter";
+        }
+        .irs-bar,
+        .irs-from,
+        .irs-to,
+        .irs-single,
+        .irs-slider {
+            display: none;
+        }
+        .irs-min,
+        .irs-max {
+            visibility: visible !important;
+        }
+    }
+}
+
+.page-sidebar__section--csdl {
+    .csdl-container {
+        min-width: 0;
+        // scss-lint:disable SelectorFormat
+        .CodeMirror {
+            height: 250px;
+        }
+        // scss-lint:enable SelectorFormat
+    }
+    .csdl-button {
+        &.csdl-geoselect,
+        &.csdl-listeditor,
+        &.csdl-theme,
+        &.csdl-view-open,
+        &.csdl-view-close,
+        &.csdl-save {
+            display: none !important;
+        }
+    }
+}
+
+.filters-clear {
+    float: right;
+    font-size: rem(11);
+    line-height: 24px;
+    color: $filter-header-clear-colour;
+}
+
+.filters-input {
+    @extend %input;
+    width: 100%;
+}
+
+.filters-select {
+    .selectize-input {
+        margin-bottom: 0;
+    }
+    .selectize-dropdown {
+        margin-top: -1px;
+    }
+}
+
+.filters-checklist {
+    @extend %no-list-style;
+    @include row;
+    margin: 0;
+    padding: 0;
+    input[type="checkbox"] {
+        display: inline;
+        margin: 0;
+        width: auto;
+    }
+}
+
+.filters-checklist__item {
+    @include span-columns(6);
+    @include omega(2n);
+    margin-bottom: 7px;
+    line-height: 16px;
+    [data-input-label-placeholder] {
+        &::after {
+            font-size: rem(11);
+        }
+    }
+}

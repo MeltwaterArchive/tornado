@@ -1,0 +1,32 @@
+{
+    "default": {
+        "title": "Default Analyses",
+        "analyses": [
+            {
+                "title": "Basic Demographics",
+                "type": "tornado",
+                "dimensions": [
+                    {"target":"fb.author.gender"},
+                    {"target":"fb.author.age"},
+                    {"target":"fb.author.country", "threshold": 20}
+                ],
+                "start": "1 week ago"
+            },
+            {
+                "title": "Top Regions",
+                "type": "histogram",
+                "dimensions": [
+                    {"target":"fb.author.region", "threshold": 20}
+                ],
+                "start": "1 week ago"
+            },
+            {
+                "title": "Time Series",
+                "type": "timeseries",
+                "span": 1,
+                "interval": "hour",
+                "start": "7 days ago"
+            }
+        ]
+    }
+}

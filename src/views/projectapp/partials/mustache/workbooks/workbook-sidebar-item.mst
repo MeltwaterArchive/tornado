@@ -1,0 +1,18 @@
+{% raw %}
+    <script data-tornado-template="workbook-sidebar-item" type="x-tmpl-mustache">
+        <li data-workbook-id="{{ id }}" class="workbook">
+            <div data-loader="[data-tornado-view='page-content']:Switching workbook" class="workbook__info">
+                <span class="workbook__title">{{ name }}</span>
+                <div class="workbook__date-created">Created <span>20 June, 2015</span></div>
+                <a style="display: none; font-size: 0.8em;" >Export</a>
+            </div>
+            <div class="workbook__actions">
+                <span data-dropdown-toggle="" class="workbook-list__item-actions__toggle"></span>
+                <ul class="dropdown__content">
+                    <li data-workbook-action="edit" data-modallica="Edit Workbook:workbook-edit-modal" class="dropdown__item">Edit workbook</li>
+                    <li data-workbook-action="export" class="dropdown__item" data-href="/api/project/{{project_id}}/workbook/{{ id }}/export">Export workbooks as CSV</li>
+                </ul>
+            </div>
+        </li>
+    </script>
+{% endraw %}

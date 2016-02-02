@@ -1,0 +1,177 @@
+##
+# API
+##
+pylon_api.identity.list:
+    path: /v{apiVersion}/account/identity
+    methods: [GET]
+    defaults: { _controller: 'pylon_api.identity.controller:index', _auth_type: agency }
+    requirements:
+        apiVersion: \d+\.\d+
+
+pylon_api.identity.create:
+    path: /v{apiVersion}/account/identity
+    methods: [POST]
+    defaults: { _controller: 'pylon_api.identity.controller:create', _auth_type: agency }
+    requirements:
+        apiVersion: \d+\.\d+
+
+pylon_api.identity:
+    path: /v{apiVersion}/account/identity/{id}
+    methods: [GET]
+    defaults: { _controller: 'pylon_api.identity.controller:show', _auth_type: agency }
+    requirements:
+        apiVersion: \d+\.\d+
+        id: "[\w\d]+"
+
+pylon_api.identity.update:
+    path: /v{apiVersion}/account/identity/{id}
+    methods: [PUT]
+    defaults: { _controller: 'pylon_api.identity.controller:update', _auth_type: agency }
+    requirements:
+        apiVersion: \d+\.\d+
+        id: "[\w\d]+"
+
+pylon_api.identity.update_token.put:
+    path: /v{apiVersion}/account/identity/{id}/token/{service}
+    methods: [PUT]
+    defaults: { _controller: 'pylon_api.identity.controller:updateToken', _auth_type: agency }
+    requirements:
+        apiVersion: \d+\.\d+
+        id: "[\w\d]+"
+        service: ^facebook$ # lock to only facebook
+
+pylon_api.identity.update_token.post:
+    path: /v{apiVersion}/account/identity/{id}/token
+    methods: [POST]
+    defaults: { _controller: 'pylon_api.identity.controller:createToken', _auth_type: agency }
+    requirements:
+        apiVersion: \d+\.\d+
+        id: "[\w\d]+"
+
+pylon_api.pylon.validate:
+    path: /v{apiVersion}/pylon/validate
+    methods: [POST]
+    defaults: { _controller: 'pylon_api.pylon.controller:validate' }
+    requirements:
+        apiVersion: \d+\.\d+
+
+pylon_api.pylon.compile:
+    path: /v{apiVersion}/pylon/compile
+    methods: [POST]
+    defaults: { _controller: 'pylon_api.pylon.controller:compile' }
+    requirements:
+        apiVersion: \d+\.\d+
+
+pylon_api.pylon.start:
+    path: /v{apiVersion}/pylon/start
+    methods: [PUT]
+    defaults: { _controller: 'pylon_api.pylon.controller:start' }
+    requirements:
+        apiVersion: \d+\.\d+
+
+pylon_api.pylon.stop:
+    path: /v{apiVersion}/pylon/stop
+    methods: [PUT]
+    defaults: { _controller: 'pylon_api.pylon.controller:stop' }
+    requirements:
+        apiVersion: \d+\.\d+
+
+pylon_api.pylon.get:
+    path: /v{apiVersion}/pylon/get
+    methods: [GET]
+    defaults: { _controller: 'pylon_api.pylon.controller:get', _auth_type: both }
+    requirements:
+        apiVersion: \d+\.\d+
+
+pylon_api.identity.limit.list:
+    path: /v{apiVersion}/account/identity/limit/{service}
+    methods: [GET]
+    defaults: { _controller: 'pylon_api.identity.controller:limitList', _auth_type: agency }
+    requirements:
+        apiVersion: \d+\.\d+
+        service: "\w+"
+
+pylon_api.identity.limit.service:
+    path: /v{apiVersion}/account/identity/{id}/limit/{service}
+    methods: [GET]
+    defaults: { _controller: 'pylon_api.identity.controller:limitService', _auth_type: agency }
+    requirements:
+        apiVersion: \d+\.\d+
+        id: "[\w\d]+"
+        service: "\w+"
+
+pylon_api.identity.limit.create:
+    path: /v{apiVersion}/account/identity/{id}/limit
+    methods: [POST]
+    defaults: { _controller: 'pylon_api.identity.controller:limitCreate', _auth_type: agency }
+    requirements:
+        apiVersion: \d+\.\d+
+        id: "[\w\d]+"
+
+pylon_api.identity.limit.update:
+    path: /v{apiVersion}/account/identity/{id}/limit/{service}
+    methods: [PUT]
+    defaults: { _controller: 'pylon_api.identity.controller:limitUpdate', _auth_type: agency }
+    requirements:
+        apiVersion: \d+\.\d+
+        id: "[\w\d]+"
+        service: "\w+"
+
+pylon_api.identity.limit.delete:
+    path: /v{apiVersion}/account/identity/{id}/limit/{service}
+    methods: [DELETE]
+    defaults: { _controller: 'pylon_api.identity.controller:limitRemove', _auth_type: agency }
+    requirements:
+        apiVersion: \d+\.\d+
+        id: "[\w\d]+"
+        service: "\w+"
+
+##
+# TORNADO API
+##
+tornado_api.project.show:
+    path: /v{apiVersion}/tornado/project/{id}
+    methods: [GET]
+    defaults: { _controller: 'tornado_api.project.controller:show' }
+    requirements:
+        id: \d+
+        apiVersion: \d+\.\d+
+
+tornado_api.project:
+    path: /v{apiVersion}/tornado/project
+    methods: [GET]
+    defaults: { _controller: 'tornado_api.project.controller:get' }
+    requirements:
+        apiVersion: \d+\.\d+
+
+tornado_api.project.create:
+    path: /v{apiVersion}/tornado/project
+    methods: [POST]
+    defaults: { _controller: 'tornado_api.project.controller:create' }
+    requirements:
+        apiVersion: \d+\.\d+
+
+tornado_api.project.update:
+    path: /v{apiVersion}/tornado/project/{id}
+    methods: [PUT]
+    defaults: { _controller: 'tornado_api.project.controller:update' }
+    requirements:
+        id: \d+
+        apiVersion: \d+\.\d+
+
+tornado_api.project.delete:
+    path: /v{apiVersion}/tornado/project/{id}
+    methods: [DELETE]
+    defaults: { _controller: 'tornado_api.project.controller:delete' }
+    requirements:
+        id: \d+
+        apiVersion: \d+\.\d+
+
+# Recording API
+
+tornado_api.recording.create:
+    path: /v{apiVersion}/tornado/recording
+    methods: [POST]
+    defaults: { _controller: 'tornado_api.recording.controller:create' }
+    requirements:
+        apiVersion: \d+\.\d+

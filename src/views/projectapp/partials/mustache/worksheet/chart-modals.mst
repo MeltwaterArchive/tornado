@@ -1,0 +1,15 @@
+{% raw %}
+    <!-- Chart Rename modal -->
+    <script data-tornado-template="chart-rename-modal" type="x-tmpl-mustache">
+        <div data-form="chart-rename" class="modallica__content">
+            <div data-form-field="name">
+                <label class="input-label" for="chart-rename-name">Chart Name</label>
+                <input type="text" placeholder="Give the chart a name..." id="chart-rename-name" value="{{ chart.name }}">
+            </div>
+            <div class="modallica__actions">
+                <button data-modallica-action="close" class="clear-button" type="button">Cancel</button>
+                <button data-spinner data-modallica-action="submit" class="submit-button" type="button" data-chart-rename-submit>Rename</button>
+            </div>
+        </div>
+    </script>
+{% endraw %}

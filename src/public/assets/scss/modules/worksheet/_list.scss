@@ -1,0 +1,115 @@
+/**
+ * Module ~ Wosksheet list
+ */
+
+/**
+ * Worksheet list variables
+ */
+$worksheet-list-item-border-colour: $colour-grey-light !default;
+$worksheet-list-item-hovered-background-colour: #f9f9f9 !default;
+$worksheet-list-item-active-background-colour: #e9eaee !default;
+$worksheet-list-item-active-border-colour: #e9eaee !default;
+
+/**
+ * Worksheet list styles
+ */
+.worksheet-list {
+    display: inline-block;
+    float: left;
+    width: 100%;
+    padding: 0 15px 0 10px;
+    &--disabled {
+        display: none;
+    }
+}
+
+.worksheet-list__items {
+    display: block;
+    position: relative;
+    top: 1px;
+    margin: 0;
+    padding: 0;
+    @extend %no-list-style;
+}
+
+%worksheet-list__item-template {
+    float: left;
+    position: relative;
+    display: inline-block;
+    padding: 10px;
+    font-size: rem(12);
+    border: 1px solid $worksheet-list-item-border-colour;
+    cursor: pointer;
+    &:hover {
+        background-color: $worksheet-list-item-hovered-background-colour;
+    }
+}
+
+.worksheet-list__item {
+    @extend %worksheet-list__item-template;
+    border-width: 1px 1px 1px 0;
+    &:first-child {
+        border-width: 1px 1px 0;
+    }
+    &:last-child {
+        border-width: 1px 0;
+    }
+    &:only-child {
+        border-width: 1px 0 0 1px;
+    }
+    &--active {
+        background-color: $worksheet-list-item-active-background-colour;
+        border-bottom-color: $worksheet-list-item-active-border-colour;
+        cursor: default;
+        &:first-child {
+            border-width: 1px;
+        }
+        &:only-child {
+            border-width: 1px 0 1px 1px;
+        }
+        &:hover {
+            background-color: $worksheet-list-item-active-background-colour;
+        }
+        .worksheet-list__item-actions {
+            display: inline-block;
+        }
+    }
+}
+
+.worksheet-list__create-worksheet {
+    @extend %worksheet-list__item-template;
+    top: 1px;
+    width: 37px;
+    height: 37px;
+    background: {
+        image: url("#{$image-path}/common/actions/create-dark.svg");
+        size: auto 10px;
+        position: center center;
+        repeat: no-repeat;
+    }
+}
+
+.worksheet-list__item-actions {
+    display: none;
+    position: relative;
+    margin-left: 20px;
+    z-index: 4;
+    &:hover {
+        .worksheet-list__item-actions__toggle {
+            opacity: 1;
+        }
+    }
+    [data-tornado-page="dimensions"] & {
+        [data-worksheet-action="options"] {
+            display: none;
+        }
+    }
+}
+
+.worksheet-list__item-actions__toggle {
+    @include dropdown-button(12px, 1px, false);
+    right: 1px;
+    background-image: url("#{$image-path}/modules/charts/options.svg");
+    cursor: pointer;
+    opacity: 0.5;
+}

@@ -1,0 +1,70 @@
+/**
+ * Plugins ~ Selectize
+ */
+
+/**
+ * Selectize variables
+ */
+$selectize-item-background-colour: $colour-blue-facebook !default;
+$selectize-item-border-colour: $colour-blue-facebook !default;
+$selectize-dropdown-active-item-colour: #fff !default;
+$selectize-dropdown-active-item-background-colour: $colour-blue-facebook !default;
+
+/**
+ * Selectize styles
+ */
+.selectize-control {
+    // Single select specific styles
+    &.single {
+        .selectize-input {
+            // Add some padding to the right
+            // for the arrow...
+            padding-right: 30px;
+            .item {
+                max-width: 97%;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+        }
+        .selectize-dropdown [data-selectable] {
+            line-height: 16px;
+        }
+    }
+    // Multiselect specific styles
+    &.multi {
+        .selectize-input {
+            min-height: 34px;
+            height: auto;
+            > input {
+                top: 0;
+            }
+            .item {
+                font-size: rem(11);
+                line-height: 16px;
+                background: $selectize-item-background-colour !important;
+                border-color: $selectize-item-border-colour !important;
+                border-radius: 3px;
+            }
+        }
+    }
+}
+
+.selectize-input {
+    border-radius: 3px;
+    &.dropdown-active {
+        border-radius: 3px 3px 0 0;
+    }
+    > input {
+        position: relative;
+        top: -2px;
+    }
+}
+
+.selectize-dropdown {
+    border-radius: 0 0 3px 3px;
+    .active {
+        color: $selectize-dropdown-active-item-colour;
+        background-color: $selectize-dropdown-active-item-background-colour;
+    }
+}

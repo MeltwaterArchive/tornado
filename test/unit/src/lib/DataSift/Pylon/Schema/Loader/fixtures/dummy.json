@@ -1,0 +1,15 @@
+{
+    "source": "facebook",
+    "schema": [
+        {
+            "target": "fb.author.id",
+            "perms": [],
+            "is_mandatory": true
+        },
+        {
+            "target": "fb.author.age",
+            "cardinality": 7,
+            "description": "One of '18-24'"
+        }
+    ]
+}

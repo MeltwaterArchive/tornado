@@ -1,0 +1,25 @@
+{% raw %}
+    <!-- Confirm Delete modal -->
+    <script data-tornado-template="confirm-delete" type="x-tmpl-mustache">
+        <div class="modallica__content modallica__content--confirm-delete">
+            <p>Are you sure you want to delete <strong>{{ item }}</strong>?</p>
+            <p>This action <strong>cannot be undone</strong>, so please ensure you really want to do it.</p>
+            <div class="modallica__actions">
+                <button data-modallica-action="close" class="clear-button" type="button">Cancel</button>
+                <button data-spinner data-modallica-action="submit" class="warning-button" type="button" data-confirm-delete>Yes, Delete It!</button>
+            </div>
+        </div>
+    </script>
+
+    <!-- Confirm Delete Batch modal -->
+    <script data-tornado-template="confirm-delete-batch" type="x-tmpl-mustache">
+        <div class="modallica__content modallica__content--confirm-delete-batch">
+            <p>Are you sure you want to delete <strong>{{ count }}</strong> item(s)?</p>
+            <p>This action <strong>cannot be undone</strong>, so please ensure you really want to do it.</p>
+            <div class="modallica__actions">
+                <button data-modallica-action="close" class="clear-button" type="button">Cancel</button>
+                <button data-spinner data-modallica-action="submit" class="warning-button" type="button" data-confirm-delete>Yes, Delete Them!</button>
+            </div>
+        </div>
+    </script>
+{% endraw %}

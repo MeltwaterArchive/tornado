@@ -1,0 +1,6 @@
+services:
+    security.http.datasift_api.authentication_manager:
+        class: Tornado\Security\Http\DataSiftApi\AuthenticationManager
+        arguments:
+            - @organization.agency.repository
+            - @organization.brand.repository

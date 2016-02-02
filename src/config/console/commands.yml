@@ -1,0 +1,58 @@
+services:
+    ##
+    # Commands Bag
+    ##
+    datasift.command.bag:
+        class: DataSift\Command\CommandBag
+
+    ##
+    # Commands Definitions
+    ##
+    command.cache_clear:
+        class: Command\CacheClear
+        arguments:
+            - @cache
+            - @filesystem
+            - %cache_dir%
+        tags:
+            - { name: command }
+
+    command.create_user:
+        class: Command\CreateUser
+        arguments:
+            - @organization.user.repository
+            - @organization.repository
+            - @validator
+            - @organization.user.factory
+        tags:
+            - { name: command }
+
+    command.delete_user:
+        class: Command\DeleteUser
+        arguments:
+            - @organization.user.repository
+        tags:
+            - { name: command }
+
+    command.user_brands:
+        class: Command\UserBrands
+        arguments:
+            - @organization.user.repository
+            - @organization.brand.repository
+        tags:
+            - { name: command }
+
+    command.user_agencies:
+        class: Command\UserAgencies
+        arguments:
+            - @organization.user.repository
+            - @organization.agency.repository
+        tags:
+            - { name: command }
+
+    command.brand_permissions:
+        class: Command\BrandPermissions
+        arguments:
+            - @organization.brand.repository
+        tags:
+            - { name: command }

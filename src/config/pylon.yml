@@ -1,0 +1,39 @@
+services:
+    pylon.schema.loader.json:
+        class: DataSift\Pylon\Schema\Loader\Json
+        arguments:
+            - %pylon.schema.fb%
+            - @monolog
+
+    pylon.schema.provider:
+        class: DataSift\Pylon\Schema\Provider
+        arguments:
+            - [@pylon.schema.loader.json,@pylon.schema.tags_loader]
+            - @cache
+            - @monolog
+
+    pylon.schema.tags_loader:
+        class: DataSift\Pylon\Schema\Loader\Tags
+        arguments:
+            - @datasift.pylon
+            - @cache
+
+    pylon.schema.grouper.loader:
+        class: DataSift\Loader\Json
+        arguments:
+            - [%pylon.schema.groups.json%]
+
+    pylon.schema.grouper:
+        class: DataSift\Pylon\Schema\Grouper
+        arguments:
+            - @pylon.schema.grouper.loader
+
+    pylon.regions.loader:
+        class: DataSift\Loader\Json
+        arguments:
+            - [%pylon.regions.json%]
+
+    pylon.regions:
+        class: DataSift\Pylon\Regions
+        arguments:
+            - @pylon.regions.loader

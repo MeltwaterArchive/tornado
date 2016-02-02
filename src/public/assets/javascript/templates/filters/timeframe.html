@@ -1,0 +1,38 @@
+<h4 class="page-sidebar__section-headline">Timeframe</h4>
+
+<input type="hidden" value="<%= options.from.valueOf() || options.min.valueOf() %>" name="timeframe-start" />
+<input type="hidden" value="<%= options.to.valueOf() || options.max.valueOf() %>" name="timeframe-end" />
+<input type="hidden" value="<%= options.timeframe || 'custom' %>" name="timeframe-name" />
+
+<div class="wrapper">
+	<%
+		var selected = options.timeframe || 'custom';
+	%>
+
+	<ul class="dropdown">
+
+		<li class="placeholder <% options.to && options.from ? 'selected' : '' %>">
+			Select...
+		</li>
+
+	<% options.timeframes.forEach(function (timeframe) { %>
+		<li data-start="<%= timeframe.time.valueOf() %>" data-end="<%= options.max.valueOf() %>" data-name="<%= timeframe.name %>" class="<%= selected === timeframe.name ? 'selected': '' %>">
+			<span class="title"><%= timeframe.name %></span>
+			<span class="small-time">
+				<%= timeframe.time.format('lll') %>
+				-
+				<%= options.max.format('lll') %>
+			</span>
+		</li>
+	<% }) %>
+
+		<li data-start="<%= options.from.valueOf() || options.min.valueOf() %>" data-end="<%= options.to.valueOf() || options.max.valueOf() %>" data-name="custom" class="<%= selected === 'custom' ? 'selected' : '' %> custom">
+			<span class="title">Custom Range</span>
+			<span class="small-time">
+				<%= options.from.valueOf() ? options.from.format('lll') : options.min.format('lll') %>
+				-
+				<%= options.to.valueOf() ? options.to.format('lll') : options.max.format('lll') %>
+			</span>
+		</li>
+	</ul>
+</div>

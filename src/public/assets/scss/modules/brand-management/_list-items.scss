@@ -1,0 +1,125 @@
+/**
+ * Module ~ List Item
+ *
+ * Used in brand management for both
+ * project and recording listing. Fun.
+ */
+
+/**
+ * List Item variables
+ */
+$list-item-background-colour: #fff !default;
+$list-item-selected-background-colour: #fffbe5 !default;
+$list-item-even-background-colour: #f8f9fa !default;
+$list-item-border-colour: $colour-grey-light !default;
+$list-item-date-created-label-colour: #9197a3 !default;
+$list-item-date-created-colour: #333 !default;
+
+$list-items-no-results-border-colour: $colour-grey-light !default;
+$list-items-no-results-heading-colour: #9197a3 !default;
+
+/**
+ * List Item styles
+ */
+%list-items,
+.list-items {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+    margin: 5px 0 0;
+    padding: 0;
+    @extend %no-list-style;
+    @include user-select(none);
+}
+
+.list-items--no-results {
+    padding: 35px 0;
+    text-align: center;
+    border: 1px dashed $list-items-no-results-border-colour;
+    h6 {
+        margin-bottom: 8px;
+        font-size: rem(12);
+        font-weight: bold;
+        color: $list-items-no-results-heading-colour;
+    }
+    p {
+        margin-top: 8px;
+        font-size: rem(12);
+    }
+}
+
+%list-item,
+.list-item {
+    display: table-row;
+    width: 100%;
+    padding: 10px;
+    background-color: $list-item-background-colour;
+    @include transition(0.3s background-color $slick-ease);
+    &:first-child {
+        .list-item__cell {
+            border-width: 1px 0;
+        }
+    }
+    &:nth-child(even) {
+        background-color: $list-item-even-background-colour;
+    }
+}
+
+.list-item--selected {
+    background-color: $list-item-selected-background-colour !important;
+}
+
+%list-item-cell,
+.list-item__cell {
+    display: table-cell;
+    border: 1px solid $list-item-border-colour;
+    border-width: 0 0 1px;
+    vertical-align: middle;
+    &.list-item__cell--checkbox {
+        width: 45px;
+    }
+    &.list-item__cell--actions {
+        width: 150px;
+        padding: 0 10px;
+        text-align: right;
+    }
+}
+
+.list-item__select {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    text-align: center;
+}
+
+%list-item-title,
+.list-item__link {
+    font-weight: bold;
+    @include ellipsis(100%);
+}
+
+%list-item-date-created,
+.list-item__date-created {
+    margin: 0;
+    font-size: rem(12);
+    color: $list-item-date-created-label-colour;
+    span {
+        color: $list-item-date-created-colour;
+    }
+}
+
+/**
+ * Single list item actions
+ */
+%list-item-actions,
+.list-item__actions {
+    display: inline-block;
+    margin: 5px 0;
+    padding: 10px 0;
+}
+
+%list-item-action,
+.list-item__action {
+    @extend %clear-button;
+    padding: 9px 10px;
+}

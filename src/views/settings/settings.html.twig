@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block page_content %}
+    <div class="content__header">
+        <h4 style="margin: 0px;">Settings</h4>
+    </div>
+    <div class="content settings">
+        <div class="gravatar">
+            <img src="{{ data.user.image }}?s=120" height="120" alt="Gravatar" />
+            Profile images are powered by <a href="http://gravatar.com/">Gravatar</a>, if you don't have a Gravatar or you want to edit your profile image, <a href="http://gravatar.com/">change your profile image here</a>.
+        </div>
+        <div class="rhs">
+            <div class="single-item__header">
+                <h5 class="single-item__title"><strong>Change Email Address</strong></h5>
+                <p>Your current email address is <strong>{{data.user.email}}</strong>. To change it, please use the form below.</p>
+            </div>
+            <form method="post" action="{{ path('settings') }}">
+                <input type="hidden" name="action" value="changeemail" />
+                <div class="input-wrapper">
+                    <label class="input-label" for="ec-current-password">Current Password</label>
+                    {% if meta.currentPassword is defined and meta.action == 'changeemail'  %}
+                        <span class="input-error">{{ meta.currentPassword }}</span>
+                    {% endif %}
+                    <input id="ec-current-password" type="password" name="currentPassword" value="" placeholder="" />
+                </div>
+                <div class="input-wrapper">
+                    <label class="input-label" for="ec-new-email">New Email</label>
+                    {% if meta.email is defined %}
+                        <span class="input-error">{{ meta.email }}</span>
+                    {% endif %}
+                    <input id="ec-email" type="text" name="email" value="" placeholder="" />
+                </div>
+                <div class="input-wrapper">
+                    <label class="input-label" for="ec-confirm-email">Confirm Email</label>
+                    {% if meta.confirmEmail is defined %}
+                        <span class="input-error">{{ meta.confirmEmail }}</span>
+                    {% endif %}
+                    <input id="ec-confirm-email" type="text" name="confirmEmail" value="" placeholder="" />
+                </div>
+                <div class="single-item__actions">
+                    <button class="single-item__action single-item__action--update" type="submit" data-spinner>Save</button>
+                </div>
+            </form>
+            <div class="single-item__header">
+                <h5 class="single-item__title"><strong>Change Password</strong></h5>
+            </div>
+            <form method="post" action="{{ path('settings') }}">
+                <input type="hidden" name="action" value="changepassword" />
+                <div class="input-wrapper">
+                    <label class="input-label" for="pc-current-password">Current Password</label>
+                    {% if meta.currentPassword is defined and meta.action == 'changepassword' %}
+                        <span class="input-error">{{ meta.currentPassword }}</span>
+                    {% endif %}
+                    <input id="pc-current-password" type="password" name="currentPassword" value="" placeholder="" />
+                </div>
+                <div class="input-wrapper">
+                    <label class="input-label" for="pc-password">Password</label>
+                    {% if meta.password is defined %}
+                        <span class="input-error">{{ meta.password }}</span>
+                    {% endif %}
+                    <input id="pc-password" type="password" name="password" value="" placeholder="" />
+                </div>
+                <div class="input-wrapper">
+                    <label class="input-label" for="pc-confirm-password">Confirm Password</label>
+                    {% if meta.confirm_password is defined %}
+                        <span class="input-error">{{ meta.confirm_password }}</span>
+                    {% endif %}
+                    <input id="pc-confirm-password" type="password" name="confirm_password" value="" placeholder="" />
+                </div>
+                <div class="single-item__actions">
+                    <button class="single-item__action single-item__action--update" type="submit" data-spinner>Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

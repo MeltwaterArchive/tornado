@@ -1,0 +1,15 @@
+/**
+ * Module ~ Confirm Delete
+ *
+ * Confirm Delete modal ~ Brand listing
+ */
+.modallica__content--confirm-delete,
+.modallica__content--confirm-delete-batch {
+    p:first-child {
+        margin-top: 0;
+    }
+
+    .warning-button {
+        float: right;
+    }
+}

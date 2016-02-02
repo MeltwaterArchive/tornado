@@ -1,0 +1,478 @@
+##
+# SECURITY
+##
+login:
+    path: /login
+    methods: [GET, POST]
+    defaults:
+        _controller: 'security.controller:login'
+        _template: 'security/login.html.twig'
+        _authentication: off
+
+login.forgotpassword:
+    path: /login/forgot
+    methods: [GET, POST]
+    defaults:
+        _controller: 'security.controller:forgot'
+        _template: 'security/forgot.html.twig'
+        _authentication: off
+
+login.resetpassword:
+    path: /login/reset
+    methods: [GET, POST]
+    defaults:
+        _controller: 'security.controller:reset'
+        _template: 'security/reset.html.twig'
+        _authentication: off
+
+jwt:
+    path: /jwt
+    methods: [GET]
+    defaults:
+        _controller: 'security.controller:jwt'
+        _template: 'security/login.html.twig'
+        _authentication: off
+
+logout:
+    path: /logout
+    methods: [GET, DELETE]
+    defaults:
+        _controller: 'security.controller:logout'
+        _authentication: off
+
+##
+# BRAND RESOURCE
+##
+brand.get:
+    path: /brands/{brandId}
+    methods: [GET]
+    defaults:
+        _controller: 'brand.controller:get'
+        _template: 'brand/projects/index.html.twig'
+        _brand_resolver: 'brandId'
+        _disallow: [ROLE_SPAONLY]
+    requirements:
+        brandId: \d+
+
+brand.get.recordings:
+    path: /brands/{brandId}/recordings
+    methods: [GET]
+    defaults:
+        _controller: 'brand.controller:getRecordings'
+        _template: 'brand/recordings/index.html.twig'
+        _brand_resolver: 'brandId'
+        _disallow: [ROLE_SPAONLY]
+    requirements:
+        brandId: \d+
+
+brand.import.recordings:
+    path: /brands/{brandId}/recordings/import
+    methods: [GET,POST]
+    defaults:
+        _controller: 'brand.controller:importRecordings'
+        _template: 'brand/recordings/import.html.twig'
+        _brand_resolver: 'brandId'
+        _disallow: [ROLE_SPAONLY]
+    requirements:
+        brandId: \d+
+
+##
+# RECORDING RESOURCE
+##
+recording.create_form:
+    path: /brands/{brandId}/recordings/new
+    defaults:
+        _controller: 'project.recording.controller:createForm'
+        _template: 'brand/recordings/create.html.twig'
+        _brand_resolver: 'brandId'
+        _disallow: [ROLE_SPAONLY]
+    methods:  [GET]
+    requirements:
+        brandId: \d+
+
+recording.create:
+    path: /brands/{brandId}/recordings
+    defaults:
+        _controller: 'project.recording.controller:create'
+        _template: 'brand/recordings/create.html.twig'
+        _brand_resolver: 'brandId'
+        _disallow: [ROLE_SPAONLY]
+    methods:  [POST]
+    requirements:
+        brandId: \d+
+
+recording.batch:
+    path: /brands/{brandId}/recordings/batch
+    defaults:
+        _controller: 'project.recording.controller:batch'
+        _brand_resolver: 'brandId'
+        _disallow: [ROLE_SPAONLY]
+    methods:  [POST]
+    requirements:
+        brandId: \d+
+
+recording.update_form:
+    path: /recordings/{recordingId}/edit
+    defaults:
+        _controller: 'project.recording.controller:updateForm'
+        _template: 'brand/recordings/edit.html.twig'
+        _brand_resolver: 'recordingId'
+        _disallow: [ROLE_SPAONLY]
+    methods:  [GET]
+    requirements:
+        recordingId: \d+
+
+recording.update:
+    path: /recordings/{recordingId}/edit
+    defaults:
+        _controller: 'project.recording.controller:update'
+        _template: 'brand/recordings/edit.html.twig'
+        _brand_resolver: 'recordingId'
+        _disallow: [ROLE_SPAONLY]
+    methods:  [POST, PUT, PATCH]
+    requirements:
+        recordingId: \d+
+
+recording.delete:
+    path: /recordings/{recordingId}/delete
+    defaults:
+        _controller: 'project.recording.controller:delete'
+        _brand_resolver: 'recordingId'
+        _disallow: [ROLE_SPAONLY]
+    methods:  [DELETE]
+    requirements:
+        recordingId: \d+
+
+recording.pause:
+    path: /recordings/{recordingId}/pause
+    defaults:
+        _controller: 'project.recording.controller:pause'
+        _brand_resolver: 'recordingId'
+        _disallow: [ROLE_SPAONLY]
+    methods:  [PUT]
+    requirements:
+        recordingId: \d+
+
+recording.resume:
+    path: /recordings/{recordingId}/resume
+    defaults:
+        _controller: 'project.recording.controller:resume'
+        _brand_resolver: 'recordingId'
+        _disallow: [ROLE_SPAONLY]
+    methods:  [PUT]
+    requirements:
+        recordingId: \d+
+
+##
+# PROJECT RESOURCE
+##
+project.create:
+    path: /brands/{brandId}/projects/new
+    defaults:
+        _controller: 'project.controller:create'
+        _template: 'brand/projects/create.html.twig'
+        _brand_resolver: 'brandId'
+        _disallow: [ROLE_SPAONLY]
+    methods:  [GET, POST]
+    requirements:
+        brandId: \d+
+
+project.batch:
+    path: /brands/{brandId}/projects/batch
+    defaults:
+        _controller: 'project.controller:batch'
+        _brand_resolver: 'brandId'
+        _disallow: [ROLE_SPAONLY]
+    methods:  [POST]
+    requirements:
+        brandId: \d+
+
+project.update:
+    path: /projects/{projectId}/edit
+    defaults:
+        _controller: 'project.controller:update'
+        _template: 'brand/projects/edit.html.twig'
+        _brand_resolver: 'projectId'
+        _disallow: [ROLE_SPAONLY]
+    methods:  [GET, POST, PUT, PATCH]
+    requirements:
+        projectId: \d+
+
+project.delete:
+    path: /projects/{projectId}/delete
+    defaults:
+        _controller: 'project.controller:delete'
+        _template: 'brand/projects/index.html.twig'
+        _brand_resolver: 'projectId'
+        _disallow: [ROLE_SPAONLY]
+    methods:  [DELETE]
+    requirements:
+        projectId: \d+
+
+##
+# PROJECT APP
+##
+project.get:
+    path: /projects/{projectId}{catchAll}
+    defaults:
+        _controller: 'project.app.controller:get'
+        _template: 'projectapp/index.html.twig'
+        _brand_resolver: 'projectId'
+        catchAll: ~
+    methods:  [GET]
+    requirements:
+        projectId: \d+
+        catchAll: (/(.*))?
+
+##
+# PROJECT RESOURCE - Xhr dedicated
+##
+project.worksheet:
+    path: /api/project/{projectId}/worksheet/{worksheetId}
+    defaults:
+        _controller: 'project.app.worksheet.controller:index'
+        _brand_resolver: 'projectId'
+    methods: [GET]
+    requirements:
+        projectId: \d+
+        worksheetId: \d+
+
+project.worksheet.create:
+    path: /api/project/{projectId}/worksheet
+    defaults:
+        _controller: 'project.app.worksheet.controller:create'
+        _brand_resolver: 'projectId'
+    methods: [POST]
+    requirements:
+        projectId: \d+
+
+project.worksheet.update:
+    path: /api/project/{projectId}/worksheet/{worksheetId}
+    defaults:
+        _controller: 'project.app.worksheet.controller:update'
+        _brand_resolver: 'projectId'
+    methods: [PUT,PATCH]
+    requirements:
+        projectId: \d+
+        worksheetId: \d+
+
+project.worksheet.explore:
+    path: /api/project/{projectId}/worksheet/{worksheetId}/explore
+    defaults:
+        _controller: 'project.app.worksheet.controller:explore'
+        _brand_resolver: 'projectId'
+    methods: [POST]
+    requirements:
+        projectId: \d+
+        worksheetId: \d+
+
+project.worksheet.export:
+    path: /api/project/{projectId}/worksheet/{worksheetId}/export
+    defaults:
+        _controller: 'project.app.worksheet.controller:export'
+        _brand_resolver: 'projectId'
+    methods: [GET]
+    requirements:
+        projectId: \d+
+        worksheetId: \d+
+
+project.worksheet.delete:
+    path: /api/project/{projectId}/worksheet/{worksheetId}
+    defaults:
+        _controller: 'project.app.worksheet.controller:delete'
+        _brand_resolver: 'projectId'
+    methods: [DELETE]
+    requirements:
+        projectId: \d+
+        worksheetId: \d+
+
+project.worksheet.dimension:
+    path: /api/project/{projectId}/worksheet/{worksheetId}/dimensions
+    methods: [GET]
+    defaults:
+        _controller: 'project.app.dimension.controller:index'
+        _brand_resolver: 'projectId'
+    requirements:
+        projectId: \d+
+        worksheetId: \d+
+
+project.workbooks:
+    path: /api/project/{projectId}/workbook
+    methods: [GET]
+    defaults:
+        _controller: 'project.app.workbook.controller:workbooks'
+        _brand_resolver: 'projectId'
+    requirements:
+        projectId: \d+
+
+project.workbook:
+    path: /api/project/{projectId}/workbook/{workbookId}
+    methods: [GET]
+    defaults:
+        _controller: 'project.app.workbook.controller:workbook'
+        _brand_resolver: 'projectId'
+    requirements:
+        projectId: \d+
+        workbookId: \d+
+
+project.workbook.create:
+    path: /api/project/{projectId}/workbook
+    methods: [POST]
+    defaults:
+        _controller: 'project.app.workbook.controller:create'
+        _brand_resolver: 'projectId'
+    requirements:
+        projectId: \d+
+
+project.workbook.create_default:
+    path: /api/project/{projectId}/workbook/default
+    defaults:
+        _controller: 'project.app.workbook.controller:createDefaults'
+        _brand_resolver: 'projectId'
+    methods: [POST]
+    requirements:
+        projectId: \d+
+
+project.workbook.update:
+    path: /api/project/{projectId}/workbook/{workbookId}
+    methods: [PUT]
+    defaults:
+        _controller: 'project.app.workbook.controller:update'
+        _brand_resolver: 'projectId'
+    requirements:
+        projectId: \d+
+        workbookId: \d+
+
+project.workbook.delete:
+    path: /api/project/{projectId}/workbook/{workbookId}
+    methods: [DELETE]
+    defaults:
+        _controller: 'project.app.workbook.controller:delete'
+        _brand_resolver: 'projectId'
+    requirements:
+        projectId: \d+
+        workbookId: \d+
+
+project.workbook.lock:
+    path: /api/project/{projectId}/workbook/{workbookId}/lock
+    methods: [POST]
+    defaults:
+        _controller: 'project.app.workbook.controller:lock'
+        _brand_resolver: 'projectId'
+    requirements:
+        projectId: \d+
+        workbookId: \d+
+
+project.workbook.lock.ttl_reset:
+    path: /api/project/{projectId}/workbook/{workbookId}/lock/ttl-reset
+    methods: [PUT]
+    defaults:
+        _controller: 'project.app.workbook.controller:ttlReset'
+        _brand_resolver: 'projectId'
+    requirements:
+        projectId: \d+
+        workbookId: \d+
+
+project.workbook.unlock:
+    path: /api/project/{projectId}/workbook/{workbookId}/unlock
+    methods: [DELETE]
+    defaults:
+        _controller: 'project.app.workbook.controller:unlock'
+        _brand_resolver: 'projectId'
+    requirements:
+        projectId: \d+
+        workbookId: \d+
+
+project.workbook.export:
+    path: /api/project/{projectId}/workbook/{workbookId}/export
+    defaults:
+        _controller: 'project.app.workbook.controller:export'
+        _brand_resolver: 'projectId'
+    methods: [GET]
+    requirements:
+        projectId: \d+
+        workbookId: \d+
+
+project.chart.update:
+    path: /api/project/{projectId}/chart/{chartId}
+    methods: [PUT, PATCH]
+    defaults:
+        _controller: 'project.app.chart.controller:update'
+        _brand_resolver: 'projectId'
+    requirements:
+        projectId: \d+
+        chartId: \d+
+
+project.chart.delete:
+    path: /api/project/{projectId}/chart/{chartId}
+    methods: [DELETE]
+    defaults:
+        _controller: 'project.app.chart.controller:delete'
+        _brand_resolver: 'projectId'
+    requirements:
+        projectId: \d+
+        chartId: \d+
+
+project.recordings:
+    path: /api/project/{projectId}/recordings
+    defaults:
+        _controller: 'project.app.recording.controller:index'
+        _brand_resolver: 'projectId'
+    methods: [GET]
+
+##
+# EXTRA RESOURCES
+##
+home:
+    path: /
+    defaults:
+        _controller: 'index.controller:index'
+        _template: 'index/index.html.twig'
+        _disallow: [ROLE_SPAONLY]
+
+analyzer:
+    path: /analyzer
+    methods:  [POST]
+    defaults:
+        _controller: 'analyze.controller:create'
+        _brand_resolver: 'worksheetId'
+
+dataset:
+    path: /datasets
+    methods: [GET]
+    defaults:
+        _controller: 'dataset.controller:index'
+
+regions:
+    path: /regions
+    methods: [GET]
+    defaults:
+        _controller: 'region.controller:regions'
+
+countries:
+    path: /countries
+    methods: [GET]
+    defaults:
+        _controller: 'region.controller:countries'
+
+##
+# SETTINGS
+##
+
+settings:
+    path: /settings
+    methods: [GET,POST]
+    defaults:
+        _template: 'settings/settings.html.twig'
+        _controller: 'settings.controller:settings'
+
+##
+# ADMIN - duplicated from config/admin/routes.yml in favor of using twig path
+##
+admin:
+    path: /admin
+    methods: [GET]
+    defaults:
+        _controller: 'admin.index.controller:index'
+        _template: 'admin/index.html.twig'
+        _permissions: [ROLE_ADMIN]

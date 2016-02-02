@@ -1,0 +1,10 @@
+{# Includes Projects and Recordings  (active) tabs #}
+<div class="brand-management__tabs">
+    <h6 class="brand-management__tab">
+        <a class="brand-management__tab__link" href="{{ path('brand.get', {'brandId': selectedBrand.id}) }}">PROJECTS</a>
+    </h6>
+
+    <h6 class="brand-management__tab brand-management__tab--active">
+        <a class="brand-management__tab__link" href="{{ path('brand.get.recordings', {'brandId': selectedBrand.id}) }}">RECORDINGS</a>
+    </h6>
+</div>

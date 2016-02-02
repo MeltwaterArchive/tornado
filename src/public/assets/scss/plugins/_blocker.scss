@@ -1,0 +1,48 @@
+/**
+ * Plugin ~ Blocker
+ */
+
+/**
+ * Blocker variables
+ */
+$blocker-background-colour: rgba(255, 255, 255, 0.9) !default;
+
+/**
+ * Blocker styles
+ */
+[data-blocker] {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: text-center;
+    background-color: $blocker-background-colour;
+    opacity: 0;
+    visibility: hidden;
+    z-index: 3;
+    @include transition(0.2s all linear);
+}
+
+[data-blocker-button] {
+    @extend %submit-button;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    @include transform-origin(left top);
+    @include transform(scale(0.60) translate(-50%, -50%));
+    @include transition(0.2s all linear, 0.3s transform $slick-ease 0.15s);
+}
+
+[data-blocker="block"] {
+    opacity: 1;
+    visibility: visible;
+    [data-blocker-button] {
+        opacity: 1;
+        visibility: visible;
+        @include transform(scale(1) translate(-50%, -50%));
+    }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "tornado",
+  "private": true,
+  "dependencies": {
+    "requirejs": "latest",
+    "backbone": "latest",
+    "lodash": "3.10.1",
+    "jquery": "latest",
+    "mustache": "latest",
+    "d3": "latest",
+    "moment": "~2.11.1",
+    "text": "latest"
+  },
+  "devDependencies": {
+    "qunit": "~1.20.0"
+  }
+}

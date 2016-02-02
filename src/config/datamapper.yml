@@ -1,0 +1,49 @@
+services:
+    # doctrine configuration
+    doctrine.dbal.configuration:
+        class: Doctrine\DBAL\Configuration
+        calls:
+            - ["setSQLLogger", ["@doctrine.sql_logger"]]
+        private: true
+
+    doctrine.sql_logger:
+        class: Tornado\DataMapper\StatsCollector
+        arguments:
+            - @stats
+        private: true
+
+    doctrine.dbal.driver.pdo_sqlite:
+        class: Doctrine\DBAL\Driver\PDOSqlite\Driver
+        private: true
+
+    doctrine.dbal.driver.pdo_mysql:
+        class: Doctrine\DBAL\Driver\PDOMySql\Driver
+        private: true
+
+    doctrine.dbal.connection.mysql:
+        class: Doctrine\DBAL\Connection
+        arguments:
+            - user: %db.username%
+              password: %db.password%
+              host: %db.host%
+              port: %db.port%
+              dbname: %db.database%
+              unix_socket: %db.unix_socket%
+              charset: %db.charset%
+            - @doctrine.dbal.driver.pdo_mysql
+            - @doctrine.dbal.configuration
+        private: true
+
+    doctrine.dbal.connection.sqlite:
+        class: Doctrine\DBAL\Connection
+        arguments:
+            - user: %db.username%
+              password: %db.password%
+              path: %db.path%
+              memory: %db.memory%
+            - @doctrine.dbal.driver.pdo_sqlite
+            - @doctrine.dbal.configuration
+        private: true
+
+    doctrine.dbal.connection:
+        synthetic: true

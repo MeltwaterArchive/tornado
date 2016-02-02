@@ -1,0 +1,21 @@
+{% extends 'base.unsecured.html.twig' %}
+
+{% block body_class %}view--login{% endblock %}
+
+{% block main_menu %}{% endblock %}
+{% block header %}{% endblock %}
+
+{% block page_class %} page--full-width{% endblock %}
+{% block page_content %}
+    <div class="content">
+        {% include 'partials/notifications.html.twig' %}
+
+        <form method="post" action="{{ path("login.forgotpassword") }}">
+            <h1 class="login__heading">Forgotten your password?</h1>
+            <p style='font-size: 0.7em'>Enter your email address and we'll send you a link to reset your password</p>
+            <input class="login__input" type="text" name="email" value="" placeholder="Email address">
+            <button class="login__submit" type="submit">Submit</button>
+            <a class="login__forgot" href="{{ path('login') }}">Back to Sign In</a>
+        </form>
+    </div>
+{% endblock %}

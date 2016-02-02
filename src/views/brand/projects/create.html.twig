@@ -1,0 +1,29 @@
+{% extends 'brand/base.html.twig' %}
+
+{% block page_header_title %}Brand Management - Create a project{% endblock %}
+{% set selectedBrand = data.selectedBrand %}
+
+{% block brand_management_content %}
+    {% include 'brand/projects/partials/header.html.twig' %}
+    <form class="single-item" method="post" action="{{ path('project.create', {'brandId': data.selectedBrand.id}) }}">
+        {# Header #}
+        <div class="single-item__header">
+            <h6 class="single-item__title"><strong>New Project</strong></h6>
+            <div class="single-item__actions">
+                <button class="single-item__action single-item__action--create" type="submit" data-spinner>Create</button>
+            </div>
+        </div>
+        <hr class="divider">
+
+        {# Project name #}
+        <label class="input-label" for="project-name">Project Name</label>
+        {% if meta.name is defined %}
+            <span class="input-error">{{ meta.name }}</span>
+        {% endif %}
+        <input id="project-name" type="text" name="name" value="" placeholder="Give your project a name">
+
+        {# Footer #}
+        <hr class="divider">
+        <a href="{{ path("brand.get", {"brandId": selectedBrand.id}) }}">Cancel</a>
+    </form>
+{% endblock %}

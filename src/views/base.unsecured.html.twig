@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html class="no-js" lang="">
+    {% block head %}
+        <head>
+            <meta charset="utf-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width">
+            <meta name="description" content="">
+
+            <title>Tornado</title>
+
+            <!-- Included Font Files -->
+
+            <!-- Included CSS Files -->
+            {% block stylesheets %}
+                <link rel="stylesheet" href="/assets/css/tornado.css">
+            {% endblock %}
+        </head>
+    {% endblock %}
+
+    <body class="{% block body_class %}{% endblock %}">
+        <div class="main-container">
+            {% block header %}
+                <div class="header">
+                    <a class="brand" href="/">Tornado</a>
+                </div>
+            {% endblock %}
+
+            {% block page %}
+                <div class="page{% block page_class %}{% endblock %}">
+                    <div class="content-wrapper">
+                        {% block page_content %}
+                        {% endblock %}
+                    </div>
+                </div>
+            {% endblock %}
+        </div>
+    </body>
+</html>

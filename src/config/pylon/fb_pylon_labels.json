@@ -1,0 +1,417 @@
+{
+    "schema": [{
+        "target": "fb.author.id",
+        "label": "Author ID",
+        "is_analysable": false
+    }, {
+        "target": "fb.author.age",
+        "label": "Author Age",
+        "description": "One of '18-24', '25-34', '35-44', '45-54', '55-64', '65+' or 'unknown'"
+    }, {
+        "target": "fb.author.country",
+        "label": "Author Country",
+        "description": "The country in which a story author's Current City is located"
+    }, 
+    {
+        "target": "fb.author.country_code",
+        "label": "Author Country Code",
+        "is_analysable": false
+    },
+    {
+        "target": "fb.og_action_type_id",
+        "label": "OG Action Type ID",
+        "is_analysable": false
+    },
+    {
+        "target": "fb.og_object_id",
+        "label": "OG Object ID",
+        "is_analysable": false
+    },
+    {
+        "target": "fb.parent.author.country_code",
+        "label": "Parent Author Country Code",
+        "is_analysable": false
+    },
+    {
+        "target": "fb.parent.og_action_type_id",
+        "label": "Parent OG Action Type ID",
+        "is_analysable": false
+    },
+    {
+        "target": "fb.parent.og_object_id",
+        "label": "Parent OG Object ID",
+        "is_analysable": false
+    },
+    {
+        "target": "interaction.ml.categories",
+        "label": "Scored Tags",
+        "is_analysable": false
+    },
+    {
+        "target": "links.code",
+        "label": "Links Code",
+        "is_analysable": false
+    },
+        {
+        "target": "fb.topics.category_name",
+        "label": "Story Categories & Topics",
+        "description":"Category & topic pairs for stories"
+    },
+        {
+        "target": "fb.parent.topics.category_name",
+        "label": "Engaged Categories & Topics",
+        "description":"Category & topic pairs for engagements"
+    },
+        {
+        "target": "fb.author.country_region",
+        "label": "Author Country & Region",
+        "description":"Country & region pairs for stories"
+    },
+        {
+        "target": "fb.parent.author.country_region",
+        "label": "Parent Author Country & Region",
+        "description":"Country and region pairs for engagements"
+    },
+    {
+        "target": "fb.author.gender",
+        "label": "Author Gender",
+        "description": "One of 'female', 'male', 'unknown'"
+    }, {
+        "target": "fb.author.highest_education",
+        "label": "Author Education",
+        "description": "One of 'high_school', 'college', 'grad_school' or 'unknown'"
+    }, {
+        "target": "fb.author.region",
+        "label": "Author Region",
+        "is_analysable": false,
+        "description": "The region where a story author's Current City is located. Can be a state, province or other region type"
+    }, {
+        "target": "fb.author.relationship_status",
+        "label": "Author Relationship Status",
+        "description": "One of 'single', 'relationship', 'engaged', 'married' or 'unknown'"
+    }, {
+        "target": "fb.author.type",
+        "label": "Author Type",
+        "description": "Breakdown of stories created by people vs. Pages"
+    }, {
+        "target": "fb.language",
+        "label": "Story Language",
+        "description": "The language in which a story is written"
+    }, {
+        "target": "fb.link",
+        "label": "Story Links",
+        "description": "links included in stories"
+    }, {
+        "target": "fb.og_action_type",
+        "label": "Actions",
+        "description": "Actions like Feeling or Watching which people tag in Facebook stories"
+    }, {
+        "target": "fb.og_object",
+        "label": "Action Objects",
+        "description": "The object of an action in a Facebook story. For example: 'drinking Starbucks', 'drinking' is the activity and 'Starbucks' is the object"
+    }, {
+        "target": "fb.parent.author.age",
+        "label": "Parent Author Age",
+        "description": "Engagements by age of the author of their parent stories"
+    }, {
+        "target": "fb.parent.author.country",
+        "label": "Parent Author Country",
+        "description": "Engagements by country of the author of their parent stories"
+    }, {
+            "target": "fb.parent.author.country_region",
+            "label": "Parent Author Country/Region"
+        },
+        {
+        "target": "fb.parent.author.gender",
+        "label": "Parent Author Gender",
+        "description": "Engagements by gender of the authors of their parent stories"
+    }, {
+        "target": "fb.parent.author.highest_education",
+        "label": "Parent Author Education",
+        "description": "Engagements by education level of the authors of their parent stories"
+    }, {
+        "target": "fb.parent.author.region",
+        "label": "Parent Author Region",
+        "is_analysable": false,
+        "description": "Engagements by region of the author of their parent stories"
+    }, {
+        "target": "fb.parent.author.relationship_status",
+        "label": "Parent Author Relationship Status",
+        "description": "Engagements by relationship status of the author of their parent stories"
+    }, {
+        "target": "fb.parent.author.type",
+        "label": "Engaged Author Type",
+        "description": "Breakdown of engagements on stories created by people vs. Pages"
+    }, {
+        "target": "fb.parent.content",
+        "label": "Parent Author Content Type",
+        "is_analysable": false
+    }, {
+        "target": "fb.parent.hashtags",
+        "label": "Engaged Hashtags",
+        "description": "Engagements on stories with hashtags"
+    }, {
+        "target": "fb.parent.language",
+        "label": "Engaged Languages",
+        "description": "Engagements on stories by language"
+    }, {
+        "target": "fb.parent.link",
+        "label": "Engaged Links",
+        "description": "Engagements on stories containing links"
+    }, {
+        "target": "fb.parent.media_type",
+        "label": "Parent Post Type",
+        "description": "Engagements on stories by media type"
+    }, {
+        "target": "fb.parent.og_action_type",
+        "label": "Engaged Activities",
+        "description": "Engagements on stories containing Actions"
+    }, {
+        "target": "fb.parent.og_object",
+        "label": "Engaged Action Objects",
+        "description": "Engagements on stories where Action Objects are present"
+    }, {
+        "target": "fb.parent.topic_ids",
+        "label": "Engaged Topic IDs",
+        "description": "Facebook IDs of topics inferred in stories"
+    }, {
+        "target": "fb.parent.topics.about",
+        "label": "Parent Topic Description",
+        "is_analysable": false
+    }, {
+        "target": "fb.parent.topics.category",
+        "label": "Engaged Topic Categories",
+        "description": "a category assigned to a topic, such as 'company' or 'musician/band'"
+    }, {
+        "target": "fb.parent.topics.company_overview",
+        "label": "Parent Company Overview",
+        "is_analysable": false
+    }, {
+        "target": "fb.parent.topics.location_city",
+        "label": "Parent Company City",
+        "is_analysable": false
+    }, {
+        "target": "fb.parent.topics.location_address",
+        "label": "Parent Company Address",
+        "is_analysable": false
+    }, {
+        "target": "fb.parent.topics.mission",
+        "label": "Parent Company Mission Stmt.",
+        "is_analysable": false
+    },
+        {
+            "target": "fb.parent.topics.category_name",
+            "label": "Parent Topic Category/Name"
+        },
+        {
+        "target": "fb.parent.topics_company_overview",
+        "label": "Parent Company Overview"
+    }, {
+        "target": "fb.parent.topics_location_city",
+        "label": "Parent Company City"
+    }, {
+        "target": "fb.parent.topics_location_address",
+        "label": "Parent Company Address"
+    }, {
+        "target": "fb.parent.topics.mission",
+        "label": "Parent Company Mission Stmt."
+    }, {
+        "target": "fb.parent.topics.name",
+        "label": "Engaged Topics",
+        "description": "Engagements by Facebook IDs of topics inferred in parent stories"
+    }, {
+        "target": "fb.parent.topics.products",
+        "label": "Parent Company Products",
+        "is_analysable": false
+    }, {
+        "target": "fb.parent.topics.release_date",
+        "label": "Parent Topic Release Data",
+        "is_analysable": false
+    }, {
+        "target": "fb.parent.topics.username",
+        "label": "Parent Facebook Username",
+        "is_analysable": false
+    }, {
+        "target": "fb.parent.topics.website",
+        "label": "Parent Company Website",
+        "is_analysable": false,
+        "label": "Parent Company Products"
+    }, {
+        "target": "fb.parent.topics.release_date",
+        "label": "Parent Topic Release Data"
+    }, {
+        "target": "fb.parent.topics.username",
+        "label": "Parent Facebook Username"
+    }, {
+        "target": "fb.parent.topics.website",
+        "label": "Parent Company Website"
+    }, {
+        "target": "fb.topic_ids",
+        "label": "Topic IDs",
+        "description": "Stories by Facebook IDs of inferred topics"
+    }, {
+        "target": "fb.topics.about",
+        "label": "Topic Description",
+        "is_analysable": false
+    }, {
+        "target": "fb.topics.category",
+        "label": "Topic Category",
+        "description": "a category assigned to a topic, such as 'company' or 'musician/band'"
+    }, {
+        "target": "fb.topics.company_overview",
+        "label": "Company Description",
+        "is_analysable": false
+    }, {
+        "target": "fb.topics.location_city",
+        "label": "Company City",
+        "is_analysable": false
+    }, {
+        "target": "fb.topics.location_address",
+        "label": "Company Address",
+        "is_analysable": false
+    }, {
+        "target": "fb.topics.mission",
+        "label": "Company Mission Stmt.",
+        "is_analysable": false
+    },
+        {
+            "target": "fb.topics.category_name",
+            "label": "Topic Category/Name"
+        },
+        {
+        "target": "fb.topics_company_overview",
+        "label": "Company Description"
+    }, {
+        "target": "fb.topics_location_city",
+        "label": "Company City"
+    }, {
+        "target": "fb.topics_location_address",
+        "label": "Company Address"
+    }, 
+     {
+        "target": "fb.topics.name",
+        "label": "Topic Name",
+        "description": "Topics inferred in stories"
+    }, {
+        "target": "fb.topics.products",
+        "label": "Company Products",
+        "is_analysable": false
+    }, {
+        "target": "fb.topics.release_date",
+        "label": "Topic Release Data",
+        "is_analysable": false
+    }, {
+        "target": "fb.topics.username",
+        "label": "Topic Username",
+        "is_analysable": false
+    }, {
+        "target": "fb.topics.website",
+        "label": "Topic Website",
+        "is_analysable": false,
+        "label": "Company Products"
+    }, {
+        "target": "fb.topics.release_date",
+        "label": "Topic Release Data"
+    }, {
+        "target": "fb.topics.username",
+        "label": "Topic Username"
+    }, {
+        "target": "fb.topics.website",
+        "label": "Topic Website"
+    }, {
+        "target": "fb.sentiment",
+        "label": "Sentiment",
+        "description": "Sentiment detected in stories; one of 'positive','negative','neutral'"
+    }, {
+        "target": "fb.parent.sentiment",
+        "label": "Sentiment Engagement",
+        "description": "Engagements by sentiment detected in parent stories; one of 'positive','negative','neutral'"
+    }, {
+        "target": "interaction.content",
+        "label": "Message Content",
+        "is_analysable": false
+    }, {
+        "target": "fb.story.content",
+        "label": "Content Story",
+        "is_analysable": false
+    }, {
+        "target": "interaction.created_at",
+        "label": "Message Date"
+    }, {
+        "target": "interaction.hashtags",
+        "label": "Hashtags",
+        "description": "Hashtags in stories"
+    }, {
+        "target": "interaction.id",
+        "label": "Message ID",
+        "is_analysable": false,
+
+        "label": "Message ID"
+    }, {
+        "target": "interaction.media_type",
+        "label": "Story Media Type",
+        "description": "The media type of a story. One of 'link', 'photo_album', 'note', 'photo', 'post', 'reshare' or 'video'"
+    }, {
+        "target": "interaction.received_at",
+        "label": "Message Receive Date",
+        "is_analysable": false,
+        "label": "Message Receive Date"
+    }, {
+        "target": "interaction.subtype",
+        "label": "Message Subtype",
+        "description": "One of 'story', 'comment', 'like' or 'reshare'"
+    }, {
+        "target": "interaction.tags",
+        "label": "Message Tags",
+        "description": "Tags defined in your Filter which are not part of a hierarchical tag structure"
+    }, {
+        "target": "links.domain",
+        "label": "Links Domain",
+        "description": "The web domains from which URLs are shared in stories"
+    }, {
+        "target": "links.normalized_url",
+        "label": "Cleaned URLs",
+        "description": "URLs shared in stories with UTM codes and anchor tags removed"
+    }, {
+        "target": "links.url",
+        "label": "All Links",
+        "description": "Breakdown of stories with links and their engagements"
+    }, {
+        "target": "meta.user_id",
+        "label": "User ID"
+    }, {
+        "target": "meta.definition_id",
+        "label": "Definition ID"
+    }, {
+        "target": "meta.identity_id",
+        "label": "Identity ID"
+    }, {
+        "target": "interaction.tag_tree_flat.key",
+        "label": "Tag tree key"
+    }, {
+        "target": "interaction.tag_tree_flat.value",
+        "label": "Tag tree value"
+    }, {
+    },
+
+
+
+
+
+        {
+        "target": "interaction.tag_tree",
+        "label": "Tag tree",
+        "is_analysable": false
+    }, {
+        "target": "time",
+        "label": "Time",
+        "description": "Volume of interactions and authors over time",
+        "cardinality": 100,
+        "is_analysable": true,
+        "is_time": true,
+        "applicable_charts": ["timeseries"]
+    }, {
+        "target": "DEFAULT",
+        "label": "default"
+    }]
+}

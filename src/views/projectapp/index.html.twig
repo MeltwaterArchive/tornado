@@ -1,0 +1,69 @@
+{% extends 'base.projectapp.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="/assets/javascript/libs/csdl-editor/csdleditor.min.css">
+    <link rel="stylesheet" href="/assets/javascript/libs/ion.rangeSlider/css/ion.rangeSlider.css">
+    <link rel="stylesheet" href="/assets/javascript/libs/ion.rangeSlider/css/ion.rangeSlider.skinFlat.css">
+    <link rel="stylesheet" href="/assets/javascript/libs/selectize/selectize.default.css">
+{% endblock %}
+
+{% block body_class %}{% endblock %}
+{% block page_header_title %}{{ data.project.name }}{% endblock %}
+
+{% block main_menu %}{% endblock %}
+
+{% block page_content %}
+    <div data-tornado-view="page-header" class="content__header"></div>
+    <div data-tornado-view="page-content" class="content" data-show-outliers="off"></div>
+    <div data-tornado-view="page-footer" class="content__footer"></div>
+{% endblock %}
+
+{% block worksheet_list %}
+    <div class="worksheet-list worksheet-list--disabled">
+        <ul data-tornado-view="worksheet-list" class="worksheet-list__items"></ul>
+        <span data-modallica="New Worksheet:worksheet-create-modal" class="worksheet-list__create-worksheet"></span>
+    </div>
+{% endblock %}
+
+{% block workbook_sidebar %}
+    <div data-workbook-sidebar class="workbook-sidebar">
+        <div class="workbook-sidebar__header">
+            <h3 class="workbook-sidebar__title">Workbooks</h3>
+            <span data-workbook-sidebar-toggle class="workbook-sidebar__button workbook-sidebar__button--close"></span>
+            <span data-modallica="New Workbook:workbook-create-modal" class="workbook-sidebar__button workbook-sidebar__button--create"></span>
+        </div>
+        <div class="workbook-sidebar__section">
+            <div class="scrollfoo__content-wrapper">
+                <span class="scrollfoo__scroller scrollfoo__scroller--workbooks"></span>
+                <ul data-tornado-view="workbook-sidebar-items" class="workbooks scrollfoo__parent scrollfoo__parent--workbooks"></ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block mustache_templates %}
+    {# Common templates #}
+    {% include 'projectapp/partials/common.html.twig' %}
+
+    {# Plugin templates #}
+    {% include 'projectapp/partials/plugins.html.twig' %}
+
+    {# Worksbook related templates #}
+    {% include 'projectapp/partials/workbooks.html.twig' %}
+
+    {# Worksheet related templates #}
+    {% include 'projectapp/partials/worksheet.html.twig' %}
+
+    {# Dimension related templates #}
+    {% include 'projectapp/partials/dimensions.html.twig' %}
+
+    {# Filters related templates #}
+    {% include 'projectapp/partials/filters.html.twig' %}
+
+    {# Timespan related templates #}
+    {% include 'projectapp/partials/timespan.html.twig' %}
+
+    {# Comparison related templates #}
+    {% include 'projectapp/partials/comparison.html.twig' %}
+{% endblock %}

@@ -1,0 +1,88 @@
+/**
+ * Common ~ Pagination
+ */
+
+/**
+ * Pagination variables
+ */
+$pagination-current-colour: #313540 !default;
+
+/**
+ * Pagination styles
+ */
+.pagination {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    @include user-select(none);
+
+    &-right {
+        position: absolute;
+        right: 0px;
+        top: 25%;
+    }
+}
+
+.pagination-dropdown {
+    display: inline-block;
+    float: left;
+    margin-bottom: -10px;
+    // When there's pagination present
+    // absolute position it to the left
+    .pagination-current ~ & {
+        position: absolute;
+        top: 5px;
+        left: 0;
+        margin-bottom: 0;
+    }
+}
+
+.pagination-current {
+    padding: 0 15px;
+    font-size: rem(12);
+    font-weight: bold;
+    color: $pagination-current-colour;
+}
+
+.pagination-direction {
+    position: relative;
+    display: inline-block;
+    top: 1px;
+    width: 10px;
+    height: 10px;
+    background: {
+        size: 10px auto;
+        repeat: no-repeat;
+    }
+    opacity: 0.4;
+    cursor: pointer;
+    &:hover {
+        opacity: 1;
+    }
+    // Increase the trigger area a bit
+    &::before {
+        position: absolute;
+        top: -10px;
+        left: -10px;
+        right: -10px;
+        bottom: -10px;
+        content: "";
+    }
+    &--next {
+        background: {
+            image: url("#{$image-path}/common/pagination/next.svg");
+            position: left center;
+        }
+    }
+    &--previous {
+        background: {
+            image: url("#{$image-path}/common/pagination/previous.svg");
+            position: right center;
+        }
+    }
+    &--disabled {
+        opacity: 0;
+        visibility: hidden;
+    }
+}

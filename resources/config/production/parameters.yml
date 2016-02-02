@@ -1,0 +1,55 @@
+parameters:
+    debug: false
+
+    routes.path:      %config_dir%
+    twig.path:        %root_dir%/views
+    monolog.log_file: /var/log/tornado/%env%.log
+
+    cache.service_name: cache.memcached
+    cache_dir: %root_dir%/.cache
+
+    tornado.cache.namespace: "datasift.tornado"
+    api.cache.namespace: "datasift.tornado.api"
+
+    # you can define this param either as string or array (array casting)
+    pylon.schema.fb:
+        - %root_dir%/config/pylon/fb_pylon_schema.json
+        - %root_dir%/config/pylon/fb_pylon_labels.json
+    pylon.schema.groups.json: %root_dir%/config/pylon/fb_pylon_groups.json
+    pylon.regions.json: %root_dir%/config/pylon/regions.json
+
+    analyzer.templates: %root_dir%/config/analyzer/templates.json
+    analyzer.templates.default: "default"
+
+    db.username: "tornado"
+    db.password: "tornado"
+    db.host: 127.0.0.1
+    db.port: ~
+    db.database: tornado
+    db.unix_socket: ~
+    db.charset: UTF8
+
+    # session configuration options @see http://silex.sensiolabs.org/doc/providers/session.html
+    session.storage.save_path: /tmp
+    session.storage.options:
+        name: tornado_sess
+        cookie_lifetime: 1209600 #2 weeks
+
+    memcache.server:
+        - 127.0.0.1
+        - 11211
+
+    template.error:  error.html.twig
+    api.error.default: "An internal error occurred. Please try again shortly."
+
+
+    # statsd connection config
+    statsd.host: 127.0.0.1
+    statsd.port: 8125
+    statsd.namespace: tornado.%env%.%kernel.name%
+
+    workbook.lock.ttl: 120 #seconds
+    workbook.lock.ttl_reset: 30 #iteration
+
+    datasift.public_api_url: false
+    datasift.public_api_ssl: true

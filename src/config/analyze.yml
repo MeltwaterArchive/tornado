@@ -1,0 +1,36 @@
+services:
+    analyze.analysis.form.create:
+        class: Tornado\Analyze\Analysis\Form\Create
+        parent: project.worksheet.form
+
+    analyze:
+        class: Tornado\Analyze\Analyzer
+        arguments:
+            - @datasift.pylon
+            - @stats
+
+    analyze.dataset.generator:
+        class: Tornado\Analyze\DataSet\Generator
+
+    analyze.dataset.repository:
+        class: Tornado\DataMapper\DoctrineRepository
+        arguments:
+            - @doctrine.dbal.connection
+            - Tornado\Analyze\DataSet\StoredDataSet
+            - "dataset"
+
+    analyze.dimension.factory:
+        class: Tornado\Analyze\Dimension\Factory
+        arguments:
+            - @pylon.schema.provider
+
+    analyze.templated.loader:
+        class: DataSift\Loader\Json
+        arguments: [%analyzer.templates%]
+
+    analyze.templated:
+        class: Tornado\Analyze\TemplatedAnalyzer
+        arguments:
+            - @analyze.templated.loader
+            - @analyze
+            - @analyze.dimension.factory

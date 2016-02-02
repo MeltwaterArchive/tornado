@@ -1,0 +1,3 @@
+services:
+    console.command.test:
+        class: Test\DataSift\Silex\Fixtures\TestCommand

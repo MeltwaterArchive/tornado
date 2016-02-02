@@ -1,0 +1,74 @@
+{% extends 'brand/base.html.twig' %}
+
+{% set selectedBrand = data.selectedBrand %}
+{% set pagination = meta.pagination %}
+
+{% block brand_management_content %}
+    {% include 'brand/recordings/partials/header.html.twig' %}
+    <div class="brand-management__column-content">
+            <ul class="list-actions">
+                <li><a href="{{ path('brand.get.recordings', {'brandId': selectedBrand.id}) }}">&laquo; Back</a><br /><br /> Import Recordings</li>
+            </ul>
+            {# Display items when there are items #}
+            {% if pagination.totalItemsCount > 0 %}
+                <ul class="list-items">
+                    {% for recording in selectedBrand.recordings %}
+                        <li class="list-item">
+                            <div class="list-item__cell list-item__cell--checkbox">
+                                <div class="list-item__select styled-checkbox__wrapper">
+                                    <label class="styled-checkbox__label" for="recording{{ recording.hash }}"></label>
+                                </div>
+                            </div>
+                            <div class="list-item__cell list-item__cell--info">
+                                <span style="font-size: 0.75em">{{ recording.name }}</span>
+                                <p class="list-item__date-created">Created <span>{{ recording.created | date('d M, Y') }}</span> &bull; <span>{{ recording.volume }} interactions</span></p>
+                            </div>
+                            <div class="list-item__cell list-item__cell--actions">
+                                <div class="list-item__actions">
+                                    {% if recording.imported %}
+                                        <a class="list-item__action button" href="{{ path('recording.update', {'recordingId': recording.imported}) }}">Imported</a>
+                                    {% else %}
+                                    <form method="POST" action="{{ path('brand.import.recordings', {'brandId': selectedBrand.id, 'page': pagination.previousPage, 'perPage': pagination.perPage, 'sort': pagination.sortBy, 'order': pagination.order }) }}"><input type="hidden" name="id" value="{{ recording.hash }}" /><input type="submit" class="list-item__action button" value="Import" style="margin-bottom: 0;" /></form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <hr class="divider">
+                <div class="list-items list-items--no-results">
+                    <h6>THERE ARE NO IMPORTABLE RECORDINGS IN YOUR ACCOUNT</h6>
+                </div>
+            {% endif %}
+            <div class="pagination">
+                {% if pagination.totalPages > 1 %}
+                    <a class="pagination-direction pagination-direction--previous{% if pagination.currentPage == pagination.firstPage %} pagination-direction--disabled{% endif %}" href="{{ path('brand.import.recordings', {'brandId': selectedBrand.id, 'page': pagination.previousPage, 'perPage': pagination.perPage, 'sort': pagination.sortBy, 'order': pagination.order }) }}"></a>
+                    <span class="pagination-current">{{ pagination.currentPage }}/{{ pagination.totalPages }}</span>
+                    <a class="pagination-direction pagination-direction--next {% if pagination.currentPage == pagination.totalPages %} pagination-direction--disabled{% endif %}" href="{{ path('brand.import.recordings', {'brandId': selectedBrand.id, 'page': pagination.nextPage, 'perPage': pagination.perPage, 'sort': pagination.sortBy, 'order': pagination.order }) }}"></a>
+                {% endif %}
+                {# Don't show the sorting dropdown when there are no projects #}
+                {% if pagination.totalItemsCount > 0 %}
+                    <div class="dropdown dropdown--styled pagination-dropdown">
+                        <span data-dropdown-toggle class="dropdown__toggle">Display: <span class="dropdown__toggle__selected">{{ pagination.perPage }}</span></span>
+                        <ul class="dropdown__content">
+                            <li class="dropdown__item">
+                                <a class="dropdown__item__link{% if pagination.perPage == 5 %} dropdown__item__link--active{% endif %}" href="{{ path('brand.import.recordings', {'brandId': selectedBrand.id, 'page': pagination.previousPage, 'perPage': 5, 'sort': pagination.sortBy, 'order': pagination.order }) }}">5</a>
+                            </li>
+                            <li class="dropdown__item">
+                                <a class="dropdown__item__link{% if pagination.perPage == 20 %} dropdown__item__link--active{% endif %}" href="{{ path('brand.import.recordings', {'brandId': selectedBrand.id, 'page': pagination.previousPage, 'perPage': 20, 'sort': pagination.sortBy, 'order': pagination.order }) }}">20</a>
+                            </li>
+                            <li class="dropdown__item">
+                                <a class="dropdown__item__link{% if pagination.perPage == 50 %} dropdown__item__link--active{% endif %}" href="{{ path('brand.import.recordings', {'brandId': selectedBrand.id, 'page': pagination.previousPage, 'perPage': 50, 'sort': pagination.sortBy, 'order': pagination.order }) }}">50</a>
+                            </li>
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+    </div>
+{% endblock %}
+
+{% block javascript_additional %}
+    {{ parent() }}
+    <script src="/assets/javascript/brand/recording.list.js"></script>
+{% endblock %}

@@ -1,0 +1,168 @@
+services:
+    ##
+    # PROJECT's SECURITY SERVICES
+    ##
+    project.user_acccess_voter:
+        class: Tornado\Project\Project\UserAccessVoter
+        arguments:
+            - @session
+            - @organization.brand.repository
+        tags:
+            - { name: voter }
+
+    project.recording.user_acccess_voter:
+        class: Tornado\Project\Recording\UserAccessVoter
+        arguments:
+            - @session
+            - @organization.brand.repository
+        tags:
+            - { name: voter }
+
+    ##
+    # PROJECT SERVICES
+    ##
+    project.repository:
+        class: Tornado\Project\Project\DataMapper
+        arguments:
+            - @doctrine.dbal.connection
+            - Tornado\Project\Project
+            - "project"
+
+    project.form.create:
+        class: Tornado\Project\Project\Form\Create
+        arguments:
+            - @validator
+            - @project.repository
+
+    project.form.update:
+        parent: project.form.create
+        class: Tornado\Project\Project\Form\Update
+
+    ##
+    # PROJECT's WORKBOOK SERVICES
+    ##
+    project.workbook.repository:
+        class: Tornado\Project\Workbook\DataMapper
+        arguments:
+            - @doctrine.dbal.connection
+            - Tornado\Project\Workbook
+            - "workbook"
+
+    project.workbook.form:
+        abstract: true
+        arguments:
+            - @validator
+            - @project.workbook.repository
+
+    project.workbook.form.create:
+        class: Tornado\Project\Workbook\Form\Create
+        parent: project.workbook.form
+
+    project.workbook.form.update:
+        class: Tornado\Project\Workbook\Form\Update
+        parent: project.workbook.form
+
+    ##
+    # PROJECT's WORKSHEET SERVICES
+    ##
+    project.worksheet.repository:
+        class: Tornado\Project\Worksheet\DataMapper
+        arguments:
+            - @doctrine.dbal.connection
+            - Tornado\Project\Worksheet
+            - "worksheet"
+
+    project.worksheet.form:
+        abstract: true
+        arguments:
+            - @validator
+            - @pylon.schema.provider
+            - @analyze.dimension.factory
+            - @project.worksheet.filter_csdl_generator
+            - @pylon.regions
+            - @project.workbook.repository
+            - @project.worksheet.repository
+
+    project.worksheet.form.create:
+        class: Tornado\Project\Worksheet\Form\Create
+        parent: project.worksheet.form
+
+    project.worksheet.form.explore:
+        class: Tornado\Project\Worksheet\Form\Explore
+        parent: project.worksheet.form
+
+    project.worksheet.form.update:
+        class: Tornado\Project\Worksheet\Form\Update
+        parent: project.worksheet.form
+
+    project.worksheet.generator:
+        class: Tornado\Project\Worksheet\Generator
+        arguments:
+            - @project.worksheet.repository
+            - @project.chart.repository
+            - @analyze.templated
+            - @analyze.analysis.form.create
+            - @analyze.dataset.generator
+            - @project.chart.factory
+
+    project.worksheet.exporter:
+        class: Tornado\Project\Worksheet\Exporter
+        arguments:
+            - @project.chart.repository
+
+    project.worksheet.explorer:
+        class: Tornado\Project\Worksheet\Explorer
+        arguments:
+            - @project.worksheet.filter_csdl_generator
+
+    project.worksheet.filter_csdl_generator:
+        class: Tornado\Project\Worksheet\FilterCsdlGenerator
+
+    ##
+    # PROJECT's CHART SERVICES
+    ##
+    project.chart.repository:
+        class: Tornado\Project\Chart\DataMapper
+        arguments:
+            - @doctrine.dbal.connection
+            - Tornado\Project\Chart
+            - "chart"
+
+    project.chart.factory:
+        class: Tornado\Project\Chart\Factory
+        arguments:
+            - @project.chart.name_generator
+
+    project.chart.name_generator:
+        class: Tornado\Project\Chart\NameGenerator
+
+    project.chart.form.update:
+        class: Tornado\Project\Chart\Form\Update
+        arguments:
+            - @validator
+
+    ##
+    # PROJECT's RECORDING SERVICES
+    ##
+    project.recording.repository:
+        class: Tornado\Project\Recording\DataMapper
+        arguments:
+            - @doctrine.dbal.connection
+            - Tornado\Project\Recording
+            - "recording"
+
+    project.recording.form.create:
+        class: Tornado\Project\Recording\Form\Create
+        arguments:
+            - @validator
+
+    project.recording.form.update:
+        parent: project.recording.form.create
+        class: Tornado\Project\Recording\Form\Update
+
+    project.recording.datasift_recording:
+        class: Tornado\Project\Recording\DataSiftRecording
+        arguments:
+            - @datasift.pylon
+            - @project.recording.repository
+            - @monolog

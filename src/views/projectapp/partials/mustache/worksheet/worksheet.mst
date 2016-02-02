@@ -1,0 +1,52 @@
+{% raw %}
+    <script data-tornado-template="worksheet" type="x-tmpl-mustache">
+        <div class="worksheet__actions-groups">
+            <div class="worksheet__actions-group worksheet__actions-group--hints">
+                {{ #filters }}
+                    <button type="button" class="worksheet__hint-button" data-worksheet-hint-toggle="filters">Filtered by</button>
+                {{ /filters }}
+                {{ #comparison }}
+                    <button type="button" class="worksheet__hint-button" data-worksheet-hint-toggle="comparison">Compared to</button>
+                {{ /comparison }}
+            </div>
+            <div class="worksheet__actions-group worksheet__actions-group--pagination">
+                <div class="pagination">
+                    <span data-paging-action="previous" class="pagination-direction pagination-direction--previous"></span>
+                    <span class="pagination-current">
+                        <span data-paging-state="current">1</span>/<span data-paging-state="total">1</span>
+                    </span>
+                    <span data-paging-action="next" class="pagination-direction pagination-direction--next"></span>
+                </div>
+            </div>
+            <div class="worksheet__actions-group">
+                <ul class="worksheet__actions worksheet__actions--measures">
+                    <li data-worksheet-measure="unique_authors" class="worksheet__action worksheet__action--active">
+                        <span class="worksheet__action__link">Unique Authors</span>
+                    </li>
+                    <li data-worksheet-measure="interactions" class="worksheet__action">
+                        <span class="worksheet__action__link">Total Interactions</span>
+                    </li>
+                </ul>
+                <ul class="worksheet__actions">
+                    <li class="worksheet__action">
+                        <a data-loader="[data-tornado-view='page-content']:Refreshing" data-worksheet-refresh class="worksheet__action__button worksheet__action__button--refresh" href="#"></a>
+                    </li>
+                    <li class="worksheet__action">
+                        <a data-change-display-mode="multiple" class="worksheet__action__button worksheet__action__button--active worksheet__action__button--multiple-charts" href="#"></a>
+                    </li>
+                    <li class="worksheet__action">
+                        <a data-change-display-mode="single" class="worksheet__action__button worksheet__action__button--single-chart" href="#"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="worksheet__hints-wrapper">
+            {{ #filters }}
+                <div data-worksheet-hint="filters" class="worksheet__hint">{{ filters }}</div>
+            {{ /filters }}
+            {{ #comparison }}
+                <div data-worksheet-hint="comparison" class="worksheet__hint{{ #filters }} worksheet__hint--has-filters{{ /filters }}">{{ comparison }}</div>
+            {{ /comparison }}
+        </div>
+    </script>
+{% endraw %}

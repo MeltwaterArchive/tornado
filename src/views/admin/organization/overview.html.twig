@@ -1,0 +1,27 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block page_header_title %}Organization Management - Edit {{ data.organization.name }}{% endblock %}
+
+{% block page_title %}
+<a href="{{ path('admin') }}">Administration</a>
+        {% if sessionUser.hasRole("ROLE_SUPERADMIN") %}
+            &gt; <a href="{{ path('admin.organizations') }}">Organizations</a>
+        {% endif %}
+        &gt; {{ data.organization.name }}
+{% endblock %}
+
+{% block page_content %}
+    <div class="single-item single-item--edit">
+        {# Organization name #}
+        <label class="input-label">Name</label>{{ data.organization.name }}<br />
+    </div>
+{% endblock %}
+
+{% block javascript_additional %}
+    data-main="/assets/javascript/brand/brand.edit.js"
+{% endblock %}
+
+{% block delete_template %}
+    {% include 'projectapp/partials/mustache/plugins/modallica.mst' %}
+    {% include 'brand/partials/confirm-delete.mst' %}
+{% endblock %}

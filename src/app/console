@@ -1,0 +1,37 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Tornado CLI application
+ *
+ * LICENSE: This software is the intellectual property of MediaSift Ltd.,
+ * and is covered by retained intellectual property rights, including
+ * copyright. Distribution of this software is strictly forbidden under
+ * the terms of this license.
+ *
+ * @category    Applications
+ * @copyright   2015-2016 MediaSift Ltd.
+ * @license     http://mediasift.com/licenses/internal MediaSift Internal License
+ * @link        https://github.com/datasift/tornado
+ */
+require __DIR__ . '/../vendor/autoload.php';
+
+try {
+    $bootstrap = new \DataSift\Silex\Bootstrap(
+        realpath(__DIR__.'/../config/console'),
+        realpath(__DIR__.'/../../resources/config') ?: '/etc/ms-app-tornado',
+        getenv('APP_ENV') ?: 'production'
+    );
+
+    // Build the container
+    $bootstrap->addCompilerPass(new \DataSift\Command\Container\CompilerPass());
+    $container = $bootstrap->buildContainer();
+
+    // Create an Application
+    $app = $bootstrap->createApplication(\Tornado\Application\Console::class, $container);
+} catch (\Exception $e) {
+    $error = sprintf("<pre>%s\n\n%s</pre>", $e->getMessage(), $e->getTraceAsString());
+    echo $error;
+    exit(1);
+}
+
+$app->run();

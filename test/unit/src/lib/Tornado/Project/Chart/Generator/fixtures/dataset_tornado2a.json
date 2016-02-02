@@ -1,0 +1,136 @@
+{
+    "DataSet::KEY_MEASURE_INTERACTIONS": {
+        "DataSet::KEY_VALUE": 36300,
+        "DataSet::KEY_REDACTED": false,
+        "dimension:fb.author.gender": {
+            "unknown" : {
+                "DataSet::KEY_VALUE" : 33000,
+                "DataSet::KEY_REDACTED" : false,
+                "dimension:fb.author.age" : {
+                    "unknown" : {
+                        "DataSet::KEY_VALUE" : 33000,
+                        "DataSet::KEY_REDACTED" : false,
+                        "dimension:fb.region": {
+                            "alabama": {
+                                "DataSet::KEY_VALUE" : 6100,
+                                "DataSet::KEY_REDACTED" : false
+                            },
+                            "alaska": {
+                                "DataSet::KEY_VALUE" : 91100,
+                                "DataSet::KEY_REDACTED" : false
+                            }
+                        }
+                    },
+                    "18-24" : {
+                        "DataSet::KEY_VALUE" : 33000,
+                        "DataSet::KEY_REDACTED" : false,
+                        "dimension:fb.region": {
+                            "alabama": {
+                                "DataSet::KEY_VALUE" : 5100,
+                                "DataSet::KEY_REDACTED" : false
+                            },
+                            "alaska": {
+                                "DataSet::KEY_VALUE" : 4100,
+                                "DataSet::KEY_REDACTED" : false
+                            }
+                        }
+                    }
+                }
+            },
+            "male" : {
+                "DataSet::KEY_VALUE" : 1600,
+                "DataSet::KEY_REDACTED" : false,
+                "dimension:fb.author.age" : {
+                    "unknown" : {
+                        "DataSet::KEY_VALUE" : 33000,
+                        "DataSet::KEY_REDACTED" : false,
+                        "dimension:fb.region": {
+                            "alabama": {
+                                "DataSet::KEY_VALUE" : 31100,
+                                "DataSet::KEY_REDACTED" : false
+                            },
+                            "alaska": {
+                                "DataSet::KEY_VALUE" : 21100,
+                                "DataSet::KEY_REDACTED" : false
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "DataSet::KEY_MEASURE_UNIQUE_AUTHORS": {
+        "DataSet::KEY_VALUE": 36300,
+        "DataSet::KEY_REDACTED": false,
+        "dimension:fb.author.gender": {
+            "unknown" : {
+                "DataSet::KEY_VALUE" : 33000,
+                "DataSet::KEY_REDACTED" : false,
+                "dimension:fb.author.age" : {
+                    "unknown" : {
+                        "DataSet::KEY_VALUE" : 33000,
+                        "DataSet::KEY_REDACTED" : false,
+                        "dimension:fb.region": {
+                            "alabama": {
+                                "DataSet::KEY_VALUE" : 6200,
+                                "DataSet::KEY_REDACTED" : false
+                            },
+                            "alaska": {
+                                "DataSet::KEY_VALUE" : 92100,
+                                "DataSet::KEY_REDACTED" : false
+                            }
+                        }
+                    },
+                    "18-24" : {
+                        "DataSet::KEY_VALUE" : 33000,
+                        "DataSet::KEY_REDACTED" : false,
+                        "dimension:fb.region": {
+                            "alabama": {
+                                "DataSet::KEY_VALUE" : 5200,
+                                "DataSet::KEY_REDACTED" : false
+                            },
+                            "alaska": {
+                                "DataSet::KEY_VALUE" : 4200,
+                                "DataSet::KEY_REDACTED" : false
+                            }
+                        }
+                    }
+                }
+            },
+            "male" : {
+                "DataSet::KEY_VALUE" : 1600,
+                "DataSet::KEY_REDACTED" : false,
+                "dimension:fb.author.age" : {
+                    "unknown" : {
+                        "DataSet::KEY_VALUE" : 33000,
+                        "DataSet::KEY_REDACTED" : false,
+                        "dimension:fb.region": {
+                            "alabama": {
+                                "DataSet::KEY_VALUE" : 32100,
+                                "DataSet::KEY_REDACTED" : false
+                            },
+                            "alaska": {
+                                "DataSet::KEY_VALUE" : 22100,
+                                "DataSet::KEY_REDACTED" : false
+                            }
+                        }
+                    },
+                    "18-24" : {
+                        "DataSet::KEY_VALUE" : 33000,
+                        "DataSet::KEY_REDACTED" : false,
+                        "dimension:fb.region": {
+                            "alabama": {
+                                "DataSet::KEY_VALUE" : 62100,
+                                "DataSet::KEY_REDACTED" : false
+                            },
+                            "alaska": {
+                                "DataSet::KEY_VALUE" : 82100,
+                                "DataSet::KEY_REDACTED" : false
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

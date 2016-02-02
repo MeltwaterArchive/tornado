@@ -1,0 +1,58 @@
+services:
+    # Session services
+    session:
+        synthetic: true
+
+    session.user:
+        class: Tornado\Organization\User
+        factory: [@session, get]
+        arguments:
+            - "user"
+
+    session.user.organization:
+        class: Tornado\Organization\Organization
+        factory: [@organization.repository, findOneByUser]
+        arguments:
+            - @session.user
+
+    security.controller:
+        class: Controller\SecurityController
+        arguments:
+            - @session
+            - @organization.user.form.login
+            - @url_generator
+            - @security.authorization.jwt.provider
+            - @organization.user.repository
+            - @organization.role.repository
+            - @organization.user.form.forgotpassword
+            - @organization.user.form.resetpassword
+            - @organization.user.passwordmanager
+        tags:
+            - { name: flash_aware }
+
+    security.http.authentication_firewall:
+        class: Tornado\Security\Http\AuthenticationFirewall
+        arguments:
+            - @request
+            - @session
+            - @url_generator
+
+    security.http.acl_firewall:
+        class: Tornado\Security\Http\AclFirewall
+        arguments:
+            - @request
+            - @session.user
+
+    security.authorization.access_decision_manager:
+        class: Tornado\Security\Authorization\AccessDecisionManager
+
+    security.authorization.jwt:
+        class: Tornado\Security\Authorization\JWT\JWT
+        arguments:
+            - ["HS256"]
+
+    security.authorization.jwt.provider:
+        class: Tornado\Security\Authorization\JWT\Provider
+        arguments:
+            - @organization.repository
+            - @security.authorization.jwt

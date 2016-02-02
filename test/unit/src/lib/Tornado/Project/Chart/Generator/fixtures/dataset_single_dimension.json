@@ -1,0 +1,30 @@
+{
+    "DataSet::KEY_MEASURE_INTERACTIONS": {
+        "DataSet::KEY_VALUE": 36300,
+        "DataSet::KEY_REDACTED": false,
+        "dimension:fb.author.gender": {
+            "unknown" : {
+                "DataSet::KEY_VALUE" : 33000,
+                "DataSet::KEY_REDACTED" : false
+            },
+            "male" : {
+                "DataSet::KEY_VALUE" : 1600,
+                "DataSet::KEY_REDACTED" : false
+            }
+        }
+    },
+    "DataSet::KEY_MEASURE_UNIQUE_AUTHORS": {
+        "DataSet::KEY_VALUE": 36300,
+        "DataSet::KEY_REDACTED": false,
+        "dimension:fb.author.gender": {
+            "unknown" : {
+                "DataSet::KEY_VALUE" : 33000,
+                "DataSet::KEY_REDACTED" : false
+            },
+            "male" : {
+                "DataSet::KEY_VALUE" : 1600,
+                "DataSet::KEY_REDACTED" : false
+            }
+        }
+    }
+}

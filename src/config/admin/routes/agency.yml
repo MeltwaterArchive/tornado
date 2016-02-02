@@ -1,0 +1,86 @@
+# Single paths
+
+admin.single.organization.agencies:
+    path: /admin/organization/agencies
+    methods: [GET]
+    defaults:
+        _controller: 'admin.agency.controller:singleIndex'
+        _template: 'admin/agency/index.html.twig'
+        _permissions: [ROLE_ADMIN]
+
+admin.single.organization.agencies.batch:
+    path: /admin/organization/agencies/batch
+    defaults:
+        _controller: 'admin.agency.controller:singleBatch'
+        _permissions: [ROLE_ADMIN]
+    methods:  [POST]
+
+admin.single.organization.agency.create:
+    path: /admin/organization/agency/new
+    methods: [GET,POST]
+    defaults:
+        _controller: 'admin.agency.controller:singleCreate'
+        _template: 'admin/agency/create.html.twig'
+        _permissions: [ROLE_ADMIN]
+
+admin.single.organization.agency.edit:
+    path: /admin/organization/agency/{id}
+    methods: [GET,POST]
+    defaults:
+        _controller: 'admin.agency.controller:singleEdit'
+        _template: 'admin/agency/edit.html.twig'
+        _permissions: [ROLE_ADMIN]
+    requirements:
+        id: \d+
+
+# Superadmin paths
+
+admin.organization.agencies:
+    path: /admin/organization/{id}/agencies
+    methods: [GET]
+    defaults:
+        _controller: 'admin.agency.controller:index'
+        _template: 'admin/agency/index.html.twig'
+        _permissions: [ROLE_SUPERADMIN]
+    requirements:
+        id: \d+
+
+admin.organization.agency.create:
+    path: /admin/organization/{id}/agencies/new
+    methods: [GET,POST]
+    defaults:
+        _controller: 'admin.agency.controller:create'
+        _template: 'admin/agency/create.html.twig'
+        _permissions: [ROLE_SUPERADMIN]
+    requirements:
+        id: \d+
+
+admin.organization.agencies.batch:
+    path: /admin/organization/{id}/agencies/batch
+    defaults:
+        _controller: 'admin.agency.controller:batch'
+        _permissions: [ROLE_SUPERADMIN]
+    methods:  [POST]
+    requirements:
+        id: \d+
+
+admin.organization.agency.edit:
+    path: /admin/organization/{organizationId}/agency/{id}
+    methods: [GET,POST]
+    defaults:
+        _controller: 'admin.agency.controller:edit'
+        _template: 'admin/agency/edit.html.twig'
+        _permissions: [ROLE_SUPERADMIN]
+    requirements:
+        id: \d+
+        organizationId: \d+
+
+admin.organization.agency.delete:
+    path: /admin/organization/{organizationId}/agency/{id}
+    methods: [DELETE]
+    defaults:
+        _controller: 'admin.agency.controller:delete'
+        _permissions: [ROLE_SUPERADMIN]
+    requirements:
+        id: \d+
+        organizationId: \d+

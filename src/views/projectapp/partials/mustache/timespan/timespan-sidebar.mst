@@ -1,0 +1,29 @@
+{% raw %}
+    <script data-tornado-template="timespan-sidebar" type="x-tmpl-mustache">
+        <div class="page-sidebar__header">
+            <h3 class="page-sidebar__title">TIMESPAN</h3>
+            <button data-spinner data-loader="[data-tornado-view='page-content']:Applying" type="button" data-timespan-apply-button class="page-sidebar__action-button page-sidebar__action-button--submit">Apply</button>
+        </div>
+        <div class="scrollfoo__content-wrapper">
+            <span class="scrollfoo__scroller scrollfoo__scroller--timespan"></span>
+            <div class="scrollfoo__parent scrollfoo__parent--timespan">
+                <div class="page-sidebar__section page-sidebar__section--timespan">
+                    <h4 class="page-sidebar__section-headline">Span and Interval</h4>
+                    <div class="timespan__inputs">
+                        <div class="timespan__span">
+                            <input data-timespan-span type="number" min="1" value="{{ span }}" class="timespan__span-input">
+                        </div>
+                        <div class="timespan__interval">
+                            <select data-timespan-interval class="timespan-select timespan-select--interval" placeholder="Select interval">
+                                <option value="minute">Minute</option>
+                                <option value="hour">Hour</option>
+                                <option value="day">Day</option>
+                                <option value="week">Week</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+{% endraw %}
