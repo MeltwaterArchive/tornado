@@ -1,0 +1,55 @@
+<h4 class="sample__title">Super Public Sample Posts</h4>
+{{#if posts}}
+
+    <div class="samples-wrapper">
+        {{#each posts}}
+            <div class="interaction-wrapper">
+                <div class="interaction__container">
+                    <span class="sample__small-text">
+                        {{prettyDate data.interaction.created_at }}
+                    </span>
+                    <p class="interaction__content">{{ interaction data.interaction.content }}</p>
+                    <hr>
+                    <dl class="interaction__details">
+                        {{#if data.fb.topics}}
+                            <dt>Topics</dt>
+                            <dd>{{topic 'category_name' data.fb.topics }}</dd>
+                        {{/if}}
+
+                        {{#if data.fb.link}}
+                            <dt>Link</dt>
+                            <dd>
+                                <a href="{{data.fb.link }}" target="_blank">
+                                    {{data.fb.link }}
+                                    <span class="external-link"></span>
+                                </a>
+                            </dd>
+                        {{/if}}
+
+                        {{#if data.interaction.hashtags}}
+                            <dt>Hashtags</dt>
+                            <dd>{{hashtag data.interaction.hashtags }}</dd>
+                        {{/if}}
+
+                        {{#if data.tag_tree}}
+                            <dt>Tags</dt>
+                            <dd>{{tagTree data.tag_tree }}</dd>
+                        {{/if}}
+
+                    </dl>
+                </div>
+
+            </div>
+
+        {{/each}}
+    </div>
+    <p class="sample__small-text text-center">
+        You've reached the end of the list
+    </p>
+{{/if}}
+
+{{#unless posts}}
+    <div class="notification notification-warning">
+        No posts matched the current filter.
+    </div>
+{{/unless}}

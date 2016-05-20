@@ -1,0 +1,37 @@
+{% extends 'brand/base.html.twig' %}
+
+{% block body_class %}recording recording--create{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ cs_build_location }}/javascript/libs/csdl-editor/csdleditor.min.css">
+    <link rel="stylesheet" href="{{ cs_build_location }}/javascript/libs/vqb-editor/jcsdl.min.css">
+    <link rel="stylesheet" href="{{ cs_build_location }}/javascript/libs/selectize/selectize.default.css">
+{% endblock %}
+
+{% set selectedBrand = data.selectedBrand %}
+{% set dataset = data.dataset %}
+
+{% block brand_management_content %}
+    {% include 'brand/partials/header.html.twig' with { 'selected': 'datasets' } %}
+    <form class="single-item" method="post" action="{{ path('brand.dataset.edit', {'brandId': data.selectedBrand.id, 'id': data.dataset.id }) }}">
+        {# Header #}
+        <div class="single-item__header">
+            <h6 class="single-item__title"><strong>Edit DataSet</strong></h6>
+        </div>
+        <hr class="divider">
+
+        {% include 'brand/dataset/partials/form.html.twig' %}
+
+        {# Footer #}
+        <hr class="divider">
+        <a href="{{ path("brand.datasets", {"brandId": selectedBrand.id}) }}">Cancel</a>
+        <div class="single-item__actions">
+            <button class="single-item__action single-item__action--create" type="submit" data-spinner>Save</button>
+        </div>
+    </form>
+{% endblock %}
+
+{% block javascript_additional %}
+    data-main="{{ cs_build_location }}/javascript/dataset.edit"
+{% endblock %}

@@ -1,0 +1,250 @@
+/**
+ * Module ~ Dimensions
+ */
+
+/**
+ * Dimensions variables
+ */
+$dimension-scrollbar-unhovered-background-colour: #e9eaee !default;
+$dimension-dropzone-background-colour: #fbfbfc !default;
+$dimension-dropzone-border-colour: $colour-grey-light !default;
+$dimension-dropzone-label-colour: #afbdd4 !default;
+$dimension-dropzone-disabled-background-colour: #e9eaee !default;
+$dimension-dropzone-droppable-background-colour: #eff6e9 !default;
+$dimension-dropzone-droppable-border-colour: #65a730 !default;
+$dimension-dropzone-droppable-label-colour: $colour-green-bright !default;
+$dimension-dropzone-options-info-colour: #9197a3 !default;
+$dimension-dropzone-options-separator-colour: #fff !default;
+$dimension-actions-link-colour: $colour-blue-facebook !default;
+
+/**
+ * Dimensions styles
+ */
+[data-tornado-page="dimensions"] {
+    .page-sidebar:hover {
+        .scrollfoo__scroller {
+            background-color: $colour-blue-facebook;
+        }
+    }
+    .scrollfoo__scroller {
+        background-color: $dimension-scrollbar-unhovered-background-colour;
+    }
+    .content__header {
+        display: none;
+    }
+}
+
+.dimension-content {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    height: 400px;
+    .draggaball-body-dragging & {
+        @include perspective(2000px);
+    }
+}
+
+.dimension-dropzone {
+    position: absolute;
+    padding: 30px;
+    background-color: $dimension-dropzone-background-colour;
+    border: 1px solid $dimension-dropzone-border-colour;
+    border-radius: 1px;
+    overflow: hidden;
+    @include transition(0.3s all $slick-ease);
+    // Dropzone label
+    &::before,
+    &::after {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        margin-top: -6px;
+        font-size: rem(12);
+        line-height: 12px;
+        font-weight: bold;
+        color: $dimension-dropzone-label-colour;
+        text-align: center;
+        white-space: nowrap;
+        content: attr(data-dimension-dropzone-label);
+        pointer-events: none;
+        @include transition(0.4s transform $slick-ease, 0.4s opacity $slick-ease);
+    }
+    &::before {
+        content: attr(data-dimension-dropzone-label);
+        @include transform(scale(1));
+    }
+    &::after {
+        color: $dimension-dropzone-droppable-label-colour;
+        content: "DROP";
+        opacity: 0;
+        @include transform(scale(1.2));
+    }
+    &--top {
+        top: 0;
+        width: 100%;
+        height: 25%;
+    }
+    &--bottom {
+        bottom: 0;
+        width: 100%;
+        height: 25%;
+    }
+    &--left {
+        top: 32%;
+        bottom: 32%;
+        width: 30%;
+    }
+    &[data-draggaball-dropzone="droppable"] {
+        background-color: $dimension-dropzone-droppable-background-colour;
+        border: 1px dashed $dimension-dropzone-droppable-border-colour;
+        @include transform(translateZ(20px));
+        &::before {
+            opacity: 0;
+            @include transform(scale(0.8));
+        }
+        &::after {
+            opacity: 1;
+            @include transform(scale(1));
+        }
+        .dimension--dropzone {
+            opacity: 0.4;
+            @include transform(scale(0.9) translate(-50%, -50%));
+        }
+    }
+    // Complete dropzone is the one that
+    // already contains one dimension
+    &[data-dimension-dropzone="complete"] {
+        &::before,
+        &::after {
+            opacity: 0;
+        }
+    }
+}
+
+// The dimensions found inside a dropzone
+.dimension--dropzone {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    padding-right: 60px;
+    pointer-events: auto;
+    white-space: nowrap;
+    cursor: default;
+    z-index: 2;
+    @include transform-origin(right center);
+    @include transform(scale(0.8) translate(-50%, -50%));
+    @include transition(0.3s transform $slick-ease);
+    &::after {
+        display: inline-block;
+        position: absolute;
+        bottom: -22px;
+        left: 0;
+        width: 100%;
+        font-size: rem(11);
+        text-align: center;
+        color: $dimension-dropzone-options-info-colour;
+        pointer-events: none;
+        content: attr(data-dimension-options-info);
+        opacity: 0;
+        @include transform(translate(0, -15px));
+        @include transition(0.3s all $slick-ease);
+    }
+    &--active {
+        opacity: 1;
+        @include transform(scale(1) translate(-50%, -50%));
+        &::after {
+            opacity: 1;
+            @include transform(translate(0, 0));
+            @include transition-delay(0.2s);
+        }
+    }
+    &--disabled {
+        background-color: $dimension-dropzone-disabled-background-colour;
+        border: none;
+        opacity: 0.5;
+    }
+}
+
+.dimension__options {
+    position: absolute;
+    top: 0;
+    right: 24px;
+    display: inline-block;
+    width: 16px;
+    height: 100%;
+    background: {
+        image: url("#{$image-path}/modules/dimensions/options.svg");
+        position: center 11px;
+        size: 11px 11px;
+        repeat: no-repeat;
+    }
+    // Options separator (the `&middot;` clone)
+    &::before {
+        position: absolute;
+        top: 11px;
+        right: 22px;
+        color: $dimension-dropzone-options-separator-colour;
+        pointer-events: none;
+        cursor: default;
+        content: "\000B7";
+    }
+}
+
+.dimension__remove {
+    position: absolute;
+    top: 0;
+    right: 6px;
+    display: inline-block;
+    width: 16px;
+    height: 100%;
+    background: {
+        image: url("#{$image-path}/modules/dimensions/remove.svg");
+        position: center center;
+        size: 9px 9px;
+        repeat: no-repeat;
+    }
+}
+
+.dimension-actions {
+    position: absolute;
+    top: 50%;
+    left: 30%;
+    right: 20%;
+    margin-top: -16px;
+    font-size: rem(12);
+    text-align: center;
+    a {
+        color: $dimension-actions-link-colour;
+    }
+}
+
+.dimension-build-button {
+    @extend %submit-button;
+}
+
+@media (max-width: 1200px) {
+    .dimension-content {
+
+        height: 420px;
+
+        .dimension-dropzone--left {
+            width: 100%;
+            height: 100px;
+        }
+
+        .dimension-dropzone--top {
+            height: 100px;
+        }
+
+        .dimension-dropzone--bottom {
+            height: 100px;
+            bottom: 60px;
+        }
+
+        .dimension-actions {
+            top: auto;
+            bottom: 0;
+        }
+    }
+}

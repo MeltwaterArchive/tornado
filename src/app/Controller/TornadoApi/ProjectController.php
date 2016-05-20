@@ -11,6 +11,8 @@ use Symfony\Component\HttpKernel\Exception as HttpException;
 use DataSift\Http\Request;
 use DataSift_Pylon;
 
+use DataSift\Form\FormInterface;
+
 use Tornado\DataMapper\DataMapperInterface;
 use Tornado\DataMapper\Paginator;
 use Tornado\Organization\Agency;
@@ -106,7 +108,7 @@ class ProjectController
      * Shows a single project info.
      *
      * @param Request $request Request.
-     * @param integer $id      Project ID.
+     * @param integer $id Project ID.
      *
      * @return JsonResponse
      */
@@ -162,12 +164,7 @@ class ProjectController
         ]);
 
         if (!$this->createProjectForm->isValid()) {
-            return new JsonResponse(
-                [
-                    'errors' => $this->createProjectForm->getErrors()
-                ],
-                Response::HTTP_BAD_REQUEST
-            );
+            return $this->processFormErrors($this->createProjectForm);
         }
 
         $recordings = $this->processRecordings($brand, $recordingIds);
@@ -203,11 +200,27 @@ class ProjectController
             return new JsonResponse(['error' => 'Authorization failed.'], Response::HTTP_UNAUTHORIZED);
         }
 
+        $page = $request->get('page', 1);
+        if (intval($page) <= 0) {
+            return new JsonResponse(
+                ['error' => 'Page must be an integer and greater than 0.'],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
+        $perPage = $request->get('per_page', 25);
+        if (intval($perPage) <= 0) {
+            return new JsonResponse(
+                ['error' => 'per_page must be an integer and greater than 0.'],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
         $paginator = new Paginator(
             $this->projectRepo,
-            $request->get('page', 1),
+            $page,
             $request->get('sort', 'created_at'),
-            $request->get('per_page', 25),
+            $perPage,
             $request->get('order', DataMapperInterface::ORDER_ASCENDING)
         );
         $paginator->paginate(['brand_id' => $brand->getId()]);
@@ -236,7 +249,7 @@ class ProjectController
      * Deletes the given Project without stopping any of associated Recordings
      *
      * @param \DataSift\Http\Request $request
-     * @param int                    $id
+     * @param int $id
      *
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
@@ -256,7 +269,7 @@ class ProjectController
      * Updates the Project.
      *
      * @param Request $request Request.
-     * @param integer $id      Project ID.
+     * @param integer $id Project ID.
      *
      * @return JsonResponse
      */
@@ -274,7 +287,7 @@ class ProjectController
 
         $this->updateProjectForm->submit($params, $project);
         if (!$this->updateProjectForm->isValid()) {
-            return new JsonResponse(['errors' => $this->updateProjectForm->getErrors()], Response::HTTP_BAD_REQUEST);
+            return $this->processFormErrors($this->updateProjectForm);
         }
 
         $project = $this->updateProjectForm->getData();
@@ -310,7 +323,7 @@ class ProjectController
      * Gets a project and guards access to it.
      *
      * @param Request $request HTTP Request.
-     * @param integer $id      Project ID.
+     * @param integer $id Project ID.
      *
      * @return Project
      *
@@ -340,13 +353,13 @@ class ProjectController
      * Transforms Tornado Project object to ProjectApiView
      *
      * @param \Tornado\Project\Project $project
-     * @param array                    $recordings
+     * @param array $recordings
      *
      * @return array
      */
     protected function getProjectViewData(Project $project, array $recordings = [])
     {
-        $recordings = $project->getRecordingFilter() === Project::RECORDING_FILTER_API
+        $recordings = $project->getRecordingFilter() == Project::RECORDING_FILTER_API
             ? ObjectUtils::filter($recordings, 'project_id', $project->getId())
             : $recordings;
 
@@ -455,5 +468,23 @@ class ProjectController
         $recording->setBrandId($brand->getId());
 
         return $recording;
+    }
+
+    /**
+     * Deals with invalid form submissions in a standard fashion
+     *
+     * @param \DataSift\Form\FormInterface $form
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    private function processFormErrors(FormInterface $form)
+    {
+        $errors = $form->getErrors();
+        $responseCode = Response::HTTP_BAD_REQUEST;
+        $suffix = CreateProjectForm::CONFLICT_MESSAGE_SUFFIX;
+        if (isset($errors['name']) && strpos($errors['name'], $suffix)) {
+            $responseCode = Response::HTTP_CONFLICT;
+        }
+        return new JsonResponse(['errors' => $errors], $responseCode);
     }
 }

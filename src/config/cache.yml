@@ -20,9 +20,13 @@ services:
         arguments:
             - %cache_dir%
 
-    # works as synthetic to be declared in runntime
+    # works as synthetic to be declared in runtime
     cache.memcached:
         synthetic: true
+
+    cache.memcached.memcached:
+        class: Memcached
+        factory: ['@cache.memcached', 'getMemcached']
 
     memcache.server:
         synthetic: true

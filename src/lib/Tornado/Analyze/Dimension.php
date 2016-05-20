@@ -157,4 +157,12 @@ class Dimension implements \JsonSerializable
             'threshold' => $this->getThreshold()
         ];
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __toString()
+    {
+        return $this->getTarget();
+    }
 }

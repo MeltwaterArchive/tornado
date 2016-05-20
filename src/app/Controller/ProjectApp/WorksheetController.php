@@ -16,12 +16,15 @@ use Tornado\Controller\ProjectDataAwareTrait;
 use Tornado\Controller\Result;
 use Tornado\DataMapper\DataMapperInterface;
 use Tornado\Organization\User;
+use Tornado\Project\Recording\Sample;
 use Tornado\Project\Workbook;
 use Tornado\Project\Workbook\Locker;
+use Tornado\Project\Worksheet;
 use Tornado\Project\Worksheet\Explorer;
 use Tornado\Project\Worksheet\Exporter;
 
 use Tornado\Project\Recording\DataMapper as RecordingRepository;
+use Tornado\Project\Recording\Sample\DataMapper as RecordingSampleRepository;
 
 /**
  * Displays a project worksheet.
@@ -37,7 +40,7 @@ use Tornado\Project\Recording\DataMapper as RecordingRepository;
  * @license     http://mediasift.com/licenses/internal MediaSift Internal License
  * @link        https://github.com/datasift/tornado
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects,PHPMD.ExcessiveParameterList)
  */
 class WorksheetController implements ProjectDataAwareInterface
 {
@@ -95,6 +98,13 @@ class WorksheetController implements ProjectDataAwareInterface
     protected $recordingRepo;
 
     /**
+     * Recording repository.
+     *
+     * @var RecordingSampleRepository
+     */
+    protected $recordingSampleRepo;
+
+    /**
      * Constructor.
      *
      * @param \Tornado\DataMapper\DataMapperInterface $chartRepository
@@ -105,7 +115,8 @@ class WorksheetController implements ProjectDataAwareInterface
      * @param \Tornado\Project\Worksheet\Exporter     $exporter
      * @param \Tornado\Project\Workbook\Locker        $workbookLocker
      * @param \Tornado\Organization\User              $sessionUser
-     * @param Tornado\Project\Recording\DataMapper|null $recordingRepo
+     * @param RecordingRepository                     $recordingRepo
+     * @param RecordingSampleRepository               $recordingSampleRepo
      */
     public function __construct(
         DataMapperInterface $chartRepository,
@@ -116,7 +127,8 @@ class WorksheetController implements ProjectDataAwareInterface
         Exporter $exporter,
         Locker $workbookLocker,
         User $sessionUser,
-        RecordingRepository $recordingRepo = null
+        RecordingRepository $recordingRepo,
+        RecordingSampleRepository $recordingSampleRepo
     ) {
         $this->chartRepository = $chartRepository;
         $this->createForm = $createForm;
@@ -127,11 +139,13 @@ class WorksheetController implements ProjectDataAwareInterface
         $this->workbookLocker = $workbookLocker;
         $this->sessionUser = $sessionUser;
         $this->recordingRepo = $recordingRepo;
+        $this->recordingSampleRepo = $recordingSampleRepo;
     }
 
     /**
      * Retrieves project info and all related stuff based on the passed project ID.
      *
+     * @param  Request $request     The request object
      * @param  integer $projectId   ID of the project.
      * @param  integer $worksheetId ID of the visible worksheet.
      *
@@ -139,17 +153,28 @@ class WorksheetController implements ProjectDataAwareInterface
      *
      * @throws NotFoundHttpException When such project or worksheet was not found.
      */
-    public function index($projectId, $worksheetId)
+    public function index(Request $request, $projectId, $worksheetId)
     {
         list($project, $workbook, $worksheet) = $this->getProjectDataForWorksheetId($worksheetId, $projectId);
 
         $charts = $this->chartRepository->findByWorksheet($worksheet);
+        $sqlFilter = ['recording_id' => $workbook->getRecordingId()];
+        if ($worksheet->getFilter('generated_csdl') != null) {
+            $sqlFilter['filter_hash'] = md5($worksheet->getFilter('generated_csdl'));
+        }
+        $posts = $this->recordingSampleRepo->find(
+            $sqlFilter,
+            ['created_at' => 'DESC'],
+            Sample::RESULT_LIMIT,
+            $request->get('sample-offset')
+        );
 
         return new Result([
             'project' => $project,
             'workbook' => $workbook,
             'worksheet' => $worksheet,
-            'charts' => $charts
+            'charts' => $charts,
+            'posts' => $posts
         ]);
     }
 
@@ -166,15 +191,33 @@ class WorksheetController implements ProjectDataAwareInterface
     public function create(Request $request, $projectId)
     {
         $project = $this->getProject($projectId);
-        $postParams = $request->getPostParams();
+        $brand = $this->getBrand($project->getBrandId());
 
-        $this->createForm->submit($postParams);
+        $postParams = $request->getPostParams();
+        if (!isset($postParams['workbook_id'])) {
+            throw new NotFoundHttpException('Workbook not found');
+        }
+
+        $workbook = $this->workbookRepository->findOne(['id' => $postParams['workbook_id']]);
+
+        $recording = $this->recordingRepo->findOne(['id' => $workbook->getRecordingId()]);
+        if (!$recording) {
+            throw new NotFoundHttpException(sprintf(
+                'Could not find recording with ID %s.',
+                $workbook->getRecordingId()
+            ));
+        }
+
+        $ws = new Worksheet();
+        $ws->setWorkbookId($workbook->getId());
+        $postParams['name'] = $this->worksheetRepository->getUniqueName($ws, $postParams['name']);
+
+        $this->createForm->submit($postParams, null, $recording, $brand->getTargetPermissions());
         if (!$this->createForm->isValid()) {
             return new Result([], $this->createForm->getErrors(), Response::HTTP_BAD_REQUEST);
         }
 
         $worksheet = $this->createForm->getData();
-        $workbook = $this->workbookRepository->findOne(['id' => $worksheet->getWorkbookId()]);
 
         if (!$this->isUserAllowedToEditWorkbook($workbook)) {
             return new Result([], ['error' => sprintf(
@@ -356,6 +399,51 @@ class WorksheetController implements ProjectDataAwareInterface
         $this->worksheetRepository->delete($worksheet);
 
         return new Result([]);
+    }
+
+    /**
+     * Duplicates a worksheet.
+     *
+     * @param  integer $projectId   Project ID.
+     * @param  integer $worksheetId Worksheet ID.
+     *
+     * @return Result
+     */
+    public function duplicate($projectId, $worksheetId)
+    {
+        list($project, $workbook, $worksheet) = $this->getProjectDataForWorksheetId($worksheetId, $projectId);
+
+        if (!$this->isUserAllowedToEditWorkbook($workbook)) {
+            return new Result([], ['error' => sprintf(
+                'This Workbook is locked by "%s".',
+                $this->workbookLocker->getLockingUser()->getEmail()
+            )], Response::HTTP_FORBIDDEN);
+        }
+
+        $newWorksheet = clone($worksheet);
+        $newWorksheet->setName(
+            $this->worksheetRepository->getUniqueName($newWorksheet, "Copy of {$newWorksheet->getName()}")
+        );
+        $this->worksheetRepository->create($newWorksheet);
+
+        $charts = $this->chartRepository->find(['worksheet_id' => $worksheet->getId()]);
+        $newCharts = [];
+        foreach ($charts as $chart) {
+            $newChart = clone($chart);
+            $newChart->setWorksheetId($newWorksheet->getId());
+            $newCharts[] = $newChart;
+            $this->chartRepository->create($newChart);
+        }
+
+        return new Result(
+            [
+                'project' => $project,
+                'worksheet' => $newWorksheet,
+                'charts' => $newCharts
+            ],
+            [],
+            Response::HTTP_CREATED
+        );
     }
 
     /**

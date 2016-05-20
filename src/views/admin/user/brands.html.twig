@@ -51,8 +51,13 @@
                 <hr class="divider">
                 <div class="list-items list-items--no-results">
                     <!-- @TODO: sort out this empty state -->
-                    <h6>THERE ARE NO AGENCIES FOR THIS USER'S ORGANIZATION</h6>
-                    <p>To get started <a href="{{ orgPath('agency.create', data.organization.id) }}">Create An Agency</a></p>
+                    {% if data.user_agencies|length > 0 %}
+                    <h6>THERE ARE NO BRANDS IN ANY AGENCIES THIS USER HAS ACCESS TO</h6>
+                    <p>To get started <a href="{{ orgPath('agencies', data.organization.id) }}">browse this organization's agencies and add brands</a></p>
+                    {% else %}
+                    <h6>THIS USER HAS NO ACCESS TO ANY AGENCIES</h6>
+                    <p>To get started <a href="{{ orgPath('user.agencies', data.user.id, data.organization.id) }}">manage their agency access</a></p>
+                    {% endif %}
                 </div>
             {% endif %}
             <div class="pagination">
@@ -80,4 +85,7 @@
                 {% endif %}
             </div>
     </div>
+{% endblock %}
+{% block javascript_additional %}
+    data-main="{{ cs_build_location }}/javascript/brand"
 {% endblock %}

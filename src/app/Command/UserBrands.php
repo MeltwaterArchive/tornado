@@ -140,7 +140,7 @@ EOT
         foreach ($brandsIds as $brandId) {
             if (!in_array($brandId, $allowedBrandsIds)) {
                 throw new \InvalidArgumentException(sprintf(
-                    'User "%s" can not be added to the Brand with ID "%s". Allowed Brands IDs: %s.',
+                    'User "%s" cannot be added to the Brand with ID "%s". Allowed Brands IDs: %s.',
                     $user->getEmail(),
                     $brandId,
                     implode(',', $allowedBrandsIds)

@@ -150,303 +150,181 @@ class WorkbookControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::__construct
-     * @covers ::create
+     * DataProvider for testCreate
+     *
+     * @return array
      */
-    public function testCreate()
+    public function createProvider()
     {
-        $mocks = $this->getMocks();
-
-        $postParams = [
-            'name' => 'Test Workbook',
-            'recording_id' => $mocks['recordingId']
+        return [
+            'happy' => [
+                'postParams' => [
+                    'recording_id' => 20,
+                    'name' => 'test name',
+                    'template' => ''
+                ],
+                'project_id' => 10,
+                'template' => '',
+                'expectedCode' => 201
+            ],
+            'happy templated' => [
+                'postParams' => [
+                    'recording_id' => 20,
+                    'name' => 'test name',
+                    'template' => 'template'
+                ],
+                'project_id' => 10,
+                'template' => 'template',
+                'expectedCode' => 201
+            ],
+            'invalid form' => [
+                'postParams' => [
+                    'recording_id' => 20,
+                    'name' => 'test name',
+                    'template' => 'template'
+                ],
+                'project_id' => 10,
+                'template' => 'template',
+                'expectedCode' => 400,
+                'projectFound' => true,
+                'accessGranted' => true,
+                'formValid' => false
+            ],
+            'project not found' => [
+                'postParams' => [
+                    'recording_id' => 20,
+                    'name' => 'test name',
+                    'template' => 'template'
+                ],
+                'project_id' => 10,
+                'template' => 'template',
+                'expectedCode' => 400,
+                'projectFound' => false,
+                'accessGranted' => true,
+                'formValid' => true,
+                'expectedException' => '\Symfony\Component\HttpKernel\Exception\NotFoundHttpException'
+            ],
+            'access not granted' => [
+                'postParams' => [
+                    'recording_id' => 20,
+                    'name' => 'test name',
+                    'template' => 'template'
+                ],
+                'project_id' => 10,
+                'template' => 'template',
+                'expectedCode' => 400,
+                'projectFound' => true,
+                'accessGranted' => false,
+                'formValid' => true,
+                'expectedException' => '\Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException'
+            ]
         ];
-        $postParamsWithProjectId = array_merge($postParams, ['project_id' => $mocks['projectId']]);
-
-        $mocks['createForm']->shouldReceive('submit')
-            ->with($postParamsWithProjectId)
-            ->once();
-        $mocks['createForm']->shouldReceive('isValid')
-            ->andReturn(true)
-            ->once();
-        $mocks['createForm']->shouldReceive('getData')
-            ->andReturn($mocks['workbook'])
-            ->once();
-
-        $mocks['request']->shouldReceive('getPostParams')
-            ->andReturn($postParams)
-            ->once();
-
-        $mocks['workbookRepo']->shouldReceive('create')
-            ->with($mocks['workbook'])
-            ->once();
-
-        $mocks['project']->setFresh(0);
-
-        $controller = $this->getController($mocks);
-
-        $result = $controller->create($mocks['request'], $mocks['projectId']);
-
-        $this->assertInstanceOf(Result::class, $result);
-        $data = $result->getData();
-        $this->assertArrayHasKey('workbook', $data);
-        $this->assertSame($mocks['workbook'], $data['workbook']);
-        $this->assertArrayHasKey('worksheets', $data);
-        $this->assertInternalType('array', $data['worksheets']);
-        $this->assertEmpty($data['worksheets']);
-        $this->assertEquals(201, $result->getHttpCode());
     }
 
     /**
-     * @covers ::__construct
+     * @dataProvider createProvider
+     *
      * @covers ::create
+     *
+     * @param array $postParams
+     * @param integer $projectId
+     * @param string $template
+     * @param integer $expectedCode
+     * @param boolean $projectFound
+     * @param boolean $accessGranted
+     * @param boolean $formValid
+     * @param string $expectedException
      */
-    public function testCreateOnFreshProject()
-    {
+    public function testCreate(
+        array $postParams,
+        $projectId,
+        $template,
+        $expectedCode,
+        $projectFound = true,
+        $accessGranted = true,
+        $formValid = true,
+        $expectedException = ''
+    ) {
         $mocks = $this->getMocks();
-
-        $postParams = [
-            'name' => 'Test Workbook',
-            'recording_id' => $mocks['recordingId']
-        ];
-        $postParamsWithProjectId = array_merge($postParams, ['project_id' => $mocks['projectId']]);
-
-        $mocks['createForm']->shouldReceive('submit')
-            ->with($postParamsWithProjectId)
-            ->once();
-        $mocks['createForm']->shouldReceive('isValid')
-            ->andReturn(true)
-            ->once();
-        $mocks['createForm']->shouldReceive('getData')
-            ->andReturn($mocks['workbook'])
-            ->once();
-
         $mocks['request']->shouldReceive('getPostParams')
-            ->andReturn($postParams)
-            ->once();
+            ->andReturn($postParams);
 
-        $mocks['workbookRepo']->shouldReceive('create')
-            ->with($mocks['workbook'])
-            ->once();
+        $mocks['projectRepo']->shouldReceive('findOne')
+            ->once()
+            ->with(['id' => $projectId])
+            ->andReturn(($projectFound) ? $mocks['project'] : false);
 
-        $mocks['project']->setFresh(1);
+        $workbook = Mockery::mock(Workbook::class, [], ['getRecordingId' => $mocks['recordingId']]);
+        $expectedMeta = [];
+        $expectedData = [
+            'workbook' => $workbook,
+            'worksheets' => []
+        ];
 
-        $mocks['recordingRepo']->shouldReceive('findOne')
-            ->with(['id' => $mocks['recordingId']])
-            ->andReturn($mocks['recording'])
-            ->once();
-
-        $mocks['worksheets'] = [];
-        for ($i = 1; $i < 3; $i++) {
-            $mocks['worksheets'][] = new Worksheet();
+        $authManager = Mockery::mock('\Tornado\Security\Authorization\AccessDecisionManagerInterface');
+        if ($projectFound) {
+            $authManager->shouldReceive('isGranted')
+                ->with($mocks['project'])
+                ->andReturn($accessGranted);
         }
 
-        $mocks['worksheetsGenerator']->shouldReceive('generateFromTemplate')
-            ->with($mocks['workbook'], $mocks['recording'], $mocks['defaultWorkbookTemplate'])
-            ->andReturn($mocks['worksheets'])
-            ->once();
+        if ($projectFound && $accessGranted) {
+            $mocks['createForm']->shouldReceive('submit')
+                ->with(array_merge($postParams, ['project_id' => $projectId]));
 
-        $mocks['projectRepo']->shouldReceive('update')
-            ->with($mocks['project'])
-            ->once();
+            $mocks['createForm']->shouldReceive('isValid')
+                ->andReturn($formValid);
 
-        $controller = $this->getController($mocks);
+            if ($projectFound && $accessGranted && $formValid) {
+                $mocks['createForm']->shouldReceive('getData')
+                    ->andReturn($workbook);
+                $mocks['workbookRepo']->shouldReceive('create')
+                    ->once()
+                    ->with($workbook);
 
-        $result = $controller->create($mocks['request'], $mocks['projectId']);
+                if ($template) {
+                    $mocks['recordingRepo']->shouldReceive('findOne')
+                        ->once()
+                        ->with(['id' => $mocks['recordingId']])
+                        ->andReturn($mocks['recording']);
+                    $worksheets = [
+                        Mockery::mock('\Tornado\Project\Worksheet'),
+                        Mockery::mock('\Tornado\Project\Worksheet'),
+                        Mockery::mock('\Tornado\Project\Worksheet')
+                    ];
 
-        $this->assertInstanceOf(Result::class, $result);
-        $data = $result->getData();
-        $this->assertArrayHasKey('workbook', $data);
-        $this->assertSame($mocks['workbook'], $data['workbook']);
-        $this->assertArrayHasKey('worksheets', $data);
-        $this->assertSame($mocks['worksheets'], $data['worksheets']);
-        $this->assertEquals(0, $mocks['project']->getFresh());
-        $this->assertEquals(201, $result->getHttpCode());
-    }
+                    $mocks['worksheetsGenerator']->shouldReceive('generateFromTemplate')
+                        ->once()
+                        ->with(
+                            $workbook,
+                            $mocks['recording'],
+                            $template
+                        )->andReturn($worksheets);
 
-    /**
-     * @covers ::__construct
-     * @covers ::createDefaults
-     */
-    public function testCreateDefaults()
-    {
-        $mocks = $this->getMocks();
-
-        $mocks['project']->setFresh(1);
-        $mocks['project']->setType(Project::TYPE_API);
-        $mocks['project']->setRecordingFilter(Project::RECORDING_FILTER_API);
-
-        $mocks['recordingRepo']->shouldReceive('findByProject')
-            ->with($mocks['project'])
-            ->andReturn([$mocks['recording']])
-            ->once();
-
-        $mocks['templatedAnalyzer']->shouldReceive('readTemplate')
-            ->with($mocks['defaultWorkbookTemplate'])
-            ->andReturn(['title' => 'Default Workbook'])
-            ->once();
-
-        $mocks['createForm']->shouldReceive('submit')
-            ->with([
-                'project_id' => $mocks['projectId'],
-                'name' => 'Default Workbook',
-                'recording_id' => $mocks['recordingId']
-            ])
-            ->once();
-        $mocks['createForm']->shouldReceive('isValid')
-            ->andReturn(true)
-            ->once();
-        $mocks['createForm']->shouldReceive('getData')
-            ->andReturn($mocks['workbook'])
-            ->once();
-
-        $mocks['workbookRepo']->shouldReceive('create')
-            ->with($mocks['workbook'])
-            ->once();
-
-        $mocks['worksheets'] = [];
-        for ($i = 1; $i < 3; $i++) {
-            $mocks['worksheets'][] = new Worksheet();
+                    $expectedData['worksheets'] = $worksheets;
+                }
+            } else {
+                $errors = ['a' => 'b'];
+                $mocks['createForm']->shouldReceive('getErrors')
+                    ->once()
+                    ->andReturn($errors);
+                $expectedData = [];
+                $expectedMeta = $errors;
+            }
         }
 
-        $mocks['worksheetsGenerator']->shouldReceive('generateFromTemplate')
-            ->with($mocks['workbook'], $mocks['recording'], $mocks['defaultWorkbookTemplate'])
-            ->andReturn($mocks['worksheets'])
-            ->once();
+        $controller = $this->getConcreteController($mocks);
+        $controller->setAuthorizationManager($authManager);
 
-        $mocks['projectRepo']->shouldReceive('update')
-            ->with($mocks['project'])
-            ->once();
+        if ($expectedException) {
+            $this->setExpectedException($expectedException);
+        }
 
-        $controller = $this->getController($mocks);
-
-        $result = $controller->createDefaults($mocks['projectId']);
-
+        $result = $controller->create($mocks['request'], $projectId);
         $this->assertInstanceOf(Result::class, $result);
-        $data = $result->getData();
-        $this->assertArrayHasKey('workbook', $data);
-        $this->assertSame($mocks['workbook'], $data['workbook']);
-        $this->assertArrayHasKey('worksheets', $data);
-        $this->assertSame($mocks['worksheets'], $data['worksheets']);
-        $this->assertEquals(0, $mocks['project']->getFresh());
-        $this->assertEquals(201, $result->getHttpCode());
-    }
-
-    /**
-     * @covers ::__construct
-     * @covers ::createDefaults
-     */
-    public function testCreateDefaultsOnNotFreshProject()
-    {
-        $mocks = $this->getMocks();
-
-        $mocks['project']->setFresh(0);
-
-        $controller = $this->getController($mocks);
-
-        $result = $controller->createDefaults($mocks['projectId']);
-
-        $this->assertInstanceOf(Result::class, $result);
-        $this->assertEquals(400, $result->getHttpCode());
-        $meta = $result->getMeta();
-        $this->assertArrayHasKey('error', $meta);
-    }
-
-    /**
-     * @covers ::__construct
-     * @covers ::createDefaults
-     */
-    public function testCreateDefaultsOnNotApiProject()
-    {
-        $mocks = $this->getMocks();
-
-        $mocks['project']->setFresh(1);
-        $mocks['project']->setType(Project::TYPE_NORMAL);
-
-        $controller = $this->getController($mocks);
-
-        $result = $controller->createDefaults($mocks['projectId']);
-
-        $this->assertInstanceOf(Result::class, $result);
-        $this->assertEquals(400, $result->getHttpCode());
-        $meta = $result->getMeta();
-        $this->assertArrayHasKey('error', $meta);
-    }
-
-    /**
-     * @covers ::__construct
-     * @covers ::createDefaults
-     */
-    public function testCreateDefaultsWithoutDefaultRecording()
-    {
-        $mocks = $this->getMocks();
-
-        $mocks['project']->setFresh(1);
-        $mocks['project']->setType(Project::TYPE_API);
-        $mocks['project']->setRecordingFilter(Project::RECORDING_FILTER_API);
-
-        $mocks['recordingRepo']->shouldReceive('findByProject')
-            ->with($mocks['project'])
-            ->andReturn([]);
-
-        $controller = $this->getController($mocks);
-
-        $result = $controller->createDefaults($mocks['projectId']);
-
-        $this->assertInstanceOf(Result::class, $result);
-        $this->assertEquals(404, $result->getHttpCode());
-        $meta = $result->getMeta();
-        $this->assertArrayHasKey('error', $meta);
-    }
-
-    /**
-     * @covers ::__construct
-     * @covers ::createDefaults
-     */
-    public function testCreateDefaultsWithInvalidData()
-    {
-        $mocks = $this->getMocks();
-
-        $mocks['project']->setFresh(1);
-        $mocks['project']->setType(Project::TYPE_API);
-        $mocks['project']->setRecordingFilter(Project::RECORDING_FILTER_API);
-
-        $mocks['recordingRepo']->shouldReceive('findByProject')
-            ->with($mocks['project'])
-            ->andReturn([$mocks['recording']])
-            ->once();
-
-        $mocks['templatedAnalyzer']->shouldReceive('readTemplate')
-            ->with($mocks['defaultWorkbookTemplate'])
-            ->andReturn(['title' => ''])
-            ->once();
-
-        $mocks['createForm']->shouldReceive('submit')
-            ->with([
-                'project_id' => $mocks['projectId'],
-                'name' => '',
-                'recording_id' => $mocks['recordingId']
-            ])
-            ->once();
-        $mocks['createForm']->shouldReceive('isValid')
-            ->andReturn(false)
-            ->once();
-
-        $mocks['errors'] = ['name' => 'not_blank'];
-
-        $mocks['createForm']->shouldReceive('getErrors')
-            ->andReturn($mocks['errors'])
-            ->once();
-
-        $controller = $this->getController($mocks);
-
-        $result = $controller->createDefaults($mocks['projectId']);
-
-        $this->assertInstanceOf(Result::class, $result);
-        $this->assertEquals(400, $result->getHttpCode());
-        $meta = $result->getMeta();
-        $this->assertArrayHasKey('errors', $meta);
-        $this->assertEquals($mocks['errors'], $meta['errors']);
+        $this->assertEquals($expectedCode, $result->getHttpCode());
+        $this->assertEquals($expectedData, $result->getData());
+        $this->assertEquals($expectedMeta, $result->getMeta());
     }
 
     /**
@@ -976,6 +854,58 @@ class WorkbookControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * DataProvider for testTemplates
+     *
+     * @return array
+     */
+    public function templatesProvider()
+    {
+        return [
+            'happy' => [
+                'templates' => [
+                    'test' => [
+                        'title' => 'Test',
+                        'description' => 'Test desc',
+                        'analyses' => []
+                    ],
+                    'test_two' => [
+                        'title' => 'Test 2',
+                        'analyses' => []
+                    ]
+                ],
+                'expected' => [
+                    ['id' => '', 'title' => '', 'description' => ''],
+                    ['id' => 'test', 'title' => 'Test', 'description' => 'Test desc'],
+                    ['id' => 'test_two', 'title' => 'Test 2', 'description' => ''],
+                ]
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider templatesProvider
+     *
+     * @covers ::templates
+     *
+     * @param array $templates
+     * @param array $expected
+     */
+    public function testTemplates(array $templates, array $expected)
+    {
+        $mocks = $this->getMocks();
+
+        $mocks['templatedAnalyzer']->shouldReceive('getTemplates')
+            ->andReturn($templates);
+
+        $controller = $this->getController($mocks);
+
+        $result = $controller->templates();
+        $this->assertInstanceOf(Result::class, $result);
+        $this->assertEquals(200, $result->getHttpCode());
+        $this->assertEquals($expected, $result->getData());
+    }
+
+    /**
      * @return array
      */
     protected function getMocks()
@@ -1056,6 +986,30 @@ class WorkbookControllerTest extends \PHPUnit_Framework_TestCase
         $controller->shouldReceive('getWorkbook')
             ->with($mocks['project'], $mocks['workbookId'])
             ->andReturn($mocks['workbook']);
+
+        $controller->setProjectRepository($mocks['projectRepo']);
+        $controller->setWorkbookRepository($mocks['workbookRepo']);
+        $controller->setWorksheetRepository($mocks['worksheetRepo']);
+
+        return $controller;
+    }
+
+    /**
+     * @return WorkbookController
+     */
+    protected function getConcreteController(array $mocks)
+    {
+        $controller = new WorkbookController(
+            $mocks['createForm'],
+            $mocks['updateForm'],
+            $mocks['recordingRepo'],
+            $mocks['worksheetsGenerator'],
+            $mocks['templatedAnalyzer'],
+            $mocks['locker'],
+            $mocks['sessionUser'],
+            $mocks['exporter'],
+            $mocks['defaultWorkbookTemplate']
+        );
 
         $controller->setProjectRepository($mocks['projectRepo']);
         $controller->setWorkbookRepository($mocks['workbookRepo']);

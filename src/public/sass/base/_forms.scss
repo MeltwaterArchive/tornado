@@ -1,0 +1,188 @@
+/**
+ * Base ~ Forms
+ */
+
+/**
+ * Form variables
+ */
+$input-colour: #333 !default;
+$input-background-colour: $colour-grey-light !default;
+$input-placeholder-colour: #999 !default;
+$input-error-border-colour: $colour-red-error !default;
+$input-form-field-error-colour: $colour-red-error !default;
+$input-radio-disabled-label-colour: #999 !default;
+$styled-checkbox-border-colour: $colour-grey-light !default;
+
+/**
+ * Form styles
+ */
+%input-disabled-state {
+    cursor: not-allowed;
+}
+
+html {
+    input[disabled] {
+        @extend %input-disabled-state;
+    }
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+%input,
+input {
+    display: block;
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 10px;
+    font-size: rem(12);
+    line-height: 12px;
+    color: $input-colour;
+    border: 1px solid $input-background-colour;
+    border-radius: 3px;
+    outline: none;
+    @include placeholder {
+        font-size: rem(12);
+        line-height: 15px;
+        color: $input-placeholder-colour;
+    }
+    &[type="radio"] {
+        display: inline-block;
+        width: auto;
+        margin: 0 10px 10px 0;
+        &[disabled] {
+            ~ .input-label {
+                color: $input-radio-disabled-label-colour;
+                text-decoration: line-through;
+            }
+        }
+        ~ .input-label {
+            display: inline-block;
+            margin-bottom: 10px;
+            font-size: rem(12);
+            line-height: 12px;
+            font-weight: normal;
+        }
+    }
+}
+
+%input-error,
+.input-error {
+    @extend %warning-button;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px !important; // Override the default button style
+    cursor: default !important; // Override the default button style
+}
+
+%input-label,
+.input-label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: rem(12);
+    line-height: 12px;
+    font-weight: bold;
+    &[data-input-optional] {
+        &::after {
+            content: attr(data-input-optional);
+        }
+    }
+}
+
+.styled-checkbox,
+%styled-checkbox {
+    position: absolute;
+    width: 0;
+    height: 0;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.styled-checkbox__label {
+    position: relative;
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 1px solid $styled-checkbox-border-colour;
+    border-radius: 3px;
+    vertical-align: top;
+    cursor: pointer;
+    // Decoration
+    &::before {
+        position: absolute;
+        top: 3px;
+        bottom: 3px;
+        left: 3px;
+        right: 3px;
+        background: {
+            image: url("#{$image-path}/common/forms/checkbox-checked.svg");
+            size: 100% auto;
+            position: center center;
+            repeat: no-repeat;
+        }
+        border-radius: 2px;
+        content: "";
+        opacity: 0;
+        @include transform(scale(0.3));
+        @include transition(0.2s all $slick-ease);
+    }
+    // `::after` pseudo element will be used for the actual label text
+    &[data-input-label-placeholder] {
+        &::after {
+            position: relative;
+            left: 25px;
+            vertical-align: top;
+            font-size: rem(12);
+            white-space: nowrap;
+            content: attr(data-input-label-placeholder);
+        }
+    }
+}
+
+.styled-checkbox:checked + .styled-checkbox__label {
+    &::before {
+        opacity: 1;
+        @include transform(scale(1));
+    }
+}
+
+button {
+    border: none;
+}
+
+/*
+ * Allow only vertical resizing of textareas.
+ */
+textarea {
+    resize: vertical;
+}
+
+// styling to support elements going side to side, just add a .form-left class
+.form-left {
+    float: left;
+    width: 50%;
+    padding-right: 10px;
+    box-sizing: border-box;
+
+    // this stops the last element from having a right padding
+    &:last-child {
+        padding-right: 0;
+    }
+}
+
+// overrides for selectize to bring the height inline with our text box height
+.selectize-input {
+    height: 37px !important;
+    line-height: 17px !important;
+}
+
+// special case for the CSDL text box
+.input-wrapper[data-form-field="filter"] {
+    margin-top: 20px;
+}
+
+::-webkit-input-placeholder { color: $placeholder-colour !important; }
+:-moz-placeholder { color: $placeholder-colour !important; }
+::-moz-placeholder { color: $placeholder-colour !important; }
+:-ms-input-placeholder { color: $placeholder-colour !important; }

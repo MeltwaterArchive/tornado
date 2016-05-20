@@ -44,7 +44,7 @@ end
 
 # populate production database schema
 execute 'import_db' do
-  command 'mysql -uroot < /vagrant/database/master.sql || true'
+  command 'mysql -uroot tornado < /vagrant/database/master.sql || true'
   action :run
   not_if "mysql -uroot -e'SELECT * FROM tornado.organization;'"
   notifies :run, 'execute[import_sample_data]', :immediately
@@ -52,7 +52,7 @@ end
 
 # Import fixtures the first time
 execute 'import_sample_data' do
-  command 'mysql -uroot < /vagrant/database/fixtures.sql || true'
+  command 'mysql -uroot tornado < /vagrant/database/fixtures.sql || true'
   not_if '[ ! -d /vagrant ]'
   action :nothing
 end

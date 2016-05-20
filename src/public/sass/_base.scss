@@ -1,0 +1,22 @@
+/**
+ * Base imports
+ */
+
+/* Settings that need to be set globally ***********************/
+$image-path: "/images" !global;
+
+/* Bourbon & Neat Libraries ***********************/
+@import "bourbon/bourbon";
+@import "neat/neat";
+@import "base/grid-settings";
+
+@import "../bower/chosen/chosen.css";
+@import "../bower/animate.css/animate.min.css";
+
+/* Base styles ***********************/
+@import "base/colours";
+@import "base/easings";
+@import "base/normalize";
+@import "base/type";
+@import "base/forms";
+@import "base/base";

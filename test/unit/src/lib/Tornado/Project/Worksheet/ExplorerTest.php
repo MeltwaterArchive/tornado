@@ -73,6 +73,7 @@ class ExplorerTest extends \PHPUnit_Framework_TestCase
                     'start' => 123456,
                     'end' => 123456,
                     'parent_worksheet_id' => null,
+                    'display_options' => null,
                     'created_at' => 123456789,
                     'updated_at' => 123456780
                 ],
@@ -89,7 +90,7 @@ class ExplorerTest extends \PHPUnit_Framework_TestCase
                     'id' => null,
                     'workbook_id' => 20,
                     'name' => 'Another New Name',
-                    'rank' => 1,
+                    'rank' => null,
                     'comparison' => ChartGenerator::MODE_COMPARE,
                     'measurement' => ChartGenerator::MEASURE_INTERACTIONS,
                     'chart_type' => Chart::TYPE_TORNADO,
@@ -115,6 +116,7 @@ class ExplorerTest extends \PHPUnit_Framework_TestCase
                     'start' => 123456,
                     'end' => 123456,
                     'parent_worksheet_id' => 10,
+                    'display_options' => '{}',
                     'created_at' => null,
                     'updated_at' => null
                 ]
@@ -140,6 +142,9 @@ class ExplorerTest extends \PHPUnit_Framework_TestCase
                     'start' => 123456,
                     'end' => 123456,
                     'parent_worksheet_id' => null,
+                    'display_options' => json_encode([
+                        'sort' => ['label' => 'desc', 'outliers' => false]
+                    ]),
                     'created_at' => 123456789,
                     'updated_at' => 223456789
                 ],
@@ -155,7 +160,7 @@ class ExplorerTest extends \PHPUnit_Framework_TestCase
                     'id' => null,
                     'workbook_id' => 20,
                     'name' => 'Another New Name',
-                    'rank' => 1,
+                    'rank' => null,
                     'comparison' => ChartGenerator::MODE_COMPARE,
                     'measurement' => ChartGenerator::MEASURE_INTERACTIONS,
                     'chart_type' => Chart::TYPE_TORNADO,
@@ -179,6 +184,9 @@ class ExplorerTest extends \PHPUnit_Framework_TestCase
                     'start' => 123456,
                     'end' => 123456,
                     'parent_worksheet_id' => 10,
+                    'display_options' => json_encode([
+                        'sort' => ['label' => 'desc', 'outliers' => false]
+                    ]),
                     'created_at' => null,
                     'updated_at' => null
                 ]
@@ -205,6 +213,9 @@ class ExplorerTest extends \PHPUnit_Framework_TestCase
                     'start' => 123456,
                     'end' => 123456,
                     'parent_worksheet_id' => null,
+                    'display_options' => json_encode([
+                        'sort' => ['label' => 'desc', 'outliers' => false]
+                    ]),
                     'created_at' => 123456789,
                     'updated_at' => 123456780,
                 ],
@@ -221,7 +232,7 @@ class ExplorerTest extends \PHPUnit_Framework_TestCase
                     'id' => null,
                     'workbook_id' => 20,
                     'name' => 'Another New Name',
-                    'rank' => 1,
+                    'rank' => null,
                     'comparison' => ChartGenerator::MODE_COMPARE,
                     'measurement' => ChartGenerator::MEASURE_INTERACTIONS,
                     'chart_type' => Chart::TYPE_TORNADO,
@@ -245,6 +256,9 @@ class ExplorerTest extends \PHPUnit_Framework_TestCase
                     'start' => 123456,
                     'end' => 123456,
                     'parent_worksheet_id' => 10,
+                    'display_options' => json_encode([
+                        'sort' => ['label' => 'desc', 'outliers' => false]
+                    ]),
                     'created_at' => null,
                     'updated_at' => null
                 ]
@@ -271,6 +285,9 @@ class ExplorerTest extends \PHPUnit_Framework_TestCase
                     'start' => 123456789,
                     'end' => 123456789,
                     'parent_worksheet_id' => null,
+                    'display_options' => json_encode([
+                        'sort' => ['label' => 'desc', 'outliers' => false]
+                    ]),
                     'created_at' => 123456789,
                     'updated_at' => 123456780,
                 ],
@@ -287,7 +304,7 @@ class ExplorerTest extends \PHPUnit_Framework_TestCase
                     'id' => null,
                     'workbook_id' => 20,
                     'name' => 'Another New Name',
-                    'rank' => 1,
+                    'rank' => null,
                     'comparison' => ChartGenerator::MODE_COMPARE,
                     'measurement' => ChartGenerator::MEASURE_INTERACTIONS,
                     'chart_type' => Chart::TYPE_TORNADO,
@@ -311,6 +328,9 @@ class ExplorerTest extends \PHPUnit_Framework_TestCase
                     'start' => 223456789,
                     'end' => 113456789,
                     'parent_worksheet_id' => 10,
+                    'display_options' => json_encode([
+                        'sort' => ['label' => 'desc', 'outliers' => false]
+                    ]),
                     'created_at' => null,
                     'updated_at' => null
                 ]
@@ -337,6 +357,9 @@ class ExplorerTest extends \PHPUnit_Framework_TestCase
                     'start' => 123456789,
                     'end' => 123456789,
                     'parent_worksheet_id' => null,
+                    'display_options' => json_encode([
+                        'sort' => ['label' => 'desc', 'outliers' => false]
+                    ]),
                     'created_at' => 123456789,
                     'updated_at' => 123456780,
                 ],
@@ -353,7 +376,7 @@ class ExplorerTest extends \PHPUnit_Framework_TestCase
                     'id' => null,
                     'workbook_id' => 20,
                     'name' => 'Another New Name',
-                    'rank' => 1,
+                    'rank' => null,
                     'comparison' => ChartGenerator::MODE_COMPARE,
                     'measurement' => ChartGenerator::MEASURE_INTERACTIONS,
                     'chart_type' => Chart::TYPE_TORNADO,
@@ -377,6 +400,9 @@ class ExplorerTest extends \PHPUnit_Framework_TestCase
                     'start' => 223456789,
                     'end' => 123456789,
                     'parent_worksheet_id' => 10,
+                    'display_options' => json_encode([
+                        'sort' => ['label' => 'desc', 'outliers' => false]
+                    ]),
                     'created_at' => null,
                     'updated_at' => null
                 ]
@@ -403,6 +429,9 @@ class ExplorerTest extends \PHPUnit_Framework_TestCase
                     'start' => 123456789,
                     'end' => 123456789,
                     'parent_worksheet_id' => null,
+                    'display_options' => json_encode([
+                        'sort' => ['label' => 'desc', 'outliers' => false]
+                    ]),
                     'created_at' => 123456789,
                     'updated_at' => 123456780,
                 ],
@@ -419,7 +448,7 @@ class ExplorerTest extends \PHPUnit_Framework_TestCase
                     'id' => null,
                     'workbook_id' => 20,
                     'name' => 'Another New Name',
-                    'rank' => 1,
+                    'rank' => null,
                     'comparison' => ChartGenerator::MODE_COMPARE,
                     'measurement' => ChartGenerator::MEASURE_INTERACTIONS,
                     'chart_type' => Chart::TYPE_HISTOGRAM,
@@ -443,6 +472,9 @@ class ExplorerTest extends \PHPUnit_Framework_TestCase
                     'start' => 123456789,
                     'end' => 113456789,
                     'parent_worksheet_id' => 10,
+                    'display_options' => json_encode([
+                        'sort' => ['label' => 'desc', 'outliers' => false]
+                    ]),
                     'created_at' => null,
                     'updated_at' => null
                 ]

@@ -2,6 +2,7 @@
 
 namespace Controller\Admin;
 
+use DataSift\Api\UserProvider;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -14,6 +15,8 @@ use DataSift\Http\Request;
 use Tornado\Controller\Result;
 use Tornado\DataMapper\DataMapperInterface;
 use Tornado\DataMapper\Paginator;
+use Tornado\Organization\Agency;
+use Tornado\Organization\Brand;
 use Tornado\Organization\Organization;
 use Tornado\Organization\Organization\DataMapper as OrganizationDataMapper;
 use Tornado\Organization\Agency\DataMapper as AgencyDataMapper;
@@ -21,6 +24,7 @@ use Tornado\Organization\Agency\DataMapper as AgencyDataMapper;
 use Tornado\Organization\Brand\DataMapper as BrandDataMapper;
 use Tornado\Organization\Brand\Form\Create as CreateForm;
 use Tornado\Organization\Brand\Form\Update as UpdateForm;
+use Tornado\Application\Flash\Message as Flash;
 
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -73,11 +77,19 @@ class BrandController
     protected $updateForm;
 
     /**
+     * @var \DataSift\Api\UserProvider
+     */
+    protected $userProvider;
+
+    /**
      * @param \Tornado\Organization\Organization\DataMapper $organizationRepo
      * @param \Tornado\Organization\Agency\DataMapper $agencyRepo
      * @param \Tornado\Organization\Brand\DataMapper $brandRepo
      * @param \Symfony\Component\Routing\Generator\UrlGenerator $urlGenerator
      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
+     * @param \Tornado\Organization\Brand\Form\Create $createForm
+     * @param \Tornado\Organization\Brand\Form\Update $updateForm
+     * @param \DataSift\Api\UserProvider as $userProvider
      */
     public function __construct(
         OrganizationDataMapper $organizationRepo,
@@ -86,7 +98,8 @@ class BrandController
         UrlGenerator $urlGenerator,
         SessionInterface $session,
         CreateForm $createForm,
-        UpdateForm $updateForm
+        UpdateForm $updateForm,
+        UserProvider $userProvider
     ) {
         $this->organizationRepo = $organizationRepo;
         $this->agencyRepo = $agencyRepo;
@@ -95,12 +108,15 @@ class BrandController
         $this->session = $session;
         $this->createForm = $createForm;
         $this->updateForm = $updateForm;
+        $this->userProvider = $userProvider;
     }
 
     /**
      * Lists all Agencies
      *
      * @param Request $request
+     * @param integer $id The Agency identifier
+     * @param integer $organizationId The Organization identifier
      *
      * @return \Tornado\Controller\Result
      */
@@ -133,15 +149,19 @@ class BrandController
      * Creates an Agency
      *
      * @param \DataSift\Http\Request $request
+     * @param integer $id The Agency identifier
+     * @param integer $organizationId The Organization identifier
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Tornado\Controller\Result
      *
-     * @throws AccessDeniedHttpException if Session User can not access the Brand.
+     * @throws AccessDeniedHttpException if Session User cannot access the Brand.
      */
     public function create(Request $request, $id, $organizationId)
     {
         $organization = $this->getOrganization($organizationId);
         $agency = $this->getAgency($id, $organizationId);
+
+        $meta = ['tabs' => $this->getTabs($organizationId, 'brands', $id)];
 
         if ($request->getMethod() == Request::METHOD_POST) {
             $postParams = $request->getPostParams();
@@ -150,11 +170,20 @@ class BrandController
 
             if ($this->createForm->isValid()) {
                 $brand = $this->createForm->getData();
-                $this->brandRepo->create($brand);
-                $this->flashSuccess('Brand created successfully');
-                return new RedirectResponse(
-                    $this->getUrl('brands', $id, $organizationId)
-                );
+                try {
+                    $this->checkIdentity($agency, $brand);
+                    $brand->setTargetPermissions($this->getPermissions($agency, $brand));
+                    $this->brandRepo->create($brand);
+                    $this->flashSuccess('Brand created successfully');
+                    return new RedirectResponse($this->getUrl('brands', $id, $organizationId));
+                } catch (\DataSift_Exception_AccessDenied $e) {
+                    $this->setRequestFlash('Invalid DataSift API credentials', Flash::LEVEL_ERROR, $meta);
+                } catch (\DataSift_Exception_APIError $e) {
+                    $this->setRequestFlash($e->getMessage(), Flash::LEVEL_ERROR, $meta);
+                } catch (\Exception $e) {
+                    $this->setRequestFlash('An error occurred while saving the brand: ' .
+                        $e->getMessage(), Flash::LEVEL_ERROR, $meta);
+                }
             }
         }
 
@@ -165,7 +194,7 @@ class BrandController
                 'organization' => $organization
             ],
             array_merge(
-                ['tabs' => $this->getTabs($organizationId, 'brands', $agency->getId())],
+                $meta,
                 $this->createForm->getErrors('There were errors creating the Brand')
             )
         );
@@ -202,6 +231,7 @@ class BrandController
      *
      * @param \DataSift\Http\Request $request
      * @param integer $id
+     * @param integer $brandId
      *
      * @return mixed
      */
@@ -226,7 +256,10 @@ class BrandController
     /**
      * Edits an Agency
      *
-     * @param int $id
+     * @param Request $request
+     * @param integer $organizationId
+     * @param integer $id The Agency Id
+     * @param integer $brandId
      *
      * @return \Tornado\Controller\Result
      * @throws NotFoundHttpException
@@ -236,6 +269,8 @@ class BrandController
         $this->checkOrganization($organizationId);
         $organization = $this->getOrganization($organizationId);
         $agency = $this->getAgency($id, $organizationId);
+
+        $meta = ['tabs' => $this->getTabs($organizationId, 'brands', $id)];
 
         $brand = $this->brandRepo->findOne(['id' => $brandId, 'agency_id' => $id]);
 
@@ -247,11 +282,21 @@ class BrandController
             $brand = $this->updateForm->getData();
 
             if ($this->updateForm->isValid()) {
-                $this->brandRepo->update($brand);
-                $this->flashSuccess('Brand saved successfully');
-                return new RedirectResponse(
-                    $this->getUrl('brand.edit', $id, $organizationId, ['brandId' => $brandId])
-                );
+                try {
+                    $this->checkIdentity($agency, $brand);
+                    $brand->setTargetPermissions($this->getPermissions($agency, $brand));
+                    $this->brandRepo->update($brand);
+                    $this->flashSuccess('Brand saved successfully');
+                    return new RedirectResponse(
+                        $this->getUrl('brand.edit', $id, $organizationId, ['brandId' => $brandId])
+                    );
+                } catch (\DataSift_Exception_AccessDenied $e) {
+                    $this->setRequestFlash('Invalid DataSift API credentials', Flash::LEVEL_ERROR, $meta);
+                } catch (\DataSift_Exception_APIError $e) {
+                    $this->setRequestFlash($e->getMessage(), Flash::LEVEL_ERROR, $meta);
+                } catch (\Exception $e) {
+                    $this->setRequestFlash('Invalid DataSift API credentials', Flash::LEVEL_ERROR, $meta);
+                }
             }
         }
 
@@ -262,7 +307,7 @@ class BrandController
                 'brand' => $brand
             ],
             array_merge(
-                ['tabs' => $this->getTabs($organizationId, 'brands', $agency->getId())],
+                $meta,
                 $this->updateForm->getErrors('There were errors saving the Brand')
             )
         );
@@ -296,6 +341,9 @@ class BrandController
      * Performs Agencies batch processing
      *
      * @param \DataSift\Http\Request $request
+     * @param integer $id The brand id
+     * @param integer $organizationId
+     * @param \DataSift\Http\Request $request
      *
      * @return Result
      *
@@ -325,7 +373,9 @@ class BrandController
     /**
      * Performs batch Agency delete
      *
-     * @param array                       $ids
+     * @param integer $organizationId
+     * @param integer $id The brand id
+     * @param array $ids
      *
      * @return \Tornado\Controller\Result
      */
@@ -388,5 +438,40 @@ class BrandController
         if (!($user->hasRole('ROLE_SUPERADMIN') || $user->getOrganizationId() == $organizationId)) {
             throw new AccessDeniedHttpException('You do not have access');
         }
+    }
+
+    /**
+     * Tries to determine if the provided credentials have premium permissions
+     * if the credentials are invalid an AccessDenied exception is thrown.
+     *
+     * @param Agency $agency
+     * @param Brand $brand
+     * @return array The permissions array
+     * @throws \DataSift_Exception_AccessDenied
+     */
+    protected function getPermissions(Agency $agency, Brand $brand)
+    {
+        $this->userProvider->setUsername($agency->getDatasiftUsername());
+        if (!empty($brand->getDatasiftUsername())) {
+            $this->userProvider->setUsername($brand->getDatasiftUsername());
+        }
+        $this->userProvider->setApiKey($brand->getDatasiftApiKey());
+        $hasPremiumAccess = $this->userProvider->identityHasPremiumPermissions();
+        return $hasPremiumAccess ? [Brand::PERM_PREMIUM] : [];
+    }
+
+    /**
+     * Checks whether the Identity specified by the passed Brand exists
+     *
+     * @param \Tornado\Organization\Agency $agency
+     * @param \Tornado\Organization\Brand $brand
+     *
+     * @return boolean
+     */
+    protected function checkIdentity(Agency $agency, Brand $brand)
+    {
+        $this->userProvider->setUsername($agency->getDatasiftUsername());
+        $this->userProvider->setApiKey($agency->getDatasiftApiKey());
+        return $this->userProvider->identityExists($brand->getDatasiftIdentityId());
     }
 }

@@ -25,7 +25,7 @@ $env = getenv('APP_ENV') ?: 'production';
 $configPath = realpath(__DIR__ . '/../config/api');
 $resourcesPath = (is_dir('/etc/tornado')) ? '/etc/tornado' : realpath(__DIR__ . '/../../resources/config');
 
-// Catches Silex early errors which can not be handle by Silex Application Error Hanlder
+// Catches Silex early errors which cannot be handle by Silex Application Error Hanlder
 try {
     $bootstrap = new \DataSift\Silex\Bootstrap($configPath, $resourcesPath, $env);
 

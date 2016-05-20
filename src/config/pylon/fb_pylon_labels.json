@@ -11,7 +11,7 @@
         "target": "fb.author.country",
         "label": "Author Country",
         "description": "The country in which a story author's Current City is located"
-    }, 
+    },
     {
         "target": "fb.author.country_code",
         "label": "Author Country Code",
@@ -218,7 +218,8 @@
     }, {
         "target": "fb.parent.topics.name",
         "label": "Engaged Topics",
-        "description": "Engagements by Facebook IDs of topics inferred in parent stories"
+        "description": "Engagements by Facebook IDs of topics inferred in parent stories",
+        "is_analysable": false
     }, {
         "target": "fb.parent.topics.products",
         "label": "Parent Company Products",
@@ -287,11 +288,12 @@
     }, {
         "target": "fb.topics_location_address",
         "label": "Company Address"
-    }, 
+    },
      {
         "target": "fb.topics.name",
         "label": "Topic Name",
-        "description": "Topics inferred in stories"
+        "description": "Topics inferred in stories",
+        "is_analysable": false
     }, {
         "target": "fb.topics.products",
         "label": "Company Products",
@@ -377,6 +379,10 @@
         "label": "All Links",
         "description": "Breakdown of stories with links and their engagements"
     }, {
+        "target": "links.title",
+        "label": "Links Title",
+        "description": "The titles of links as fetched by Facebook"
+    }, {
         "target": "meta.user_id",
         "label": "User ID"
     }, {
@@ -392,13 +398,7 @@
         "target": "interaction.tag_tree_flat.value",
         "label": "Tag tree value"
     }, {
-    },
-
-
-
-
-
-        {
+    }, {
         "target": "interaction.tag_tree",
         "label": "Tag tree",
         "is_analysable": false

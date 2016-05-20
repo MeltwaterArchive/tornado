@@ -6,6 +6,8 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 use DataSift\Http\Request;
 
+use Tornado\Organization\Organization\DataMapper as OrganizationRepository;
+use Tornado\Organization\Agency;
 use Tornado\Organization\Agency\DataMapper as AgencyRepository;
 use Tornado\Organization\Brand\DataMapper as BrandRepository;
 
@@ -30,6 +32,11 @@ class AuthenticationManager
     const TYPE_BOTH = 'both';
 
     /**
+     * @var OrganizationRepository
+     */
+    protected $organizationRepo;
+
+    /**
      * @var AgencyRepository
      */
     protected $agencyRepository;
@@ -39,8 +46,12 @@ class AuthenticationManager
      */
     protected $brandRepository;
 
-    public function __construct(AgencyRepository $agencyRepository, BrandRepository $brandRepository)
-    {
+    public function __construct(
+        OrganizationRepository $organizationRepo,
+        AgencyRepository $agencyRepository,
+        BrandRepository $brandRepository
+    ) {
+        $this->organizationRepo = $organizationRepo;
         $this->agencyRepository = $agencyRepository;
         $this->brandRepository = $brandRepository;
     }
@@ -62,7 +73,7 @@ class AuthenticationManager
 
         if (in_array($authType, [self::TYPE_AGENCY, self::TYPE_BOTH])) {
             try {
-                $ret =$this->authByAgency($request, $credentials);
+                $ret = $this->authByAgency($request, $credentials);
             } catch (UnauthorizedHttpException $ex) {
                 if ($authType !== self::TYPE_BOTH) {
                     throw $ex;
@@ -96,6 +107,8 @@ class AuthenticationManager
             );
         }
 
+        $this->canAccess($request, $agency);
+
         $request->attributes->set('agency', $agency);
         $request->attributes->set('brand', null);
         return $agency;
@@ -115,6 +128,9 @@ class AuthenticationManager
         if (!$agency) {
             throw new UnauthorizedHttpException($request->headers->get('auth'));
         }
+
+        $this->canAccess($request, $agency);
+
         $request->attributes->set('agency', $agency);
 
         $brand = $this->brandRepository->findOne([
@@ -175,5 +191,24 @@ class AuthenticationManager
         $data['api_key'] = $authData[1];
 
         return $data;
+    }
+
+    /**
+     * Checks whether the Organization the Agency belongs to has the required access
+     *
+     * @param \DataSift\Http\Request $request
+     * @param \Tornado\Security\Http\DataSiftApi\Agency $agency
+     *
+     * @throws UnauthorizedHttpException
+     */
+    protected function canAccess(Request $request, Agency $agency)
+    {
+        $organization = $this->organizationRepo->findOne(['id' => $agency->getOrganizationId()]);
+        if (!$organization->hasPermission('api')) {
+            throw new UnauthorizedHttpException(
+                $request->headers->get('auth'),
+                'You are not authorized to access the Tornado API'
+            );
+        }
     }
 }

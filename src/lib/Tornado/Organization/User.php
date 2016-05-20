@@ -82,6 +82,13 @@ class User implements DataObjectInterface
     protected $roles = [];
 
     /**
+     * Set to true to disable login for this user
+     *
+     * @var boolean
+     */
+    protected $disabled = false;
+
+    /**
      * Sets the User's ID
      *
      * @param integer $id
@@ -294,6 +301,26 @@ class User implements DataObjectInterface
     }
 
     /**
+     * Gets whether or not this User is disabled
+     *
+     * @return boolean $disabled
+     */
+    public function isDisabled()
+    {
+        return $this->disabled;
+    }
+
+    /**
+     * Sets whether or not this User is disabled
+     *
+     * @param boolean $disabled
+     */
+    public function setDisabled($disabled)
+    {
+        $this->disabled = $disabled;
+    }
+
+    /**
      * Returns true if this User has the admin role
      *
      * @return boolean
@@ -324,16 +351,6 @@ class User implements DataObjectInterface
     }
 
     /**
-     * Gets the Gravatar image for this User
-     *
-     * @return string
-     */
-    public function getImage()
-    {
-        return '//www.gravatar.com/avatar/' . md5($this->getEmail());
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function loadFromArray(array $data)
@@ -341,10 +358,12 @@ class User implements DataObjectInterface
         $map = [
             'id' => 'setId',
             'organization_id' => 'setOrganizationId',
+            'organizationId' => 'setOrganizationId',
             'email' => 'setEmail',
             'password' => 'setPassword',
             'username' => 'setUsername',
-            'type' => 'setType'
+            'type' => 'setType',
+            'disabled' => 'setDisabled'
         ];
 
         foreach ($map as $key => $setter) {
@@ -365,7 +384,8 @@ class User implements DataObjectInterface
             'email' => 'getEmail',
             'password' => 'getPassword',
             'username' => 'getUsername',
-            'type' => 'getType'
+            'type' => 'getType',
+            'disabled' => 'isDisabled'
         ];
 
         $ret = [];
@@ -383,7 +403,6 @@ class User implements DataObjectInterface
     {
         $data = $this->toArray();
         unset($data['password']);
-        $data['image'] = $this->getImage();
 
         return $data;
     }

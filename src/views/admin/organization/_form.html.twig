@@ -1,0 +1,47 @@
+        {# Organization name #}
+        <label class="input-label" for="organization-name">Name</label>
+        {% if meta.name is defined %}
+            <span class="input-error">{{ meta.name }}</span>
+        {% endif %}
+        <input id="organization-name" type="text" name="name" value="{{ data.organization.name }}" placeholder="Give your Organization a name" />
+
+        {# Organization JWT token #}
+        <label class="input-label" for="organization-jwt-secret">JWT Secret</label>
+        {% if meta.jwtSecret is defined %}
+            <span class="input-error">{{ meta.jwtSecret }}</span>
+        {% endif %}
+        <input id="organization-jwt-secret" type="text" name="jwt_secret" value="{{ data.organization.jwtSecret }}" placeholder="Organization JWT token" />
+
+        {# Organization Skin #}
+        <label class="input-label" for="organization-skin">Skin</label>
+        {% if meta.skin is defined %}
+            <span class="input-error">{{ meta.skin }}</span>
+        {% endif %}
+        <input id="organization-skin" type="text" name="skin" value="{{ data.organization.skin }}" placeholder="Organization Skin" />
+
+        {# Organization user account limit #}
+        <label class="input-label" for="organization-account-limit">User account limit</label>
+        {% if meta.accountLimit is defined %}
+            <span class="input-error">{{ meta.accountLimit }}</span>
+        {% endif %}
+        <input id="organization-account-limit" type="number" step="1"  name="account_limit" value="{{ data.organization.accountLimit }}" placeholder="Organization account limit" />
+
+        <label class="input-label" for="organization-permissions">Permissions</label>
+        {% if meta.permissions is defined %}
+            <span class="input-error">{{ meta.permissions }}</span>
+        {% endif %}
+        <ul class="permission-list">
+            <li class="permission"><label for="organization-permissions-api">API Access</label><input id="organization-permissions-api" type="checkbox" name="permissions[]" value="api"{% if data.organization.hasPermission('api') %} checked{% endif %} /></li>
+        </ul>
+
+        {# Footer #}
+        <hr class="divider">
+        <div class="single-item__header">
+            <a href="{{ cancelPath }}">Cancel</a>
+            <div class="single-item__actions">
+                {% if showDelete == true %}
+                    <a data-delete="{{ data.organization.name }}" class="single-item__action single-item__action--delete" href="{{ path('admin.organizations.delete', {'organizationId': data.organization.id}) }}">Delete</a>
+                {% endif %}
+                <button class="single-item__action single-item__action--update" type="submit" data-spinner>{{ buttonText }}</button>
+            </div>
+        </div>

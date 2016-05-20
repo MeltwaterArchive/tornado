@@ -23,6 +23,7 @@ use Tornado\Application\Flash\Message;
  */
 abstract class Form implements FormInterface
 {
+
     /**
      * Determines if Form has been already submitted
      *
@@ -122,7 +123,7 @@ abstract class Form implements FormInterface
         }
 
         if (count($errors) && $notification) {
-            $errors['__notification'] = ['message' => $notification, 'level' => Message::LEVEL_ERROR];
+            $errors[FormInterface::NOTIFICATION_KEY] = ['message' => $notification, 'level' => Message::LEVEL_ERROR];
         }
 
         return $errors;

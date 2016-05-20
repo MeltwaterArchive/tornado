@@ -31,6 +31,23 @@ pylon_api.identity.update:
         apiVersion: \d+\.\d+
         id: "[\w\d]+"
 
+pylon_api.identity.list_tokens:
+    path: /v{apiVersion}/account/identity/{id}/token
+    methods: [GET]
+    defaults: { _controller: 'pylon_api.identity.controller:tokenList', _auth_type: agency }
+    requirements:
+        apiVersion: \d+\.\d+
+        id: "[\w\d]+"
+
+pylon_api.identity.get_token:
+    path: /v{apiVersion}/account/identity/{id}/token/{service}
+    methods: [GET]
+    defaults: { _controller: 'pylon_api.identity.controller:tokenService', _auth_type: agency }
+    requirements:
+        apiVersion: \d+\.\d+
+        id: "[\w\d]+"
+        service: ^facebook$ # lock to only facebook
+
 pylon_api.identity.update_token.put:
     path: /v{apiVersion}/account/identity/{id}/token/{service}
     methods: [PUT]
@@ -47,6 +64,15 @@ pylon_api.identity.update_token.post:
     requirements:
         apiVersion: \d+\.\d+
         id: "[\w\d]+"
+
+pylon_api.identity.token.delete:
+    path: /v{apiVersion}/account/identity/{id}/token/{service}
+    methods: [DELETE]
+    defaults: { _controller: 'pylon_api.identity.controller:tokenRemove', _auth_type: agency }
+    requirements:
+        apiVersion: \d+\.\d+
+        id: "[\w\d]+"
+        service: "\w+"
 
 pylon_api.pylon.validate:
     path: /v{apiVersion}/pylon/validate

@@ -40,6 +40,7 @@ class UpdateTest extends \PHPUnit_Framework_TestCase
                 'data' => [
                     'agencyId' => 10,
                     'name' => 'BrandName',
+                    'datasiftUsername' => '',
                     'datasiftIdentityId' => 'identityId',
                     'datasiftApikey' => 'apikey'
                 ],
@@ -56,6 +57,7 @@ class UpdateTest extends \PHPUnit_Framework_TestCase
                 'getters' => [
                     'getAgencyId' => 10,
                     'getName' => 'BrandName',
+                    'getDatasiftUsername' => '',
                     'getDatasiftIdentityId' => 'identityId',
                     'getDatasiftApikey' => 'apikey'
                 ]
@@ -64,6 +66,7 @@ class UpdateTest extends \PHPUnit_Framework_TestCase
                 'data' => [
                     'agencyId' => 10,
                     'name' => 'BrandName',
+                    'datasiftUsername' => '',
                     'datasiftIdentityId' => '',
                     'datasiftApikey' => 'apikey'
                 ],
@@ -81,6 +84,7 @@ class UpdateTest extends \PHPUnit_Framework_TestCase
                     'getAgencyId' => 10,
                     'getName' => 'BrandName',
                     'getDatasiftIdentityId' => '',
+                    'getDatasiftUsername' => '',
                     'getDatasiftApikey' => 'apikey'
                 ],
                 'expectedErrors' => ['datasiftIdentityId']
@@ -89,6 +93,7 @@ class UpdateTest extends \PHPUnit_Framework_TestCase
                 'data' => [
                     'agencyId' => 10,
                     'name' => 'BrandName',
+                    'datasiftUsername' => '',
                     'datasiftIdentityId' => '',
                     'datasiftApikey' => 'apikey'
                 ],
@@ -106,6 +111,7 @@ class UpdateTest extends \PHPUnit_Framework_TestCase
                     'getAgencyId' => 10,
                     'getName' => 'BrandName',
                     'getDatasiftIdentityId' => '',
+                    'getDatasiftUsername' => '',
                     'getDatasiftApikey' => 'apikey'
                 ],
                 'expectedErrors' => ['agencyId', 'datasiftIdentityId'],
@@ -115,6 +121,7 @@ class UpdateTest extends \PHPUnit_Framework_TestCase
                 'data' => [
                     'agencyId' => 10,
                     'name' => 'BrandName',
+                    'datasiftUsername' => '',
                     'datasiftIdentityId' => 'id id',
                     'datasiftApikey' => 'apikey'
                 ],
@@ -132,6 +139,7 @@ class UpdateTest extends \PHPUnit_Framework_TestCase
                 'getters' => [
                     'getAgencyId' => 10,
                     'getName' => 'BrandName',
+                    'getDatasiftUsername' => '',
                     'getDatasiftIdentityId' => 'id id',
                     'getDatasiftApikey' => 'apikey'
                 ],
@@ -145,6 +153,7 @@ class UpdateTest extends \PHPUnit_Framework_TestCase
                 'data' => [
                     'agencyId' => 10,
                     'name' => 'BrandName',
+                    'datasiftUsername' => '',
                     'datasiftIdentityId' => '',
                     'datasiftApikey' => 'apikey'
                 ],
@@ -162,6 +171,7 @@ class UpdateTest extends \PHPUnit_Framework_TestCase
                 'getters' => [
                     'getAgencyId' => 10,
                     'getName' => 'BrandName',
+                    'getDatasiftUsername' => '',
                     'getDatasiftIdentityId' => '',
                     'getDatasiftApikey' => 'apikey'
                 ],
@@ -175,6 +185,7 @@ class UpdateTest extends \PHPUnit_Framework_TestCase
                 'data' => [
                     'agencyId' => 10,
                     'name' => 'BrandName',
+                    'datasiftUsername' => '',
                     'datasiftIdentityId' => 'abcd',
                     'datasiftApikey' => 'apikey'
                 ],
@@ -192,6 +203,7 @@ class UpdateTest extends \PHPUnit_Framework_TestCase
                 'getters' => [
                     'getAgencyId' => 10,
                     'getName' => 'BrandName',
+                    'getDatasiftUsername' => '',
                     'getDatasiftIdentityId' => 'abcd',
                     'getDatasiftApikey' => 'apikey'
                 ],
@@ -201,10 +213,11 @@ class UpdateTest extends \PHPUnit_Framework_TestCase
                 'identityIdFound' => true,
                 'brand' => $this->getBrand(['id' => 20])
             ],
-            'Identity ID found, different id' => [
+            'Identity ID found, different id (allow)' => [
                 'data' => [
                     'agencyId' => 10,
                     'name' => 'BrandName',
+                    'datasiftUsername' => '',
                     'datasiftIdentityId' => 'abcd',
                     'datasiftApikey' => 'apikey'
                 ],
@@ -218,14 +231,15 @@ class UpdateTest extends \PHPUnit_Framework_TestCase
                 'agencyId' => 10,
                 'brandName' => 'BrandName',
                 'identityId' => 'abcd',
-                'valid' => false,
+                'valid' => true,
                 'getters' => [
                     'getAgencyId' => 10,
                     'getName' => 'BrandName',
+                    'getDatasiftUsername' => '',
                     'getDatasiftIdentityId' => 'abcd',
                     'getDatasiftApikey' => 'apikey'
                 ],
-                'expectedErrors' => ['datasiftIdentityId'],
+                'expectedErrors' => [],
                 'agencyFound' => true,
                 'brandFound' => false,
                 'identityIdFound' => true,

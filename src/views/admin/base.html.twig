@@ -14,13 +14,20 @@
             {# Included CSS Files #}
             {% block stylesheets %}
                 {% if app.request.attributes.get("skin") %}
-                <link rel="stylesheet" href="/assets/css/skins/{{ app.request.attributes.get("skin") }}.css">
+                    <link rel="stylesheet" href="{{ cs_build_location }}/css/skins/{{ app.request.attributes.get("skin") }}.css">
                 {% elseif organization is defined and organization.skin %}
-                <link rel="stylesheet" href="/assets/css/skins/{{ organization.skin }}.css">
+                    <link rel="stylesheet" href="{{ cs_build_location }}/css/skins/{{ organization.skin }}.css">
                 {% else %}
-                <link rel="stylesheet" href="/assets/css/tornado.css">
+                    <link rel="stylesheet" href="{{ cs_build_location }}/css/tornado.css">
                 {% endif %}
             {% endblock %}
+
+            {# Include Kissimetrics #}
+            {% include 'partials/kissmetrics.html.twig' %}
+            {# Include Zendesk #}
+            {% include 'partials/zendesk.html.twig' %}
+            {# Include GA #}
+            {% include 'partials/ga.html.twig' %}
         </head>
     {% endblock %}
     <body class="{% block body_class %}{% endblock %}">
@@ -62,7 +69,7 @@
         {# Global Javascript #}
         {% block javascript %}
             <script
-                src="/assets/javascript/library/requirejs/require.js"
+                src="/bower/requirejs/require.js"
                 async
                 {% block javascript_additional %}{% endblock %}
             ></script>

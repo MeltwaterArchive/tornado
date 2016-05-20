@@ -12,6 +12,8 @@ use Tornado\Organization\User\Form\Update;
 use Test\DataSift\ApplicationBuilder;
 use Test\DataSift\ReflectionAccess;
 
+use Symfony\Component\Validator\ValidatorBuilder;
+
 /**
  * UpdateTest
  *
@@ -51,8 +53,8 @@ class UpdateTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->buildApplication();
-        $this->validator = $this->container->get('validator');
+        $validatorBuilder = new ValidatorBuilder();
+        $this->validator = $validatorBuilder->getValidator();
     }
 
     /**
@@ -95,7 +97,7 @@ class UpdateTest extends \PHPUnit_Framework_TestCase
         $form = $this->getForm($mocks);
 
         $this->assertEquals(
-            ['username', 'email', 'password', 'confirm_password', 'permissions'],
+            ['username', 'email', 'password', 'confirm_password', 'permissions', 'disabled'],
             $form->getFields()
         );
     }
@@ -216,7 +218,8 @@ class UpdateTest extends \PHPUnit_Framework_TestCase
         $inputData = [
             'username' => $mocks['username'],
             'email' => $mocks['email'],
-            'permissions' => $mocks['permissions']
+            'permissions' => $mocks['permissions'],
+            'disabled' => 1
         ];
 
         $mocks['userRepo']->shouldReceive('findOne')
@@ -270,7 +273,8 @@ class UpdateTest extends \PHPUnit_Framework_TestCase
             'organization_id' => 'string',
             'username' => '',
             'email' => 'test@unit',
-            'password' => ''
+            'password' => '',
+            'disabled' => 0
         ];
 
         $mocks['userRepo']->shouldReceive('findOne')
@@ -334,7 +338,8 @@ class UpdateTest extends \PHPUnit_Framework_TestCase
             'email' => $updatedEmail,
             'password' => $updatedPassword,
             'confirm_password' => $updatedPassword,
-            'permissions' => $permissions
+            'permissions' => $permissions,
+            'disabled' => 0
         ];
 
         $userId = 20;

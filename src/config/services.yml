@@ -76,6 +76,22 @@ services:
         arguments:
             - @session.user
 
+    session.storage.memcached:
+        class: Symfony\Component\HttpFoundation\Session\Storage\Handler\MemcachedSessionHandler
+        arguments:
+            - @cache.memcached.memcached
+
+    session.storage.file:
+        class: Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler
+        arguments:
+            - %session.storage.save_path%
+
+    session.storage.handler:
+        class: Symfony\Component\HttpFoundation\Session\Storage\Handler
+        factory: ["@service_container", get]
+        arguments:
+            - "session.storage.%session.storage.driver%"
+
     stats.collector.null:
         class: DataSift\Stats\NullCollector
 

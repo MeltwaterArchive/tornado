@@ -1,6 +1,5 @@
 <div class="profile">
     <div class="dropdown">
-        <img class="profile__image" src="{{ sessionUser.image }}" alt="">
         <span data-dropdown-toggle class="profile__name">{{ sessionUser.username }}</span>
         <ul class="dropdown__content dropdown__content--profile">
             <li class="dropdown__item">
@@ -10,6 +9,11 @@
                 <li class="dropdown__item">
                     <a href="{{ path("admin") }}">Administration</a>
                 </li>
+            {% endif %}
+            {% if zendesk_url is defined %}
+            <li class="dropdown__item">
+                <a href="" onclick="zE.activate(); return false;">Support</a>
+            </li>
             {% endif %}
             <li class="dropdown__item">
                 <a href="{{ path("logout") }}">Sign out</a>

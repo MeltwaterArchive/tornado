@@ -6,7 +6,7 @@ use Tornado\Organization\Organization;
 
 /**
  * @author Christopher Hoult <chris.hoult@datasift.com>
- * @covers \Tornado\Organization\Organization
+ * @coversDefaultClass \Tornado\Organization\Organization
  */
 class OrganizationTest extends \PHPUnit_Framework_TestCase
 {
@@ -49,6 +49,24 @@ class OrganizationTest extends \PHPUnit_Framework_TestCase
                 'getter' => 'getPrimaryKey',
                 'expected' => 20
             ],
+            [
+                'setter' => 'setPermissions',
+                'value' => 'a,b',
+                'getter' => 'getPermissions',
+                'expected' => 'a,b'
+            ],
+            [
+                'setter' => 'setPermissions',
+                'value' => ['a', 'b'],
+                'getter' => 'getPermissions',
+                'expected' => 'a,b'
+            ],
+            [
+                'setter' => 'setAccountLimit',
+                'value' => 50,
+                'getter' => 'getAccountLimit',
+                'expected' => 50
+            ],
         ];
     }
 
@@ -81,19 +99,25 @@ class OrganizationTest extends \PHPUnit_Framework_TestCase
                     'id' => 10,
                     'name' => 'newName',
                     'skin' => 'test',
-                    'jwt_secret' => 'tested'
+                    'jwt_secret' => 'tested',
+                    'permissions' => 'a,b',
+                    'account_limit' => 5,
                 ],
                 'getters' => [
                     'getId' => 10,
                     'getName' => 'newName',
                     'getSkin' => 'test',
-                    'getJwtSecret' => 'tested'
+                    'getJwtSecret' => 'tested',
+                    'getPermissions' => 'a,b',
+                    'getAccountLimit' => 5
                 ],
                 'expected' => [
                     'id' => 10,
                     'name' => 'newName',
                     'skin' => 'test',
-                    'jwt_secret' => 'tested'
+                    'jwt_secret' => 'tested',
+                    'account_limit' => 5,
+                    'permissions' => 'a,b'
                 ],
             ]
         ];
@@ -102,8 +126,8 @@ class OrganizationTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider toFromArrayProvider
      *
-     * @covers \Tornado\Organization\Organization::loadFromArray
-     * @covers \Tornado\Organization\Organization::toArray
+     * @covers ::loadFromArray
+     * @covers ::toArray
      *
      * @param array $data
      * @param array $getters
@@ -142,7 +166,7 @@ class OrganizationTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider toJsonProvider
      *
-     * @covers \Tornado\Organization\Organization::jsonSerialize
+     * @covers ::jsonSerialize
      *
      * @param array $data
      * @param string $expected
@@ -155,5 +179,94 @@ class OrganizationTest extends \PHPUnit_Framework_TestCase
         $obj->loadFromArray($data);
 
         $this->assertEquals($expected, json_encode($obj));
+    }
+
+    /**
+     * DataProvider for testHasPermission
+     *
+     * @return array
+     */
+    public function hasPermissionProvider()
+    {
+        return [
+            'happy' => [
+                'permissions' => ['a', 'b'],
+                'permission' => 'a',
+                'expected' => true
+            ],
+            'unhappy' => [
+                'permissions' => ['a', 'b'],
+                'permission' => 'c',
+                'expected' => false
+            ],
+            'null' => [
+                'permissions' => null,
+                'permission' => 'c',
+                'expected' => false
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider hasPermissionProvider
+     *
+     * @covers ::hasPermission
+     *
+     * @param mixed $permissions
+     * @param string $permission
+     * @param boolean $expected
+     */
+    public function testHasPermission($permissions, $permission, $expected)
+    {
+        $obj = new Organization();
+        $obj->setPermissions($permissions);
+        $this->assertEquals($expected, $obj->hasPermission($permission));
+    }
+
+    /**
+     * DataProvider for testHasReachedAccountLimit
+     *
+     * @return array
+     */
+    public function hasReachedAccountLimitProvider()
+    {
+        return [
+            'happy' => [
+                'accountLimit' => 50,
+                'currentUserCount' => 10,
+                'expected' => false
+            ],
+            'unhappy' => [
+                'accountLimit' => 50,
+                'currentUserCount' => 60,
+                'expected' => true
+            ],
+            'null' => [
+                'accountLimit' => null,
+                'currentUserCount' => 60,
+                'expected' => false
+            ],
+            'zero' => [
+                'accountLimit' => 0,
+                'currentUserCount' => 60,
+                'expected' => false
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider hasReachedAccountLimitProvider
+     *
+     * @covers ::hasReachedAccountLimit
+     *
+     * @param int $accountLimit
+     * @param string $currentUserCount
+     * @param boolean $expected
+     */
+    public function testHasReachedAccountLimit($accountLimit, $currentUserCount, $expected)
+    {
+        $obj = new Organization();
+        $obj->setAccountLimit($accountLimit);
+        $this->assertEquals($expected, $obj->hasReachedAccountLimit($currentUserCount));
     }
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="no-js" lang="">
+<html class="no-js" lang="en">
     {% block head %}
         <head>
             <meta charset="utf-8">
@@ -13,8 +13,21 @@
 
             <!-- Included CSS Files -->
             {% block stylesheets %}
-                <link rel="stylesheet" href="/assets/css/tornado.css">
+                {% if app.request.attributes.get("skin") %}
+                    <link rel="stylesheet" href="{{ cs_build_location }}/css/skins/{{ app.request.attributes.get("skin") }}.css">
+                {% elseif organization is defined and organization.skin %}
+                    <link rel="stylesheet" href="{{ cs_build_location }}/css/skins/{{ organization.skin }}.css">
+                {% else %}
+                    <link rel="stylesheet" href="{{ cs_build_location }}/css/tornado.css">
+                {% endif %}
             {% endblock %}
+
+            <link rel="icon" href="{{ cs_build_location }}/images/common/favicon.png">
+
+            {# Include Kissimetrics #}
+            {% include 'partials/kissmetrics.html.twig' %}
+            {# Include GA #}
+            {% include 'partials/ga.html.twig' %}
         </head>
     {% endblock %}
 

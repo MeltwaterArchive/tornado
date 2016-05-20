@@ -145,7 +145,7 @@ EOT
             [
                 'name' => 'organization',
                 'question' => 'Please choose an organization (name) to which User should belong to:',
-                'error' => 'Organization can not be empty',
+                'error' => 'Organization cannot be empty',
                 'validation' => function ($inputValue) {
                     $this->validateOrganizationArgument($inputValue);
                 }
@@ -153,7 +153,7 @@ EOT
             [
                 'name' => 'email',
                 'question' => 'Please choose User email:',
-                'error' => 'Email can not be empty',
+                'error' => 'Email cannot be empty',
                 'validation' => function ($inputValue) {
                     $this->validateEmailArgument($inputValue);
                 }
@@ -161,12 +161,12 @@ EOT
             [
                 'name' => 'password',
                 'question' => 'Please choose User password:',
-                'error' => 'Password can not be empty'
+                'error' => 'Password cannot be empty'
             ],
             [
                 'name' => 'username',
                 'question' => 'Please choose User username:',
-                'error' => 'Username can not be empty'
+                'error' => 'Username cannot be empty'
             ]
         ];
 

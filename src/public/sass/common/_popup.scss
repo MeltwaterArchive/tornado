@@ -1,0 +1,57 @@
+
+$popup-overlay: rgba(#3b404d, 0.9) !default;
+
+
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: $popup-overlay;
+    z-index: 10;
+    @include transition(all 0.3s $slick-ease);
+}
+
+#popup {
+
+	@extend .modallica;
+
+	/* override the default visibility because we add/remove accordingly
+	rather than show/hide */
+
+	
+
+	&.active {
+			opacity: 1 !important;
+		visibility: visible !important;
+		@include transform(translate3d(0, 0%, 0) scale(1));
+    	@include transition(0.3s all $slick-ease, 0s opacity, 0s visibility);
+    }
+
+    .popup-header {
+    	@extend .modallica__header;
+
+    	h6 {
+    		@extend .modallica__title;
+    	}
+    }
+
+    .close {
+	    @extend .modallica__close;
+	    cursor: pointer;
+	    margin-top: 8px;
+	    margin-right: -15px;
+
+	    &:hover {
+	    	/*
+	    	 * doesn't do anything
+	    	background-color: red;
+	    	*/
+	    }
+	}
+
+	.body {
+		@extend .modallica__content;
+	}
+}

@@ -65,7 +65,9 @@ class WorksheetControllerTest extends \PHPUnit_Framework_TestCase
 
         $controller = $this->getController($mocks);
 
-        $result = $controller->index($mocks['projectId'], $mocks['worksheetId']);
+        $mocks['worksheet']->shouldReceive('getFilter');
+
+        $result = $controller->index($mocks['request'], $mocks['projectId'], $mocks['worksheetId']);
 
         $this->assertInstanceOf('Tornado\Controller\Result', $result);
         $resultData = $result->getData();
@@ -90,12 +92,13 @@ class WorksheetControllerTest extends \PHPUnit_Framework_TestCase
         $mocks = $this->getMocks();
 
         $postParams = [
-            'name' => 'Test Worksheet'
+            'name' => 'Test Worksheet',
+            'workbook_id' => $mocks['workbookId']
         ];
         $errors = ['error1' => 'error', 'error2' => 'error'];
 
         $mocks['createForm']->shouldReceive('submit')
-            ->with($postParams)
+            ->with($postParams, null, $mocks['recording'], ['everyone'])
             ->once();
         $mocks['createForm']->shouldReceive('isValid')
             ->andReturn(false)
@@ -132,8 +135,9 @@ class WorksheetControllerTest extends \PHPUnit_Framework_TestCase
         ];
 
         $mocks['createForm']->shouldReceive('submit')
-            ->with($postParams)
+            ->with($postParams, null, $mocks['recording'], ['everyone'])
             ->once();
+
         $mocks['createForm']->shouldReceive('isValid')
             ->andReturn(true)
             ->once();
@@ -148,11 +152,6 @@ class WorksheetControllerTest extends \PHPUnit_Framework_TestCase
         $mocks['worksheetRepo']->shouldReceive('create')
             ->with($mocks['worksheet'])
             ->once();
-
-        $mocks['workbookRepo']->shouldReceive('findOne')
-            ->with(['id' => $mocks['workbookId']])
-            ->once()
-            ->andReturn($mocks['workbook']);
 
         $controller = $this->getController($mocks);
 
@@ -181,7 +180,7 @@ class WorksheetControllerTest extends \PHPUnit_Framework_TestCase
             'workbook_id' => $mocks['workbookId']
         ];
         $mocks['createForm']->shouldReceive('submit')
-            ->with($postParams)
+            ->with($postParams, null, $mocks['recording'], ['everyone'])
             ->once();
         $mocks['createForm']->shouldReceive('isValid')
             ->andReturn(true)
@@ -192,10 +191,6 @@ class WorksheetControllerTest extends \PHPUnit_Framework_TestCase
         $mocks['request']->shouldReceive('getPostParams')
             ->andReturn($postParams)
             ->once();
-        $mocks['workbookRepo']->shouldReceive('findOne')
-            ->with(['id' => $mocks['workbookId']])
-            ->once()
-            ->andReturn($mocks['workbook']);
 
         $mocks['locker'] = Mockery::mock('\Tornado\Project\Workbook\Locker');
         $mocks['locker']->shouldReceive('isLocked')
@@ -345,7 +340,7 @@ class WorksheetControllerTest extends \PHPUnit_Framework_TestCase
         $mocks = $this->getMocks();
 
         $data = [
-            ['fb.author.region','fb.author.gender','interactions'],
+            ['fb.author.region', 'fb.author.gender', 'interactions'],
             ['England', 'female', 23400],
             ['England', 'male', 23300],
             ['US', 'female', 12300],
@@ -553,7 +548,7 @@ class WorksheetControllerTest extends \PHPUnit_Framework_TestCase
             $postParams2['explore'] = json_decode($postParams['explore'], true);
         }
         $mocks['exploreForm']->shouldReceive('submit')
-            ->with($postParams2, null, null, ['everyone'])
+            ->with($postParams2, null, $mocks['recording'], ['everyone'])
             ->once();
 
         $mocks['exploreForm']->shouldReceive('isValid')
@@ -618,19 +613,24 @@ class WorksheetControllerTest extends \PHPUnit_Framework_TestCase
     {
         $mocks = [];
 
+        $mocks['brandId'] = 5;
         $mocks['projectId'] = 10;
         $mocks['workbookId'] = 12;
         $mocks['worksheetId'] = 15;
+        $mocks['recordingId'] = 35;
+        $mocks['recording'] = Mockery::mock('\Tornado\Project\Recording');
 
         $mocks['project'] = Mockery::mock('Tornado\Project\Project', [
             'getId' => $mocks['projectId'],
-            'getPrimaryKey' => $mocks['projectId']
+            'getPrimaryKey' => $mocks['projectId'],
+            'getBrandId' => $mocks['brandId']
         ]);
 
         $mocks['workbook'] = Mockery::mock('Tornado\Project\Workbook', [
             'getId' => $mocks['workbookId'],
             'getPrimaryKey' => $mocks['workbookId'],
-            'getProjectId' => $mocks['projectId']
+            'getProjectId' => $mocks['projectId'],
+            'getRecordingId' => $mocks['recordingId']
         ]);
 
         $mocks['worksheet'] = Mockery::mock('Tornado\Project\Worksheet', [
@@ -645,7 +645,28 @@ class WorksheetControllerTest extends \PHPUnit_Framework_TestCase
         ]);
 
         $mocks['workbookRepo'] = Mockery::mock('Tornado\Project\Workbook\DataMapper');
+        $mocks['workbookRepo']->shouldReceive('findOne')
+            ->with(['id' => $mocks['workbookId']])
+            ->andReturn($mocks['workbook']);
+
         $mocks['worksheetRepo'] = Mockery::mock('Tornado\Project\Worksheet\DataMapper');
+        $mocks['worksheetRepo']
+            ->shouldReceive('getUniqueName')
+            ->andReturnUsing(function ($worksheet, $str) {
+                $worksheet->getId(); // PHPMD baffle
+                return $str;
+            });
+
+        $mocks['recordingRepo'] = Mockery::mock('Tornado\Project\Recording\DataMapper');
+        $mocks['recordingRepo']->shouldReceive('findOne')
+            ->with(['id' => $mocks['recordingId']])
+            ->andReturn($mocks['recording']);
+
+        $mocks['recordingSampleRepo'] = Mockery::mock('Tornado\Project\Recording\Sample\DataMapper');
+        $mocks['recordingSampleRepo']->shouldReceive('find')
+            ->with(['recording_id' => $mocks['recordingId']], ['created_at' => 'DESC'], 10, 0)
+            ->andReturn($mocks['recording']);
+
         $mocks['chartsRepo'] = Mockery::mock('Tornado\Project\Chart\DataMapper');
         $mocks['createForm'] = Mockery::mock('Tornado\Project\Worksheet\Form\Create');
         $mocks['exploreForm'] = Mockery::mock('Tornado\Project\Worksheet\Form\Explore');
@@ -654,10 +675,13 @@ class WorksheetControllerTest extends \PHPUnit_Framework_TestCase
         $mocks['exporter'] = Mockery::mock('Tornado\Project\Worksheet\Exporter');
 
         $mocks['request'] = Mockery::mock('\DataSift\Http\Request');
+        $mocks['request']->shouldReceive('get')
+            ->with('sample-offset')
+            ->andReturn(0);
 
         $mocks['locker'] = Mockery::mock('\Tornado\Project\Workbook\Locker');
         $mocks['userId'] = 10;
-        $mocks['sessionUser']= new User();
+        $mocks['sessionUser'] = new User();
         $mocks['sessionUser']->setId($mocks['userId']);
 
         $mocks['lockingUser'] = new User();
@@ -687,7 +711,9 @@ class WorksheetControllerTest extends \PHPUnit_Framework_TestCase
             $mocks['explorer'],
             $mocks['exporter'],
             $mocks['locker'],
-            $mocks['sessionUser']
+            $mocks['sessionUser'],
+            $mocks['recordingRepo'],
+            $mocks['recordingSampleRepo']
         ])->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
@@ -695,6 +721,11 @@ class WorksheetControllerTest extends \PHPUnit_Framework_TestCase
         $controller->shouldReceive('getProject')
             ->with($mocks['projectId'])
             ->andReturn($mocks['project']);
+
+        $controller->shouldReceive('getBrand')
+            ->with($mocks['brandId'])
+            ->andReturn($mocks['brand']);
+
         $controller->shouldReceive('getProjectDataForWorksheetId')
             ->with($mocks['worksheetId'], $mocks['projectId'])
             ->andReturn([$mocks['project'], $mocks['workbook'], $mocks['worksheet'], $mocks['brand']]);

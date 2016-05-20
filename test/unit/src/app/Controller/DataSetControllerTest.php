@@ -2,6 +2,8 @@
 
 namespace Test\Controller;
 
+use Mockery;
+
 use Controller\DataSetController;
 
 use Tornado\Analyze\DataSet\StoredDataSet;
@@ -32,9 +34,17 @@ class DataSetControllerTest extends \PHPUnit_Framework_TestCase
     public function testReturnsDataSetList()
     {
         list($dataSetRepo, $dataSets) = $this->getDataSetRepoMock();
-
-        $ctrl = new DataSetController($dataSetRepo);
-        $result = $ctrl->index();
+        $ctrl = new DataSetController(
+            $dataSetRepo,
+            Mockery::mock('\Symfony\Component\HttpFoundation\Session\SessionInterface'),
+            Mockery::mock('\DataSift\Pylon\Schema\Provider'),
+            Mockery::mock('\Tornado\DataMapper\DataMapperInterface'),
+            Mockery::mock('\DataSift\Form\FormInterface'),
+            Mockery::mock('\Symfony\Component\Routing\Generator\UrlGenerator'),
+            Mockery::mock('\Tornado\Analyze\Analyzer'),
+            Mockery::mock('\Tornado\Analyze\DataSet\Generator')
+        );
+        $result = $ctrl->apiIndex();
 
         $this->assertInstanceOf('Tornado\Controller\Result', $result);
         $this->assertInternalType('array', $result->getData());

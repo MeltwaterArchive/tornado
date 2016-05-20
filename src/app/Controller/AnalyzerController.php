@@ -21,6 +21,8 @@ use Tornado\Controller\ProjectDataAwareTrait;
 use Tornado\Controller\Result;
 use Tornado\DataMapper\DataMapperInterface;
 use Tornado\DataMapper\DoctrineRepository;
+use Tornado\Organization\Agency;
+use Tornado\Organization\Brand;
 use Tornado\Organization\User;
 use Tornado\Project\Chart;
 use Tornado\Project\Chart\Factory as ChartFactory;
@@ -45,7 +47,8 @@ use Tornado\Project\Recording\DataMapper as RecordingRepository;
  * @license     http://mediasift.com/licenses/internal MediaSift Internal License
  * @link        https://github.com/datasift/tornado
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects,PHPMD.NPathComplexity,PHPMD.CyclomaticComplexity)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects,PHPMD.NPathComplexity,PHPMD.CyclomaticComplexity,
+ *                      PHPMD.ExcessiveParameterList:)
  */
 class AnalyzerController implements ProjectDataAwareInterface
 {
@@ -55,6 +58,11 @@ class AnalyzerController implements ProjectDataAwareInterface
      * @var RecordingRepository
      */
     protected $recordingRepository;
+
+    /**
+     * @var Recording\Sample\DataMapper
+     */
+    protected $recordingSampleRepo;
 
     /**
      * @var ChartRepository
@@ -100,6 +108,7 @@ class AnalyzerController implements ProjectDataAwareInterface
 
     /**
      * @param \Tornado\DataMapper\DataMapperInterface $recordingRepository
+     * @param \Tornado\DataMapper\DataMapperInterface $recordingSampleRepo
      * @param \Tornado\DataMapper\DataMapperInterface $chartRepository
      * @param \Tornado\DataMapper\DataMapperInterface $datasetRepository
      * @param \DataSift\Form\FormInterface            $createForm
@@ -111,6 +120,7 @@ class AnalyzerController implements ProjectDataAwareInterface
      */
     public function __construct(
         DataMapperInterface $recordingRepository,
+        DataMapperInterface $recordingSampleRepo,
         DataMapperInterface $chartRepository,
         DataMapperInterface $datasetRepository,
         FormInterface $createForm,
@@ -121,6 +131,7 @@ class AnalyzerController implements ProjectDataAwareInterface
         User $sessionUser
     ) {
         $this->recordingRepository = $recordingRepository;
+        $this->recordingSampleRepo = $recordingSampleRepo;
         $this->chartRepository = $chartRepository;
         $this->datasetRepository = $datasetRepository;
         $this->createForm = $createForm;
@@ -158,6 +169,7 @@ class AnalyzerController implements ProjectDataAwareInterface
             )], Response::HTTP_FORBIDDEN);
         }
 
+        /** @var \Tornado\Project\Recording $recording */
         $recording = $this->recordingRepository->findOne(['id' => $workbook->getRecordingId()]);
         if (!$recording) {
             throw new NotFoundHttpException(sprintf(
@@ -172,15 +184,17 @@ class AnalyzerController implements ProjectDataAwareInterface
 
         $permissions = ($brand) ? $brand->getTargetPermissions() : [];
 
-        //var_dump($postParams);
-
         $this->createForm->submit($postParams, $worksheet, $recording, $permissions);
         if (!$this->createForm->isValid()) {
             return new Result([], $this->createForm->getErrors(), Response::HTTP_BAD_REQUEST);
         }
 
         $worksheet = $this->createForm->getData($recording, $permissions);
+
         try {
+            if ($worksheet->getAnalysisType() == Analysis::TYPE_SAMPLE) {
+                return $this->getSample($workbook, $worksheet);
+            }
             $charts = $this->getCharts($worksheet, $recording);
         } catch (BadRequestHttpException $ex) {
             return new Result(
@@ -209,8 +223,70 @@ class AnalyzerController implements ProjectDataAwareInterface
         // update worksheet at the very end for ensuring that PYLON api was done successfully.
         // That will prevent from updating worksheet data in db when i.e. csdlQuery filter is invalid|illogical
         $this->worksheetRepository->update($worksheet);
-
+        
         return new Result($charts, ['charts_count' => count($charts)]);
+    }
+
+    /**
+     * Controller method that exposes an xhr endpoint to fetch more super public samples
+     *
+     * @param $worksheetId
+     * @return Result
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     */
+    public function fetchSamplePosts($worksheetId)
+    {
+        list($project, $workbook, $worksheet, $brand) = $this->getProjectDataForWorksheetId($worksheetId);
+
+        if ($worksheet->getAnalysisType() !== Analysis::TYPE_SAMPLE) {
+            return new Result([], ['error' => 'This worksheet is not of type ' . Analysis::TYPE_SAMPLE], 400);
+        }
+
+        return $this->getSample($workbook, $worksheet);
+    }
+
+    /**
+     * Calls pylon /sample endpoint to retrieve more samples for the specified recording id
+     *
+     * @param Workbook $workbook
+     * @param Worksheet $worksheet
+     * @return Result
+     */
+    protected function getSample(Workbook $workbook, Worksheet $worksheet)
+    {
+        /** @var \Tornado\Project\Recording $recording */
+        $recording = $this->recordingRepository->findOne(['id' => $workbook->getRecordingId()]);
+        if (!$recording) {
+            throw new NotFoundHttpException(sprintf(
+                'Could not find recording with ID %s.',
+                $workbook->getRecordingId()
+            ));
+        }
+
+        $filter = $worksheet->getFilter('generated_csdl');
+        $sqlFilter = ['recording_id' => $workbook->getRecordingId()];
+        if (!empty($filter)) {
+            $sqlFilter['filter_hash'] = md5($filter);
+        }
+
+        try {
+            $result = $this->recordingSampleRepo->retrieve(
+                $recording,
+                $filter,
+                $worksheet->getStart(),
+                $worksheet->getEnd()
+            );
+        } catch (\DataSift_Exception_APIError $e) {
+            return new Result([], ['error' => $e->getMessage()], 400);
+        }
+
+        $posts = $this->recordingSampleRepo->find(
+            $sqlFilter,
+            ['created_at' => 'DESC'],
+            Recording\Sample::RESULT_LIMIT
+        );
+        $this->worksheetRepository->update($worksheet);
+        return new Result($posts, ['remaining_posts' => $result]);
     }
 
     /**

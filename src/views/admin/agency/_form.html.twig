@@ -1,0 +1,33 @@
+        <label class="input-label" for="agency-name">Name</label>
+        {% if meta.name is defined %}
+            <span class="input-error">{{ meta.name }}</span>
+        {% endif %}
+        <input id="agency-name" type="text" name="name" value="{{ data.agency.name }}" placeholder="" />
+
+        <label class="input-label" for="agency-datasiftUsername">DataSift Username</label>
+        {% if meta.datasiftUsername is defined %}
+            <span class="input-error">{{ meta.datasiftUsername }}</span>
+        {% endif %}
+        <input id="user-datasiftUsername" type="text" name="datasiftUsername" value="{{ data.agency.datasiftUsername }}" placeholder="DataSift Username" />
+
+        <label class="input-label" for="agency-datasiftApikey">DataSift API Key</label>
+        {% if meta.datasiftApikey is defined %}
+            <span class="input-error">{{ meta.datasiftApikey }}</span>
+        {% endif %}
+        <input id="user-datasiftApikey" type="text" name="datasiftApikey" value="{{ data.agency.datasiftApikey }}" placeholder="DataSift API Key" />
+
+        {# Footer #}
+        <hr class="divider">
+        <div class="single-item__header">
+            <a href="{{ agenciesLink }}">Cancel</a>
+            <div class="single-item__actions">
+                <button class="single-item__action single-item__action--create" type="submit" data-spinner>{{ buttonText }}</button>
+            </div>
+        </div>
+
+        {% if showManage == true %}
+        <hr class="divider">
+        <div class="manage-link">
+            This Agency currently has {{ data.brandCount }} Brand{% if data.brandCount != 1 %}s{% endif %}. <a href="{{ orgPath('brands', data.agency.id, data.organization.id) }}">Manage</a>
+        </div>
+        {% endif %}

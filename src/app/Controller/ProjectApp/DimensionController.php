@@ -76,9 +76,15 @@ class DimensionController implements ProjectDataAwareInterface
      * @param  integer                      $worksheetId
      * @return \Tornado\Controller\Result
      */
-    public function index($projectId, $worksheetId)
+    public function index($projectId, $worksheetId = null, $workbookId = null)
     {
-        list($project, $workbook) = $this->getProjectDataForWorksheetId($worksheetId, $projectId);
+
+        if ($workbookId) {
+            $project = $this->getProject($projectId);
+            $workbook = $this->getWorkbook($project, $workbookId);
+        } else {
+            list($project, $workbook) = $this->getProjectDataForWorksheetId($worksheetId, $projectId);
+        }
 
         // find the brand (to get permission levels)
         $brand = $this->brandRepository->findOneByProject($project);
@@ -94,6 +100,10 @@ class DimensionController implements ProjectDataAwareInterface
             ['is_analysable' => true],
             $brand->getTargetPermissions()
         );
+
+        $dimensions = array_filter($dimensions, function ($item) {
+            return !(isset($item['is_time']) && $item['is_time']);
+        });
 
         // group the tags
         $groupedDimensions = $this->schemaGrouper->groupObjects($dimensions);

@@ -39,3 +39,6 @@ services:
 
     doctrine.dbal.connection:
         synthetic: true
+
+    session.storage.handler:
+        class: Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler

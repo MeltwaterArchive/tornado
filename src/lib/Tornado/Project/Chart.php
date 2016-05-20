@@ -28,6 +28,7 @@ class Chart implements DataObjectInterface
     const TYPE_TORNADO = 'tornado';
     const TYPE_HISTOGRAM = 'histogram';
     const TYPE_TIME_SERIES = 'timeseries';
+    const TYPE_SAMPLE = 'sample';
 
     /**
      * The different measure types
@@ -309,5 +310,13 @@ class Chart implements DataObjectInterface
     public function jsonSerialize()
     {
         return $this->toArray();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __clone()
+    {
+        $this->id = null;
     }
 }

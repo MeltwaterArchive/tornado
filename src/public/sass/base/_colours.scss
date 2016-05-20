@@ -1,0 +1,53 @@
+/**
+ * Base ~ Colours
+ */
+
+/**
+ * Colour variables
+ */
+$main-font-colour: #333 !default;
+$background-colour: #e9eaee !default;
+$heading-colour: #333 !default;
+$link-colour: #939393 !default;
+$link-colour-hovered: #000 !default;
+$code-colour: #444 !default;
+$blockquote-colour: #6f6f6f !default;
+$hr-colour: #ddd !default;
+$placeholder-colour: #9197a3 !default;
+$border-color: #d3d6db !default;
+
+
+
+
+/**
+ * Colour styles
+ *
+ * Add custom colours and their respective classes if needed, ie:
+ *
+ * $red: #E23C3C;
+ *
+ * .red,
+ * %red {
+ *     color: $red;
+ * }
+ *
+ */
+$colour-blue-facebook: #3c5a96 !default;
+$colour-red-error: #f8363b !default;
+$colour-red-error-text: white;
+$colour-red-warning: $colour-red-error !default;
+
+$colour-grey-light: #d3d6db !default;
+$colour-grey-lighter: #f9f9f9 !default;
+$colour-green-bright: #63a924 !default;
+
+/**
+ * Overrides for datasift bootstrap
+ */
+$datasift-orange: $colour-blue-facebook;
+$datasift-slate: $link-colour-hovered;
+$datasift-error: $colour-red-error;
+$text-color: white;
+
+$tooltip-background-color: #3b404c !default;
+$tooltip-text-color: #fff !default;

@@ -1,0 +1,11 @@
+/**
+ * Zipline ~ Common ~ Main menu
+ */
+
+/** Main menu style overrides */
+.main-menu__item__link {
+    &::before,
+    &::after {
+        display: none;
+    }
+}

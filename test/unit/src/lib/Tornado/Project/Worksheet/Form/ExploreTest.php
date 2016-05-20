@@ -19,6 +19,8 @@ use Tornado\Analyze\Dimension\Factory as DimensionFactory;
 
 use Test\DataSift\ReflectionAccess;
 
+use Symfony\Component\Validator\ValidatorBuilder;
+
 /**
  * ExploreTest
  *
@@ -59,8 +61,8 @@ class ExploreTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->buildApplication();
-        $this->validator = $this->container->get('validator');
+        $validatorBuilder = new ValidatorBuilder();
+        $this->validator = $validatorBuilder->getValidator();
     }
 
     /**
@@ -222,7 +224,7 @@ class ExploreTest extends \PHPUnit_Framework_TestCase
             'name' => 'test',
             'chart_type' => null,
             'type' => null,
-            'explore' => null,
+            'explore' => [],
             'start' => 10,
             'end' => null
         ], $form->getNormalizedData());
@@ -301,7 +303,7 @@ class ExploreTest extends \PHPUnit_Framework_TestCase
             'name' => 123,
             'chart_type' => 'notsupported',
             'type' => 'notsupported',
-            'explore' => null,
+            'explore' => [],
             'start' => 'string',
             'end' => 'string'
         ];
@@ -324,7 +326,6 @@ class ExploreTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('name', $errors);
         $this->assertArrayHasKey('chart_type', $errors);
         $this->assertArrayHasKey('type', $errors);
-        $this->assertArrayHasKey('explore', $errors);
         $this->assertArrayHasKey('start', $errors);
         $this->assertArrayHasKey('end', $errors);
     }

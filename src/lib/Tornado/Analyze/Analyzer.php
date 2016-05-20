@@ -15,6 +15,7 @@ use Tornado\Analyze\Analysis\TimeSeries;
 use Tornado\Analyze\Analysis;
 use Tornado\Project\Recording;
 use Tornado\Project\Worksheet;
+use Tornado\Analyze\DataSet\StoredDataSet;
 
 /**
  * Performs analysis of a recording based on a collection of dimensions,
@@ -96,6 +97,31 @@ class Analyzer
             $end,
             $parameters,
             $filter
+        );
+
+        $analyses = new AnalysisCollection([$analysis]);
+        $this->analyzeCollection($analyses);
+        return $analyses;
+    }
+
+    /**
+     * Generates an analysis from the passed StoredDataSet
+     *
+     * @param \Tornado\Analyze\DataSet\StoredDataSet $dataset
+     * @param \Tornado\Project\Recording $recording
+     *
+     * @return \Tornado\Analyze\Analysis\Collection
+     */
+    public function fromStoredDataSet(StoredDataSet $dataset, Recording $recording)
+    {
+        $analysis = $this->buildAnalysis(
+            $recording,
+            $dataset->getDimensions(),
+            $dataset->getAnalysisType(),
+            $dataset->getStart(),
+            $dataset->getEnd(),
+            [],
+            $dataset->getFilter()
         );
 
         $analyses = new AnalysisCollection([$analysis]);
@@ -213,13 +239,11 @@ class Analyzer
         array $parameters = [],
         $filter = null
     ) {
+
         switch ($type) {
             case Analysis::TYPE_TIME_SERIES:
                 $interval = isset($parameters['interval']) ? $parameters['interval'] : self::INTERVAL_DAY;
                 $span = isset($parameters['span']) ? $parameters['span'] : 1;
-                $intervalDuration = $this->intervalDuration($interval) * $span;
-                $start = $this->adjustTimeSeriesStart($start, $intervalDuration, $recording);
-                $end = $this->adjustTimeSeriesEnd($end, $intervalDuration);
 
                 $analysis = new TimeSeries(
                     $dimension->getTarget(),
@@ -248,77 +272,5 @@ class Analyzer
         }
 
         return $analysis;
-    }
-
-    /**
-     * Adjusts the start time of time series analysis to minimise a chance of redaction.
-     *
-     * @link http://dev.datasift.com/pylon/howto/advanced/calculating-time-spans
-     *
-     * @param  integer   $start            Desired start time (in unix timestamp).
-     * @param  integer   $intervalDuration Duration of a single interval in time series (in seconds).
-     * @param  Recording $recording        Recording to be analysed.
-     *
-     * @return integer
-     */
-    private function adjustTimeSeriesStart($start, $intervalDuration, Recording $recording)
-    {
-        if ($start === null) {
-            return null;
-        }
-
-        $pylonLimit = time() - (60 * 60 * 24 * 32);
-        $minStart = max($recording->getCreatedAt(), $pylonLimit, $start);
-        return ceil($minStart / $intervalDuration) * $intervalDuration;
-    }
-
-    /**
-     * Adjusts the end time of time series analysis to minimise a chance of redaction.
-     *
-     * @link http://dev.datasift.com/pylon/howto/advanced/calculating-time-spans
-     *
-     * @param  integer   $end              Desired end time (in unix timestamp).
-     * @param  integer   $intervalDuration Duration of a single interval in time series (in seconds).
-     *
-     * @return integer
-     */
-    private function adjustTimeSeriesEnd($end, $intervalDuration)
-    {
-        if ($end === null) {
-            return null;
-        }
-
-        $maxEnd = min(time(), $end);
-        return floor($maxEnd / $intervalDuration) * $intervalDuration;
-    }
-
-    /**
-     * Duration in second of a single interval type.
-     *
-     * @param  string $interval One of 'week', 'day', 'hour', 'minute'.
-     *
-     * @return integer
-     */
-    private function intervalDuration($interval)
-    {
-        switch ($interval) {
-            case self::INTERVAL_WEEK:
-                $seconds = 60 * 60 * 24 * 7;
-                break;
-
-            case self::INTERVAL_DAY:
-                $seconds = 60 * 60 * 24;
-                break;
-
-            case self::INTERVAL_HOUR:
-                $seconds = 60 * 60;
-                break;
-
-            case self::INTERVAL_MINUTE:
-            default:
-                $seconds = 60;
-        }
-
-        return $seconds;
     }
 }

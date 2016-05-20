@@ -9,6 +9,8 @@ use Tornado\Analyze\Dimension\Collection as DimensionCollection;
 use Tornado\Project\Chart\DataMapper as ChartRepository;
 use Tornado\Project\Chart;
 use Tornado\Project\Worksheet;
+use Tornado\Project\Workbook\DataMapper as WorkbookRepository;
+use Tornado\Project\Recording\Sample\DataMapper as RecordingSampleRepository;
 
 use \ZipArchive;
 
@@ -26,6 +28,8 @@ use \ZipArchive;
  * @copyright   2015-2016 MediaSift Ltd.
  * @license     http://mediasift.com/licenses/internal MediaSift Internal License
  * @link        https://github.com/datasift/tornado
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects, PHPMD.ExcessiveClassComplexity)
  */
 class Exporter
 {
@@ -43,13 +47,34 @@ class Exporter
     protected $chartsRepository;
 
     /**
+     * Workbook repository
+     *
+     * @var \Tornado\Project\Workbook\DataMapper
+     */
+    protected $workbookRepo;
+
+    /**
+     * Recording Sample repository
+     *
+     * @var \Tornado\Project\Recording\Sample\DataMapper
+     */
+    protected $recordingSampleRepo;
+
+    /**
      * Constructor.
      *
-     * @param ChartRepository $chartsRepository Charts repository.
+     * @param \Tornado\Project\Chart\DataMapper              $chartsRepository Charts repository.
+     * @param \Tornado\Project\Workbook\DataMapper           $workbookRepo
+     * @param \Tornado\Project\Recording\Sample\DataMapper   $recordingSampleRepo
      */
-    public function __construct(ChartRepository $chartsRepository)
-    {
+    public function __construct(
+        ChartRepository $chartsRepository,
+        WorkbookRepository $workbookRepo,
+        RecordingSampleRepository $recordingSampleRepo
+    ) {
         $this->chartsRepository = $chartsRepository;
+        $this->workbookRepo = $workbookRepo;
+        $this->recordingSampleRepo = $recordingSampleRepo;
     }
 
     /**
@@ -95,6 +120,25 @@ class Exporter
      */
     public function exportWorksheetGenerator(Worksheet $worksheet)
     {
+        switch ($worksheet->getChartType()) {
+            case Chart::TYPE_SAMPLE:
+                return $this->exportSampleWorksheetGenerator($worksheet);
+            default:
+                return $this->exportAnalysisWorksheet($worksheet);
+        }
+    }
+
+    /**
+     * Exports all charts from the worksheet to a 2 dimensional array where 1st row are headers.
+     *
+     * Returns a Generator that yields single data row.
+     *
+     * @param  Worksheet $worksheet Worksheet to be exported.
+     *
+     * @return Generator
+     */
+    private function exportAnalysisWorksheet(Worksheet $worksheet)
+    {
         $dimensionsCollection = $worksheet->getDimensions();
         $targets = $dimensionsCollection
             ? ObjectUtils::pluck($dimensionsCollection->getDimensions(DimensionCollection::ORDER_NATURAL), 'target')
@@ -114,6 +158,62 @@ class Exporter
                 yield $this->fillExportRow($row, $headers);
             }
         }
+    }
+
+    /**
+     * Exports all sample data for a sample Worksheet
+     *
+     * Returns a Generator that yields single data row.
+     *
+     * @param  Worksheet $worksheet Worksheet to be exported.
+     *
+     * @return \Generator
+     */
+    private function exportSampleWorksheetGenerator(Worksheet $worksheet)
+    {
+        $workbook = $this->workbookRepo->findOne(['id' => $worksheet->getWorkbookId()]);
+
+        $headers = $rows = [];
+        $filters = $worksheet->getFilter('generated_csdl');
+        $sqlFilter = ['recording_id' => $workbook->getRecordingId()];
+        if (!empty($filters)) {
+            $sqlFilter['filter_hash'] = md5($filters);
+        }
+        foreach ($this->recordingSampleRepo->find($sqlFilter) as $sample) {
+            $data = $this->flattenData($sample->getData());
+            $headers = array_unique(array_merge($headers, array_keys($data)));
+            $rows[] = $data;
+        }
+
+        $blank = array_fill_keys($headers, '');
+
+        yield array_values($headers);
+        foreach ($rows as $row) {
+            yield array_values(array_merge($blank, $row));
+        }
+    }
+
+    /**
+     * Flattens the passed object/array into a dot-notation 2D array
+     *
+     * @param mixed $data
+     *
+     * @return array
+     */
+    private function flattenData($data)
+    {
+        $ret = [];
+        foreach ($data as $key => $value) {
+            if (is_object($value) || is_array($value)) {
+                foreach ($this->flattenData($value) as $k => $v) {
+                    $ret[$key . '.' . $k] = $v;
+                }
+            } else {
+                $ret[$key] = $value;
+            }
+        }
+
+        return $ret;
     }
 
     /**
@@ -354,7 +454,7 @@ class Exporter
                     )
                 ) . "\n";
             }
-            $archive->addFromString(StringUtils::fileNameFriendly($worksheet->getName()), $str);
+            $archive->addFromString(StringUtils::fileNameFriendly($worksheet->getName()) . '.csv', $str);
         }
 
         $archive->close();

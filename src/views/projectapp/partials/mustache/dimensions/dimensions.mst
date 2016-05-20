@@ -11,8 +11,8 @@
     </script>
 
     <script data-tornado-template="dimensions-item" type="x-tmpl-mustache">
-        <div class="dimension dimension--dropzone" data-tooltip="{{ dimension.tooltip }}" data-dimension-axis="{{ axis }}" data-dimension-target="{{ dimension.target }}" data-dimension-options-info="Threshold: {{ dimension.threshold }}">
-            {{ dimension.name }}
+        <div class="dimension dimension--dropzone" data-tooltip="{{ dimension.description }}" data-dimension-axis="{{ axis }}" data-dimension-target="{{ dimension.target }}" data-dimension-options-info="Threshold: {{ dimension.threshold }}" data-cardinality="{{ dimension.cardinality }}">
+            {{ dimension.label }}
             <a href="#" class="dimension__options"></a>
             <a href="#" class="dimension__remove"></a>
         </div>

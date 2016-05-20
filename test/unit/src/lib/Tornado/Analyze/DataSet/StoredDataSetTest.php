@@ -145,6 +145,66 @@ class StoredDataSetTest extends \PHPUnit_Framework_TestCase
                 'value' => $data,
                 'getter' => 'getRawData',
                 'expected' => $jsonData
+            ],
+            [
+                'setter' => 'setBrandId',
+                'value' => 10,
+                'getter' => 'getBrandId',
+                'expected' => 10
+            ],
+            [
+                'setter' => 'setRecordingId',
+                'value' => 20,
+                'getter' => 'getRecordingId',
+                'expected' => 20
+            ],
+            [
+                'setter' => 'setAnalysisType',
+                'value' => 'freq',
+                'getter' => 'getAnalysisType',
+                'expected' => 'freq'
+            ],
+            [
+                'setter' => 'setFilter',
+                'value' => 'interaction.content exists',
+                'getter' => 'getFilter',
+                'expected' => 'interaction.content exists'
+            ],
+            [
+                'setter' => 'setSchedule',
+                'value' => 5,
+                'getter' => 'getSchedule',
+                'expected' => 5
+            ],
+            [
+                'setter' => 'setScheduleUnits',
+                'value' => 'day',
+                'getter' => 'getScheduleUnits',
+                'expected' => 'day'
+            ],
+            [
+                'setter' => 'setTimeRange',
+                'value' => 'last week',
+                'getter' => 'getTimeRange',
+                'expected' => 'last week'
+            ],
+            [
+                'setter' => 'setLastRefreshed',
+                'value' => 123456789,
+                'getter' => 'getLastRefreshed',
+                'expected' => 123456789
+            ],
+            [
+                'setter' => 'setCreatedAt',
+                'value' => 123456789,
+                'getter' => 'getCreatedAt',
+                'expected' => 123456789
+            ],
+            [
+                'setter' => 'setUpdatedAt',
+                'value' => 123456789,
+                'getter' => 'getUpdatedAt',
+                'expected' => 123456789
             ]
         ];
     }
@@ -208,47 +268,113 @@ class StoredDataSetTest extends \PHPUnit_Framework_TestCase
             [
                 'data' => [
                     'id' => 10,
+                    'brand_id' => 20,
+                    'recording_id' => 30,
                     'name' => 'Facebook US',
                     'dimensions' => 'fb.author.gender,fb.author.age',
                     'visibility' => 'private',
-                    'data' => $jsonData
+                    'data' => $jsonData,
+                    'analysis_type' => 'freq',
+                    'filter' => 'interaction.content exists',
+                    'schedule' => 5,
+                    'schedule_units' => 'days',
+                    'time_range' => 'last week',
+                    'status' => 'running',
+                    'last_refreshed' => 123456789,
+                    'created_at' => 223456789,
+                    'updated_at' => 323456789,
                 ],
                 'getters' => [
                     'getId' => 10,
+                    'getBrandId' => 20,
+                    'getRecordingId' => 30,
                     'getName' => 'Facebook US',
                     'getDimensions' => $dimensions,
                     'getVisibility' => StoredDataSet::VISIBILITY_PRIVATE,
-                    'getData' => $data
+                    'getData' => $data,
+                    'getAnalysisType' => 'freq',
+                    'getFilter' => 'interaction.content exists',
+                    'getSchedule' => 5,
+                    'getScheduleUnits' => 'days',
+                    'getTimeRange' => 'last week',
+                    'getStatus' => 'running',
+                    'getLastRefreshed' => 123456789,
+                    'getCreatedAt' => 223456789,
+                    'getUpdatedAt' => 323456789,
                 ],
                 'expected' => [
                     'id' => 10,
+                    'brand_id' => 20,
+                    'recording_id' => 30,
                     'name' => 'Facebook US',
                     'dimensions' => 'fb.author.gender,fb.author.age',
                     'visibility' => 'private',
-                    'data' => $jsonData
+                    'data' => $jsonData,
+                    'analysis_type' => 'freq',
+                    'filter' => 'interaction.content exists',
+                    'schedule' => 5,
+                    'schedule_units' => 'days',
+                    'time_range' => 'last week',
+                    'status' => 'running',
+                    'last_refreshed' => 123456789,
+                    'created_at' => 223456789,
+                    'updated_at' => 323456789,
                 ]
             ],
             [
                 'data' => [
                     'id' => 10,
+                    'brand_id' => 20,
+                    'recording_id' => 30,
                     'name' => 'Facebook US',
                     'dimensions' => ['fb.author.gender', 'fb.author.age'],
                     'visibility' => 'private',
-                    'data' => $jsonData
+                    'data' => $jsonData,
+                    'analysis_type' => 'freq',
+                    'filter' => 'interaction.content exists',
+                    'schedule' => 5,
+                    'schedule_units' => 'days',
+                    'time_range' => 'last week',
+                    'status' => 'stopped',
+                    'last_refreshed' => 123456789,
+                    'created_at' => 223456789,
+                    'updated_at' => 323456789,
                 ],
                 'getters' => [
                     'getId' => 10,
+                    'getBrandId' => 20,
+                    'getRecordingId' => 30,
                     'getName' => 'Facebook US',
                     'getDimensions' => $dimensions,
                     'getVisibility' => StoredDataSet::VISIBILITY_PRIVATE,
-                    'getData' => $data
+                    'getData' => $data,
+                    'getAnalysisType' => 'freq',
+                    'getFilter' => 'interaction.content exists',
+                    'getSchedule' => 5,
+                    'getScheduleUnits' => 'days',
+                    'getTimeRange' => 'last week',
+                    'getStatus' => 'stopped',
+                    'getLastRefreshed' => 123456789,
+                    'getCreatedAt' => 223456789,
+                    'getUpdatedAt' => 323456789,
                 ],
                 'expected' => [
                     'id' => 10,
+                    'brand_id' => 20,
+                    'recording_id' => 30,
                     'name' => 'Facebook US',
                     'dimensions' => 'fb.author.gender,fb.author.age',
                     'visibility' => 'private',
-                    'data' => $jsonData
+                    'data' => $jsonData,
+                    'analysis_type' => 'freq',
+                    'filter' => 'interaction.content exists',
+                    'schedule' => 5,
+                    'schedule_units' => 'days',
+                    'time_range' => 'last week',
+                    'status' => 'stopped',
+                    'last_refreshed' => 123456789,
+                    'created_at' => 223456789,
+                    'updated_at' => 323456789,
                 ]
             ]
         ];
@@ -309,5 +435,47 @@ class StoredDataSetTest extends \PHPUnit_Framework_TestCase
         $obj->loadFromArray($data);
 
         $this->assertEquals($expected, json_encode($obj));
+    }
+
+    /**
+     * DataProvider for testStartEnd
+     *
+     * @return array
+     */
+    public function startEndProvider()
+    {
+        return [
+            'day' => [
+                'timeRange' => StoredDataSet::TIMERANGE_DAY,
+                'expectedDiff' => 86400,
+            ],
+            'week' => [
+                'timeRange' => StoredDataSet::TIMERANGE_WEEK,
+                'expectedDiff' => 86400 * 7,
+            ],
+            'month' => [
+                'timeRange' => StoredDataSet::TIMERANGE_MONTH,
+                'expectedDiff' => 86400 * 31,
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider startEndProvider
+     *
+     * @covers ::getStart
+     * @covers ::getEnd
+     *
+     * @param string $timeRange
+     * @param integer $expectedDiff
+     */
+    public function testStartEnd($timeRange, $expectedDiff)
+    {
+        $obj = new StoredDataSet();
+        $obj->setTimeRange($timeRange);
+        $start = $obj->getStart();
+        $end = $obj->getEnd();
+        $this->assertTrue($start < $end);
+        $this->assertEquals($expectedDiff, $end - $start);
     }
 }

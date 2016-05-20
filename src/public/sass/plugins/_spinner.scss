@@ -1,0 +1,74 @@
+/**
+ * Plugin ~ Spinner
+ */
+[data-spinner], .loading-spin {
+    &::before {
+        position: relative;
+        display: inline-block;
+        float: right;
+        width: 0;
+        height: 5px;
+        margin-left: 0;
+        line-height: 0;
+        content: "";
+        will-change: margin;
+        @include transition(0.3s margin-left $slick-ease);
+    }
+    &::after {
+        position: absolute;
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        top: 50%;
+        margin-top: -8px;
+        right: 18px;
+        background: {
+            image: url("#{$image-path}/plugins/spinner/spinner.png");
+            size: 16px 16px;
+            position: center center;
+            repeat: no-repeat;
+        }
+        @include hidpi {
+            background-image: url("#{$image-path}/plugins/spinner/spinner@2x.png");
+        }
+        content: "";
+        opacity: 0;
+        visibility: 0;
+        @include transform(scale(0));
+        @include transition(0.3s transform $slick-ease);
+    }
+
+    &.blue {
+        &::after {
+            background-image: url("#{$image-path}/plugins/spinner/spinner-blue.png");
+
+            @include hidpi {
+                background-image: url("#{$image-path}/plugins/spinner/spinner@2x-blue.png");
+            }
+        }
+    }
+}
+
+.loading-spin::after {
+    right: 50%;
+    margin-left: -16px;
+}
+
+[data-spinner="spin"], .loading-spin {
+    &::before {
+        margin-left: 22px;
+    }
+    &::after {
+        opacity: 1;
+        visibility: visible;
+        @include animation(spinner-spin 1.7s $slick-ease infinite);
+        @include keyframes(spinner-spin) {
+            from {
+                @include transform(rotate(0deg) scale(1));
+            }
+            to {
+                @include transform(rotate(360deg) scale(1));
+            }
+        }
+    }
+}

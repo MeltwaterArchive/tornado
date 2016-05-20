@@ -15,6 +15,7 @@
                                     data-dimension-item="{{ label }}"
                                     data-dimension-target="{{ target }}"
                                     data-dimension-description="{{ description }}"
+                                    data-cardinality="{{ cardinality }}"
                                     class="dimension"
                                 >{{ label }}</li>
                             {{ /items }}

@@ -108,8 +108,9 @@ class TemplatedAnalyzer
                 $analysisTemplate['end'],
                 [
                     'span' => $analysisTemplate['span'],
-                    'interval' => $analysisTemplate['interval']
-                ]
+                    'interval' => $analysisTemplate['interval'],
+                ],
+                $analysisTemplate['filters']['csdl']
             );
 
             $analysisCollection->addAnalysis($analysis);
@@ -138,17 +139,13 @@ class TemplatedAnalyzer
      */
     public function readTemplate($name)
     {
-        if (empty($this->templates)) {
-            foreach ($this->loader->load() as $templates) {
-                $this->templates = array_merge($this->templates, $templates);
-            }
-        }
+        $templates = $this->loadTemplates();
 
-        if (!isset($this->templates[$name])) {
+        if (!isset($templates[$name])) {
             throw new \InvalidArgumentException(sprintf('Could not find analysis template %s', $name));
         }
 
-        $template = $this->templates[$name];
+        $template = $templates[$name];
 
         if (!isset($template['title']) || !isset($template['analyses']) || !is_array($template['analyses'])) {
             throw new \RuntimeException(sprintf('Invalid analysis template structure for template %s', $name));
@@ -160,6 +157,31 @@ class TemplatedAnalyzer
         }
 
         return $template;
+    }
+
+    /**
+     * Gets a list of templates in this Analyzer
+     *
+     * @return array
+     */
+    public function getTemplates()
+    {
+        return $this->loadTemplates();
+    }
+
+    /**
+     * Loads templates from disk
+     *
+     * @return array
+     */
+    private function loadTemplates()
+    {
+        if (empty($this->templates)) {
+            foreach ($this->loader->load() as $templates) {
+                $this->templates = array_merge($this->templates, $templates);
+            }
+        }
+        return $this->templates;
     }
 
     /**
@@ -214,7 +236,8 @@ class TemplatedAnalyzer
         $template = array_merge([
             'dimensions' => [],
             'span' => 1,
-            'interval' => Analyzer::INTERVAL_DAY
+            'interval' => Analyzer::INTERVAL_DAY,
+            'filters' => ['csdl' => '']
         ], $template);
 
         $template['start'] = isset($template['start']) ? strtotime($template['start']) : null;

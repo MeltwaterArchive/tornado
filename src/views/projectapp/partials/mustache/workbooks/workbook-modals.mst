@@ -11,15 +11,22 @@
                     <option value="">Select a recording</option>
                 </select>
             </div>
+            <div>
+                <label class="input-label" for="new-workbook-template">Template</label>
+                <select id="new-workbook-template" class="create-workbook__select--template" placeholder="Select a template">
+                    <option value=""></option>
+                </select>
+            </div>
+            <div class="create-workbook__template-description"><p></p></div>
             <div class="modallica__actions">
                 <button data-modallica-action="close" class="clear-button" type="button">Cancel</button>
-                <button data-modallica-action="submit" data-spinner data-loader=".modallica--workbook-create-modal .modallica__content:Populating data" class="submit-button" type="button">Create</button>
+                <button data-modallica-action="submit" data-loader=".modallica--workbook-create-modal .modallica__content:Populating data" class="submit-button" type="button">Create</button>
             </div>
         </div>
     </script>
 
     <script data-tornado-template="workbook-create-modal-select-option-item" type="x-tmpl-mustache">
-        <option value="{{ id }}">{{ name }}</option>
+        <option value="{{ id }}" data-data='{"description": "{{ description }}"}'>{{ name }}</option>
     </script>
 
     <script data-tornado-template="workbook-edit-modal" type="x-tmpl-mustache">

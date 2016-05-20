@@ -54,7 +54,9 @@
             {% if sessionUser.isSuperAdmin %}
             <input id="user-permissions-superadmin" type="radio" name="permissions" value="superadmin"{% if data.user.isSuperAdmin or data.user.permissions == "none" %} checked="checked"{% endif %} /><label for="user-permissions-superadmin">Superadmin</label>
             {% endif %}
+            <input id="user-disabled" name="disabled" type="checkbox" value="1"{% if data.user.isDisabled %}checked="checked"{% endif %} /><label for="user-disabled">Disable User</label>
         </div>
+
         {# Footer #}
         <hr class="divider">
         <div class="single-item__header">
@@ -73,4 +75,7 @@
             This User currently has access to {{ data.brandCount }} Brand{% if data.brandCount != 1 %}s{% endif %}. <a href="{{ orgPath('user.brands', data.user.id, data.organization.id) }}">Manage</a>
         </div>
     </form>
+{% endblock %}
+{% block javascript_additional %}
+    data-main="{{ cs_build_location }}/javascript/brand"
 {% endblock %}

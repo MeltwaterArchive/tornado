@@ -1,0 +1,57 @@
+/**
+ * Plugins ~ ScrollFoo
+ */
+
+/**
+ * ScrollFoo variables
+ */
+$scrollfoo-scroller-background-colour: $colour-blue-facebook !default;
+
+/**
+ * ScrollFoo styles
+ */
+// Wrapping both the scroller and the content
+.scrollfoo__content-wrapper {
+    position: relative;
+}
+
+// Class applied to the body
+.scrollfoo--dragging {
+    .scrollfoo__content-wrapper {
+        @include user-select(none);
+    }
+    .scrollfoo__scroller {
+        @extend %active-scroller;
+    }
+}
+
+.scrollfoo__parent {
+    overflow: hidden;
+}
+
+%active-scroller {
+    width: 8px;
+    background-color: $scrollfoo-scroller-background-colour;
+}
+
+// This is our custom scroll(bar)er
+.scrollfoo__scroller {
+    display: inline-block;
+    position: absolute;
+    right: -13px;
+    width: 4px;
+    background-color: $scrollfoo-scroller-background-colour;
+    border-radius: 5px;
+    cursor: pointer;
+    cursor: -webkit-grab;
+    cursor: -moz-grab;
+    z-index: 9;
+    @include transition(0.2s background-color $slick-ease, 0.2s width $slick-ease 0.2s);
+    &:hover {
+        @extend %active-scroller;
+        @include transition-delay(0s);
+    }
+    &--disabled {
+        background-color: transparent !important;
+    }
+}

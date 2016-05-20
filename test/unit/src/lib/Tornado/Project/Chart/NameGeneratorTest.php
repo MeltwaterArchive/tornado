@@ -52,7 +52,7 @@ class NameGeneratorTest extends \PHPUnit_Framework_TestCase
                 "chart" => $tornadoChart,
                 "dimensionsCol" => new DimensionCollection([$dimA, $dimB, $dimC]),
                 "lowestDimVal" => 'test Custom',
-                "expected" => 'Test Custom: Test A x Test B'
+                "expected" => 'Test Custom'
             ],
             [
                 "chart" => $tornadoChart,
@@ -146,7 +146,7 @@ class NameGeneratorTest extends \PHPUnit_Framework_TestCase
 
         $nameGenerator = new NameGenerator();
         $this->assertEquals(
-            'Test C: Test A x Test B',
+            'Test C',
             $nameGenerator->generate($tornadoChart, $dimensionsCol, 'test C')
         );
         $this->assertEquals(
@@ -174,7 +174,7 @@ class NameGeneratorTest extends \PHPUnit_Framework_TestCase
 
         $nameGenerator = new NameGenerator();
         $this->assertEquals(
-            'Test C: test.a x Test B',
+            'Test C',
             $nameGenerator->generate($tornadoChart, $dimensionsCol, 'test C')
         );
         $this->assertEquals('test.a x Test B x test.c', $nameGenerator->generate($barChart, $dimensionsCol));
@@ -200,7 +200,7 @@ class NameGeneratorTest extends \PHPUnit_Framework_TestCase
         #1
         $dimensionsCol = new DimensionCollection([$dimA, $dimB, $dimC]);
         $data = $this->invokeMethod($nameGenerator, 'generateTornadoName', [$dimensionsCol, 'unit']);
-        $this->assertEquals('Unit: test.a x Test B', $data);
+        $this->assertEquals('Unit', $data);
 
         #2
         $dimensionsCol = new DimensionCollection([$dimA, $dimB]);

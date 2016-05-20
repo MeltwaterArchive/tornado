@@ -18,9 +18,17 @@ src/logs/*.log
 .idea
 **/bower_components
 
+# Testing
+mb.pid
+mb*.log
+
 # Frontend
 **/.sass-cache
 src/public/assets/**/*.map
 
 # JavaScript
 src/public/assets/javascript/library/*
+src/public/bower/*
+src/public/dist/*
+.kitchen/
+.kitchen.local.yml

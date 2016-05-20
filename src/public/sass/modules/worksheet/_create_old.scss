@@ -1,0 +1,83 @@
+/**
+ * Module ~ Create Worksheet Modal
+ */
+
+/**
+ * Create Worksheet variables
+ */
+$create-worksheet-chart-type-border-colour: $colour-grey-light !default;
+$create-worksheet-chart-type-active-border-colour: $colour-green-bright !default;
+
+/**
+ * Create Worksheet styles
+ */
+.modallica--worksheet-create-modal,
+.modallica--worksheet-create-exploration-modal {
+    .modallica__actions {
+        margin-top: 20px;
+    }
+}
+
+.create-worksheet__chart-types {
+    display: inline-block;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    @extend %no-list-style;
+}
+
+.create-worksheet__chart-type {
+    @include span-columns(4);
+    position: relative;
+    background: {
+        size: 74px 74px;
+        position: center center;
+        repeat: no-repeat;
+    }
+    border: 1px solid $create-worksheet-chart-type-border-colour;
+    cursor: pointer;
+    &::before {
+        display: inline-block;
+        width: 100%;
+        padding-top: 100%;
+        content: "";
+    }
+    &--active {
+        border: 1px solid $create-worksheet-chart-type-active-border-colour;
+    }
+    &--disabled {
+        pointer-events: none;
+        &::before {
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+        &::after {
+            @extend %button;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            padding: 10px;
+            @include transform(translate(-50%, -50%));
+            white-space: nowrap;
+            content: "Coming soon";
+        }
+    }
+}
+
+.create-worksheet__chart-type--tornado {
+    background-image: url("#{$image-path}/modules/worksheet/create/chart-tornado.png");
+    @include hidpi {
+        background-image: url("#{$image-path}/modules/worksheet/create/chart-tornado@2x.png");
+    }
+}
+.create-worksheet__chart-type--histogram {
+    background-image: url("#{$image-path}/modules/worksheet/create/chart-histogram.png");
+    @include hidpi {
+        background-image: url("#{$image-path}/modules/worksheet/create/chart-histogram@2x.png");
+    }
+}
+.create-worksheet__chart-type--time-series {
+    background-image: url("#{$image-path}/modules/worksheet/create/chart-time-series.png");
+    @include hidpi {
+        background-image: url("#{$image-path}/modules/worksheet/create/chart-time-series@2x.png");
+    }
+}

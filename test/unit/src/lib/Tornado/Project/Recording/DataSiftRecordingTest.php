@@ -7,6 +7,7 @@ use Psr\Log\NullLogger;
 use \Mockery;
 
 use Tornado\Project\Recording;
+use Tornado\Project\Workbook;
 use Tornado\Project\Recording\DataSiftRecording;
 use Tornado\Project\Recording\DataSiftRecordingException;
 
@@ -494,11 +495,18 @@ class DataSiftRecordingTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $obj->getPylonRecordings($clearCache)); // Repeated twice for cache checking
     }
 
-    private function getRecordingToDecorate($hash, \DataSift_Pylon $pylon = null)
+    private function getRecordingToDecorate($hash, \DataSift_Pylon $pylon = null, $id = 1, $volume = 0)
     {
-        $recording = Mockery::mock('\Tornado\Project\Recording');
-        $recording->shouldReceive('getDatasiftRecordingId')
-            ->andReturn($hash);
+        $recording = Mockery::mock(
+            '\Tornado\Project\Recording',
+            [],
+            [
+                'getDatasiftRecordingId' => $hash,
+                'getId' => $id,
+                'getVolume' => $volume
+            ]
+        );
+
         if ($pylon) {
             $recording->shouldReceive('fromDataSiftRecording')
                 ->with($pylon);
@@ -524,9 +532,9 @@ class DataSiftRecordingTest extends \PHPUnit_Framework_TestCase
                     $p2->getHash() => $p2
                 ],
                 'recordings' => [
-                    $this->getRecordingToDecorate($p1->getHash(), $p1),
-                    $this->getRecordingToDecorate($p2->getHash(), $p2),
-                    $this->getRecordingToDecorate('ghi789'),
+                    $this->getRecordingToDecorate($p1->getHash(), $p1, 1),
+                    $this->getRecordingToDecorate($p2->getHash(), $p2, 2),
+                    $this->getRecordingToDecorate('ghi789', null, 3),
                 ]
             ]
         ];
@@ -554,6 +562,87 @@ class DataSiftRecordingTest extends \PHPUnit_Framework_TestCase
 
 
         $obj->decorateRecordings($recordings);
+    }
+
+    /**
+     *
+     * @param type $hash
+     *
+     * @return \Tornado\Project\Workbook
+     */
+    private function getWorkbookToDecorate($recordingId, $expectedStatus)
+    {
+        $workbook = Mockery::mock(
+            '\Tornado\Project\Workbook',
+            [],
+            [
+                'getRecordingId' => $recordingId
+            ]
+        );
+
+        $workbook->shouldReceive('setStatus')
+            ->once()
+            ->with($expectedStatus);
+
+        return $workbook;
+    }
+
+    /**
+     * DataProvider for testDecorateWorkbooks
+     *
+     * @return array
+     */
+    public function decorateWorkbooksProvider()
+    {
+        $p1 = new \DataSift_Pylon(null, ['hash' => 'abc123']);
+        $p2 = new \DataSift_Pylon(null, ['hash' => 'def456']);
+
+        return [
+            [ // #0
+                'pylonRecordings' => [
+                    $p1->getHash() => $p1,
+                    $p2->getHash() => $p2
+                ],
+                'recordings' => [
+                    $this->getRecordingToDecorate($p1->getHash(), $p1, 1, 0),
+                    $this->getRecordingToDecorate($p2->getHash(), $p2, 2, 10),
+                    $this->getRecordingToDecorate('ghi789', null, 3, 0),
+                ],
+                'workbooks' => [
+                    [1, Workbook::STATUS_ARCHIVED],
+                    [2, Workbook::STATUS_ACTIVE],
+                ]
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider decorateWorkbooksProvider
+     *
+     * @covers ::decorateWorkbooks
+     *
+     * @param array $pylonRecordings
+     * @param array $recordings
+     * @param array $workbooks
+     */
+    public function testDecorateWorkbooks(array $pylonRecordings, array $recordings, array $workbooks)
+    {
+        $pylon = Mockery::mock('\DataSift_Pylon');
+        $pylon->shouldReceive('findAll')
+            ->andReturn($pylonRecordings);
+
+        $obj = new DataSiftRecording(
+            $pylon,
+            Mockery::mock('Tornado\Project\Recording\DataMapper'),
+            Mockery::mock('\Psr\Log\LoggerInterface')
+        );
+
+        $workbookList = [];
+        foreach ($workbooks as $workbook) {
+            $workbookList[] = $this->getWorkbookToDecorate($workbook[0], $workbook[1]);
+        }
+
+        $obj->decorateWorkbooks($workbookList, $recordings);
     }
 
     /**

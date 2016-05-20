@@ -6,6 +6,7 @@ use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Required;
+use Symfony\Component\Validator\Constraints\Optional;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -90,6 +91,7 @@ class Login extends Form
                 ]),
                 new Callback($this->passwordCorrect())
             ]),
+            'redirect' => new Optional()
         ]);
     }
 

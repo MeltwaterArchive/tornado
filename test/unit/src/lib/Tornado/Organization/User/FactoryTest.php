@@ -61,7 +61,8 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
                 'email' => $email,
                 'username' => $username,
                 'password' => $user->getPassword(),
-                'type' => User::TYPE_NORMAL
+                'type' => User::TYPE_NORMAL,
+                'disabled' => false
             ],
             $user->toArray()
         );
@@ -132,7 +133,8 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
                 'email' => $email,
                 'username' => $username,
                 'password' => $user->getPassword(),
-                'type' => User::TYPE_NORMAL
+                'type' => User::TYPE_NORMAL,
+                'disabled' => false
             ],
             $user->toArray()
         );
@@ -173,7 +175,8 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
                 'email' => $email,
                 'username' => $username,
                 'password' => $user->getPassword(),
-                'type' => User::TYPE_IDENTITY_API
+                'type' => User::TYPE_IDENTITY_API,
+                'disabled' => false
             ],
             $user->toArray()
         );

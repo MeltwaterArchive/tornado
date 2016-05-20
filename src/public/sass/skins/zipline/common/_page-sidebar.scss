@@ -1,0 +1,23 @@
+/**
+ * Zipline ~ Common ~ Page sidebar
+ *
+ * Sidebar on the left of the page content
+ */
+
+/** Content style overrides */
+.page-sidebar {
+    // Push the content a bit further only when we have
+    // views that have an active page sidebar
+    [data-tornado-page="timespan"] &,
+    [data-tornado-page="filters"] &,
+    [data-tornado-page="comparison"] & {
+        ~ .page {
+            padding-left: $main-menu-width;
+        }
+    }
+    [data-tornado-page="dimensions"] & {
+        ~ .page {
+            padding-left: $main-menu-width + $page-sidebar-width;
+        }
+    }
+}

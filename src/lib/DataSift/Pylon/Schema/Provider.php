@@ -31,6 +31,8 @@ class Provider implements LoggerAwareInterface
 
     const PYLON_SCHEMA_CACHE_ID = 'datasift.pylon.schema';
 
+    const CACHE_TTL = 600;
+
     /**
      * This Pylon final schema objects where its array key is equal the object definition target value
      * For instance: [
@@ -137,7 +139,7 @@ class Provider implements LoggerAwareInterface
             $this->schemaObjects = $this->cacheClient->fetch($cacheId);
         } else {
             $this->readLoaders($subscription);
-            $this->cacheClient->save($cacheId, $this->schemaObjects);
+            $this->cacheClient->save($cacheId, $this->schemaObjects, self::CACHE_TTL);
         }
     }
 

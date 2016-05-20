@@ -1,0 +1,54 @@
+/**
+ * Netflix colour scheme only has 3 colours, we will use the lighten and darken
+ * functions to produce the difference we need.
+ * @type {[type]}
+ */
+$netflix-red: #e21220;
+$netflix-grey: #ebebeb;
+$netflix-black: #232323;
+$netflix-white: #fff;
+
+// header
+$header-background-colour: $netflix-black;
+
+// main menu
+$main-menu-background-colour: $netflix-black;
+$main-menu-item-icon-fill: $netflix-white;
+$main-menu-item-colour: $netflix-white;
+$main-menu-item-active-background-colour: darken($netflix-black, 10%);
+$main-menu-item-hovered-background-colour: darken($netflix-black, 10%);
+
+
+$colour-blue-facebook: #232323;
+$link-colour: $netflix-red;
+$button-background-colour: $netflix-red;
+$button-hovered-background-colour: darken($netflix-red, 10%);
+
+$button-colour: #FFF;
+$button-hover-colour: #FFF;
+
+$background-colour: #ebebeb;
+
+
+
+$button-submit-hovered-background-colour: darken($netflix-red, 10%);
+$button-border-colour: $netflix-red;
+
+
+$trace-right-group-main-fill: $colour-blue-facebook;/*#197BB2*/
+$trace-left-group-main-fill: $colour-blue-facebook;
+$trace-left-group-baseline-fill: $background-colour;
+$trace-right-group-baseline-fill: $background-colour;
+$chart-outliers-overindexed-fill: #52cb60;
+$chart-outliers-underindexed-fill: #ff9e2b;
+
+
+
+$worksheet-list-item-hovered-background-colour: #f9f9f9 !default;
+$worksheet-list-item-active-background-colour: $background-colour;
+$worksheet-list-item-active-border-colour: $background-colour;
+
+$colour-blue-facebook: $netflix-red;
+$colour-grey-light: $netflix-grey;
+$colour-grey-lighter: lighten($netflix-grey, 10%);
+$colour-green-bright: $netflix-red;

@@ -48,7 +48,7 @@ trait DataAwareTrait
      * @return \Tornado\Organization\Brand
      *
      * @throws NotFoundHttpException When such Brand was not found.
-     * @throws AccessDeniedHttpException if Session User can not access the Brand
+     * @throws AccessDeniedHttpException if Session User cannot access the Brand
      */
     protected function getBrand($brandId)
     {
@@ -58,7 +58,7 @@ trait DataAwareTrait
         }
 
         if (!$this->authorizationManager->isGranted($brand)) {
-            throw new AccessDeniedHttpException('You can not access this Brand.');
+            throw new AccessDeniedHttpException('You cannot access this Brand.');
         }
 
         return $brand;

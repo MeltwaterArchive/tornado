@@ -22,6 +22,7 @@ abstract class Analysis
 {
     const TYPE_FREQUENCY_DISTRIBUTION = 'freqDist';
     const TYPE_TIME_SERIES = 'timeSeries';
+    const TYPE_SAMPLE = 'sample';
 
     /**
      * The Recording on which this Analysis is executed

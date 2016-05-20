@@ -3,7 +3,9 @@ parameters:
 
     routes.path:      %config_dir%
     twig.path:        %root_dir%/views
-    monolog.log_file: /var/log/tornado/%env%.log
+    twig.options:
+      strict_variables: false
+    monolog.log_file: target/%env%.log
 
     cache.service_name: cache.memcached
     cache_dir: %root_dir%/.cache
@@ -21,8 +23,8 @@ parameters:
     analyzer.templates: %root_dir%/config/analyzer/templates.json
     analyzer.templates.default: "default"
 
-    db.username: "tornado"
-    db.password: "tornado"
+    db.username: "root"
+    db.password:
     db.host: 127.0.0.1
     db.port: ~
     db.database: tornado_test
@@ -50,5 +52,6 @@ parameters:
     workbook.lock.ttl: 120 #seconds
     workbook.lock.ttl_reset: 30 #iteration
 
-    datasift.public_api_url: localhost:50987
+
+    datasift.public_api_url: 127.0.0.1:4546/
     datasift.public_api_ssl: false

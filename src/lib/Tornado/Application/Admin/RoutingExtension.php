@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * Admin Routing Extension
  *
  * LICENSE: This software is the intellectual property of MediaSift Ltd.,
- * and is covered by retained intellectual propferty rights, including
+ * and is covered by retained intellectual property rights, including
  * copyright. Distribution of this software is strictly forbidden under
  * the terms of this license.
  *
@@ -60,7 +60,7 @@ class RoutingExtension extends BaseRoutingExtension
      * @param array $parameters
      * @param boolean $relative
      *
-     * @return strung
+     * @return string
      */
     public function getOrgPath($name, $id, $organizationId = null, array $parameters = [], $relative = false)
     {

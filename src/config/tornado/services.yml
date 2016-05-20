@@ -8,9 +8,15 @@ parameters:
     kernel.name: tornado
 
 services:
-    project.workbook.locker:
-        class: Tornado\Project\Workbook\Locker
+    project.workbook.locker.cache:
+        class: Tornado\Project\Workbook\Locker\Cache
         arguments:
             - @cache
             - %workbook.lock.ttl%
             - %workbook.lock.ttl_reset%
+
+    project.workbook.locker.dummy:
+        class: Tornado\Project\Workbook\Locker\Dummy
+
+    project.workbook.locker:
+        alias: project.workbook.locker.dummy

@@ -19,6 +19,12 @@
 {% block page_content %}
     <form class="single-item" method="post" action="{{ orgPath('user.create', data.organization.id) }}">
 
+        {% if data.account_limit_reached %}
+            <div class="notification notification-warning">
+                Cannot create more users, account limit reached.
+            </div>
+        {% endif %}
+
         <label class="input-label" for="user-username">Username</label>
         {% if meta.username is defined %}
             <span class="input-error">{{ meta.username }}</span>
@@ -58,4 +64,7 @@
             </div>
         </div>
     </form>
+{% endblock %}
+{% block javascript_additional %}
+    data-main="{{ cs_build_location }}/javascript/brand"
 {% endblock %}

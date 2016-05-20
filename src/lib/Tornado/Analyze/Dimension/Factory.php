@@ -65,6 +65,31 @@ class Factory
     }
 
     /**
+     * Decorates the passed Collection with cardinality information
+     *
+     * @param \Tornado\Analyze\Dimension\Collection $collection
+     * @param \DataSift\Pylon\SubscriptionInterface $subscription
+     *
+     * @return \Tornado\Analyze\Dimension\Collection
+     */
+    public function decorateDimensionCollection(
+        Collection $collection,
+        SubscriptionInterface $subscription = null
+    ) {
+        $schema = $this->schemaProvider->getSchema($subscription);
+        foreach ($collection->getDimensions() as $dimension) {
+            $dimensionDef = $schema->findObjectByTarget($dimension->getTarget(), ['premium', 'internal']);
+            $dimension->setCardinality(
+                (isset($dimensionDef['cardinality']))
+                ? (int)$dimensionDef['cardinality']
+                : null
+            );
+        }
+
+        return $collection;
+    }
+
+    /**
      * Creates and configures the single Dimension object based on the given target
      *
      * @param array $dimension with target and optionally threshold keys

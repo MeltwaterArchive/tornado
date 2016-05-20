@@ -20,6 +20,8 @@ use Tornado\Organization\Brand;
 use Tornado\Project\Project;
 use Tornado\Project\Recording;
 
+use Tornado\Project\Project\Form\Create as CreateProjectForm;
+
 /**
  * ProjectControllerTest
  *
@@ -455,6 +457,30 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
                 ],
                 'projectValid' => false
             ],
+            'Project name already in use' => [
+                'request' => $this->getRequest(
+                    [],
+                    [],
+                    [
+                        'name' => 'testName',
+                        'recordings' => ['a', 'b']
+                    ],
+                    [
+                        'brand' => $this->getBrand(['setId' => 10])
+                    ]
+                ),
+                'expected' => [
+                    'errors' => [
+                        'name' => 'Project with name \u0022testName\u0022 ' . CreateProjectForm::CONFLICT_MESSAGE_SUFFIX
+                    ]
+                ],
+                'expectedCode' => 409,
+                'projectParams' => [
+                    'name' => 'testName',
+                    'brand_id' => 10
+                ],
+                'projectValid' => false
+            ],
             'processRecordings fails' => [
                 'request' => $this->getRequest(
                     [],
@@ -688,6 +714,28 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
                     'name' => 'bob'
                 ],
                 'projectValid' => false,
+            ],
+            'Project name already in use' => [
+                'request' => $this->getRequest(
+                    [],
+                    [],
+                    [
+                        'name' => 'bob'
+                    ],
+                    ['brand' => $this->getBrand(['setId' => 20])]
+                ),
+                10,
+                'expected' => [
+                    'errors' => [
+                        'name' => 'Project with name \u0022bob\u0022 ' . CreateProjectForm::CONFLICT_MESSAGE_SUFFIX
+                    ]
+                ],
+                'expectedCode' => 409,
+                'project' => $this->getProject(['setBrandId' => 20, 'setName' => 'dave']),
+                'projectParams' => [
+                    'name' => 'bob'
+                ],
+                'projectValid' => false
             ],
         ];
     }

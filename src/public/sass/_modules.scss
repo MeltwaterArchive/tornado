@@ -1,0 +1,34 @@
+/**
+ * Modules imports
+ *
+ * Module styles (individual page (and their components) styles)
+ */
+@import "modules/login";
+@import "modules/error-page";
+@import "modules/notifications";
+@import "modules/settings/settings";
+@import "modules/brand-management";
+@import "modules/brand-management/list-actions"; // Used by both Projects and Recordings
+@import "modules/brand-management/list-items"; // Used by both Projects and Recordings
+@import "modules/brand-management/single-item"; // Record + Project item styles (create & edit pages)
+@import "modules/brand-management/single-item/recording";
+@import "modules/brand-management/brands";
+@import "modules/brand-management/confirm-delete";
+@import "modules/worksheet";
+@import "modules/worksheet/pages"; // `No Workbook` and `No worksheet` pages (currently)
+@import "modules/worksheet/create_old";
+@import "modules/worksheet/create";
+@import "modules/worksheet/list";
+@import "modules/workbooks/sidebar";
+@import "modules/workbooks/create";
+
+// Shifting positions on the next 2 to
+// prioritize rules coming from the sidebar
+@import "modules/dimensions/sidebar";
+@import "modules/dimensions";
+@import "modules/filters/sidebar";
+@import "modules/filters/timespan";
+@import "modules/timespan/sidebar";
+@import "modules/comparison/sidebar";
+
+@import "modules/admin";

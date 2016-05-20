@@ -6,6 +6,8 @@ use \Mockery;
 
 use Tornado\Security\Http\AuthenticationFirewall;
 use \Symfony\Component\HttpFoundation\ParameterBag;
+use \DataSift\Http\Request;
+use Tornado\Organization\User;
 
 /**
  * AuthenticationFirewallTest
@@ -25,161 +27,125 @@ use \Symfony\Component\HttpFoundation\ParameterBag;
  */
 class AuthenticationFirewallTest extends \PHPUnit_Framework_TestCase
 {
+
     /**
-     * @covers ::__construct
-     * @covers ::isGranted
+     * DataProvider for testIsGranted
+     *
+     * @return array
      */
-    public function testSessionRemovedIfSessionExistsAndRequestedUriIsLogin()
+    public function isGrantedProvider()
     {
-        $user = Mockery::mock('\Tornado\Organization\User');
-        $request = Mockery::mock('\DataSift\Http\Request', [
-            'getPathInfo' => '/login',
-            'getMethod' => 'GET'
-        ]);
-        $request->attributes = new ParameterBag();
-
-        $session = Mockery::mock('\Symfony\Component\HttpFoundation\Session\SessionInterface', [
-            'get' => $user
-        ]);
-        $urlGenerator = Mockery::mock('\Symfony\Component\Routing\Generator\UrlGenerator');
-        $urlGenerator->shouldReceive('generate')
-            ->withArgs(['login'])
-            ->times(1)
-            ->andReturn('/login')
-            ->getMock();
-        $session->shouldReceive('remove')
-            ->withArgs(['user'])
-            ->times(1);
-
-        $firewall = new AuthenticationFirewall($request, $session, $urlGenerator);
-        $firewallResponse = $firewall->isGranted();
-
-        $this->assertNotInstanceOf('\Symfony\Component\HttpFoundation\RedirectResponse', $firewallResponse);
-        $this->assertNull($firewallResponse);
+        return [
+            'Do Nothing If Session Does Not Exist And Requested Uri Is Login' => [
+                'user' => null,
+                'method' => 'GET',
+                'url' => '/login',
+                'queryString' => '',
+                'access' => AuthenticationFirewall::AUTHENTICATION_OFF,
+                'expectedRedirect' => '',
+                'expectedSessionClear' => true
+            ],
+            'Session Removed If Session Exists And Requested Uri Is Login' => [
+                'user' => new User(),
+                'method' => 'GET',
+                'url' => '/login',
+                'queryString' => '',
+                'access' => AuthenticationFirewall::AUTHENTICATION_OFF,
+                'expectedRedirect' => '',
+                'expectedSessionClear' => true
+            ],
+            'Do Nothing If Session Exists And Requested Uri Is Not Login' => [
+                'user' => new User(),
+                'method' => 'GET',
+                'url' => '/',
+                'queryString' => '',
+                'access' => AuthenticationFirewall::AUTHENTICATION_ON,
+            ],
+            'Redirect To Login If Session Does Not Exist' => [
+                'user' => null,
+                'method' => 'GET',
+                'url' => '/',
+                'queryString' => '',
+                'access' => AuthenticationFirewall::AUTHENTICATION_ON,
+                'expectedRedirect' => '/login?redirect=' . urlencode('/')
+            ],
+            'Redirect To Login Unless Session User Is Tornado User' => [
+                'user' => new \stdClass(),
+                'method' => 'GET',
+                'url' => '/',
+                'queryString' => '',
+                'access' => AuthenticationFirewall::AUTHENTICATION_ON,
+                'expectedRedirect' => '/login?redirect=' . urlencode('/')
+            ],
+        ];
     }
 
     /**
+     * @dataProvider isGrantedProvider
+     *
      * @covers ::__construct
      * @covers ::isGranted
+     *
+     * @param mixed $user
+     * @param string $method
+     * @param string $url
+     * @param string $queryString
+     * @param string $access
+     * @param string $expectedRedirect
+     * @param boolean $expectedSessionClear
+     * @param string $loginUrl
      */
-    public function testDoNothingIfSessionExistsAndRequestedUriIsNotLogin()
-    {
-        $user = Mockery::mock('\Tornado\Organization\User');
+    public function testIsGranted(
+        $user,
+        $method,
+        $url,
+        $queryString,
+        $access,
+        $expectedRedirect = '',
+        $expectedSessionClear = false,
+        $loginUrl = '/login'
+    ) {
         $request = Mockery::mock('\DataSift\Http\Request', [
-            'getPathInfo' => '/',
-            'getMethod' => 'GET'
+            'getPathInfo' => $url,
+            'getMethod' => $method,
+            'getQueryString' => $queryString
         ]);
-        $request->attributes = new ParameterBag();
 
-        $session = Mockery::mock('\Symfony\Component\HttpFoundation\Session\SessionInterface', [
-            'get' => $user
-        ]);
+        $data = [];
+        if ($access) {
+            $data[AuthenticationFirewall::AUTHENTICATION_ATTR] = $access;
+        }
+        $request->attributes = new ParameterBag($data);
+
+        $session = Mockery::mock('\Symfony\Component\HttpFoundation\Session\SessionInterface');
+        $session->shouldReceive('get')
+            ->with('user')
+            ->andReturn($user);
+
         $urlGenerator = Mockery::mock('\Symfony\Component\Routing\Generator\UrlGenerator');
         $urlGenerator->shouldReceive('generate')
-            ->withArgs(['login'])
-            ->times(1)
-            ->andReturn('/login')
-            ->getMock();
+            ->with('login')
+            ->andReturn($loginUrl);
+
+        if ($expectedSessionClear) {
+            $session->shouldReceive('remove')
+                ->once()
+                ->with('user');
+        } else {
+            $session->shouldReceive('remove')
+                ->never();
+        }
 
         $firewall = new AuthenticationFirewall($request, $session, $urlGenerator);
         $firewallResponse = $firewall->isGranted();
 
-        $this->assertNotInstanceOf('\Symfony\Component\HttpFoundation\RedirectResponse', $firewallResponse);
-        $this->assertNull($firewallResponse);
-    }
-
-    /**
-     * @covers ::__construct
-     * @covers ::isGranted
-     */
-    public function testRedirectToLoginIfSessionDoesNotExists()
-    {
-        $request = Mockery::mock('\DataSift\Http\Request', [
-            'getPathInfo' => '/',
-            'getMethod' => 'GET'
-        ]);
-        $request->attributes = new ParameterBag();
-
-        $session = Mockery::mock('\Symfony\Component\HttpFoundation\Session\SessionInterface', [
-            'get' => null
-        ]);
-        $urlGenerator = Mockery::mock('\Symfony\Component\Routing\Generator\UrlGenerator');
-        $urlGenerator->shouldReceive('generate')
-            ->withArgs(['login'])
-            ->times(1)
-            ->andReturn('/login')
-            ->getMock();
-
-        $firewall = new AuthenticationFirewall($request, $session, $urlGenerator);
-        $firewallResponse = $firewall->isGranted();
-
-        $this->assertInstanceOf('\Symfony\Component\HttpFoundation\RedirectResponse', $firewallResponse);
-        $this->assertEquals('/login', $firewallResponse->getTargetUrl());
-        $this->assertEquals(302, $firewallResponse->getStatusCode());
-    }
-
-    /**
-     * @covers ::__construct
-     * @covers ::isGranted
-     */
-    public function testRedirectToLoginUnlessSessionUserIsTornadoUser()
-    {
-        $request = Mockery::mock('\DataSift\Http\Request', [
-            'getPathInfo' => '/'
-        ]);
-        $request->attributes = new ParameterBag();
-
-        $session = Mockery::mock('\Symfony\Component\HttpFoundation\Session\SessionInterface', [
-            'get' => new \StdClass()
-        ]);
-        $urlGenerator = Mockery::mock('\Symfony\Component\Routing\Generator\UrlGenerator');
-        $urlGenerator->shouldReceive('generate')
-            ->withArgs(['login'])
-            ->times(1)
-            ->andReturn('/login')
-            ->getMock();
-
-        $firewall = new AuthenticationFirewall($request, $session, $urlGenerator);
-        $firewallResponse = $firewall->isGranted();
-
-        $this->assertInstanceOf('\Symfony\Component\HttpFoundation\RedirectResponse', $firewallResponse);
-        $this->assertEquals('/login', $firewallResponse->getTargetUrl());
-        $this->assertEquals(302, $firewallResponse->getStatusCode());
-    }
-
-    /**
-     * @covers ::__construct
-     * @covers ::isGranted
-     */
-    public function testDoNothingIfSessionDoesNotExistsAndRequestedUriIsLogin()
-    {
-        $request = Mockery::mock('\DataSift\Http\Request', [
-            'getPathInfo' => '/login',
-            'getMethod' => 'GET'
-        ]);
-        $request->attributes = new ParameterBag(
-            [AuthenticationFirewall::AUTHENTICATION_ATTR => AuthenticationFirewall::AUTHENTICATION_OFF]
-        );
-
-        $session = Mockery::mock('\Symfony\Component\HttpFoundation\Session\SessionInterface', [
-            'get' => null
-        ]);
-        $urlGenerator = Mockery::mock('\Symfony\Component\Routing\Generator\UrlGenerator');
-        $urlGenerator->shouldReceive('generate')
-            ->withArgs(['login'])
-            ->times(1)
-            ->andReturn('/login')
-            ->getMock();
-
-        $session->shouldReceive('remove')
-            ->withArgs(['user'])
-            ->times(1);
-
-        $firewall = new AuthenticationFirewall($request, $session, $urlGenerator);
-        $firewallResponse = $firewall->isGranted();
-
-        $this->assertNotInstanceOf('\Symfony\Component\HttpFoundation\RedirectResponse', $firewallResponse);
-        $this->assertNull($firewallResponse);
+        if ($expectedRedirect) {
+            $this->assertInstanceOf('\Symfony\Component\HttpFoundation\RedirectResponse', $firewallResponse);
+            $this->assertEquals($expectedRedirect, $firewallResponse->getTargetUrl());
+            $this->assertEquals(302, $firewallResponse->getStatusCode());
+        } else {
+            $this->assertNull($firewallResponse);
+        }
     }
 
     /**

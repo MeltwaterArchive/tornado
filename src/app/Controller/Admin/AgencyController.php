@@ -2,8 +2,8 @@
 
 namespace Controller\Admin;
 
+use DataSift\Api\UserProvider;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -14,6 +14,7 @@ use DataSift\Http\Request;
 use Tornado\Controller\Result;
 use Tornado\DataMapper\DataMapperInterface;
 use Tornado\DataMapper\Paginator;
+use Tornado\Organization\Agency;
 use Tornado\Organization\Organization;
 use Tornado\Organization\Organization\DataMapper as OrganizationDataMapper;
 
@@ -23,6 +24,8 @@ use Tornado\Organization\Agency\Form\Create as CreateForm;
 use Tornado\Organization\Agency\Form\Update as UpdateForm;
 
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
+use Tornado\Application\Flash\Message as Flash;
 
 /**
  * AgencyController
@@ -73,10 +76,19 @@ class AgencyController
     protected $updateForm;
 
     /**
+     * @var \DataSift\Api\UserProvider
+     */
+    protected $userProvider;
+
+    /**
      * @param \Tornado\Organization\Organization\DataMapper $organizationRepo
-     * @param \Tornado\Organization\Agency\DataMapper $userRepo
+     * @param \Tornado\Organization\Agency\DataMapper $agencyRepo
+     * @param \Tornado\Organization\Brand\DataMapper $brandRepo
      * @param \Symfony\Component\Routing\Generator\UrlGenerator $urlGenerator
      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
+     * @param \Tornado\Organization\Agency\Form\Create $createForm
+     * @param \Tornado\Organization\Agency\Form\Update $updateForm
+     * @param \DataSift\Api\UserProvider as $userProvider
      */
     public function __construct(
         OrganizationDataMapper $organizationRepo,
@@ -85,7 +97,8 @@ class AgencyController
         UrlGenerator $urlGenerator,
         SessionInterface $session,
         CreateForm $createForm,
-        UpdateForm $updateForm
+        UpdateForm $updateForm,
+        UserProvider $userProvider
     ) {
         $this->organizationRepo = $organizationRepo;
         $this->agencyRepo = $agencyRepo;
@@ -94,6 +107,7 @@ class AgencyController
         $this->session = $session;
         $this->createForm = $createForm;
         $this->updateForm = $updateForm;
+        $this->userProvider = $userProvider;
     }
 
     /**
@@ -132,11 +146,13 @@ class AgencyController
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Tornado\Controller\Result
      *
-     * @throws AccessDeniedHttpException if Session User can not access the Brand.
+     * @throws AccessDeniedHttpException if Session User cannot access the Brand.
      */
     public function create(Request $request, $id)
     {
         $organization = $this->getOrganization($id);
+
+        $meta = ['tabs' => $this->getTabs($id, 'agencies')];
 
         if ($request->getMethod() == Request::METHOD_POST) {
             $postParams = $request->getPostParams();
@@ -145,11 +161,20 @@ class AgencyController
 
             if ($this->createForm->isValid()) {
                 $agency = $this->createForm->getData();
-                $this->agencyRepo->create($agency);
-                $this->flashSuccess('Agency created successfully');
-                return new RedirectResponse(
-                    $this->getUrl('agencies', $id)
-                );
+                try {
+                    $this->userProvider->setUsername($agency->getDatasiftUsername());
+                    $this->userProvider->setApiKey($agency->getDatasiftApiKey());
+                    $this->userProvider->validateCredentials();
+                    $this->agencyRepo->create($agency);
+                    $this->flashSuccess('Agency created successfully');
+                    return new RedirectResponse($this->getUrl('agency.edit', $agency->getId(), $organization->getId()));
+                } catch (\DataSift_Exception_AccessDenied $e) {
+                    $this->setRequestFlash('Invalid DataSift API credentials', Flash::LEVEL_ERROR, $meta);
+                } catch (\DataSift_Exception_APIError $e) {
+                    $this->setRequestFlash($e->getMessage(), Flash::LEVEL_ERROR, $meta);
+                } catch (\Exception $e) {
+                    $this->setRequestFlash('There were errors saving the Agency', Flash::LEVEL_ERROR, $meta);
+                }
             }
         }
 
@@ -159,7 +184,7 @@ class AgencyController
                 'organization' => $organization
             ],
             array_merge(
-                ['tabs' => $this->getTabs($id, 'agencies')],
+                $meta,
                 $this->createForm->getErrors('There were errors saving the Agency')
             )
         );
@@ -206,7 +231,6 @@ class AgencyController
      * The single-organization path for batch modification
      *
      * @param \DataSift\Http\Request $request
-     * @param integer $id
      *
      * @return mixed
      */
@@ -218,7 +242,9 @@ class AgencyController
     /**
      * Edits an Agency
      *
-     * @param int $id
+     * @param \DataSift\Http\Request $request
+     * @param int $organizationId The organization id
+     * @param int $id The agency id
      *
      * @return \Tornado\Controller\Result
      * @throws NotFoundHttpException
@@ -229,6 +255,7 @@ class AgencyController
         $organization = $this->getOrganization($organizationId);
 
         $agency = $this->agencyRepo->findOne(['id' => $id, 'organization_id' => $organizationId]);
+        $meta = ['tabs' => $this->getTabs($organizationId, 'agencies')];
 
         if ($request->getMethod() == Request::METHOD_POST) {
             $postParams = $request->getPostParams();
@@ -238,11 +265,20 @@ class AgencyController
             $agency = $this->updateForm->getData();
 
             if ($this->updateForm->isValid()) {
-                $this->agencyRepo->update($agency);
-                $this->flashSuccess('Agency saved successfully');
-                return new RedirectResponse(
-                    $this->getUrl('agency.edit', $id, $organizationId)
-                );
+                try {
+                    $this->userProvider->setUsername($agency->getDatasiftUsername());
+                    $this->userProvider->setApiKey($agency->getDatasiftApiKey());
+                    $this->userProvider->validateCredentials();
+                    $this->agencyRepo->update($agency);
+                    $this->flashSuccess('Agency saved successfully');
+                    return new RedirectResponse($this->getUrl('agency.edit', $id, $organizationId));
+                } catch (\DataSift_Exception_AccessDenied $e) {
+                    $this->setRequestFlash('Invalid DataSift API credentials', Flash::LEVEL_ERROR, $meta);
+                } catch (\DataSift_Exception_APIError $e) {
+                    $this->setRequestFlash($e->getMessage(), Flash::LEVEL_ERROR, $meta);
+                } catch (\Exception $e) {
+                    $this->setRequestFlash('There were errors saving the Agency', Flash::LEVEL_ERROR, $meta);
+                }
             }
         }
 
@@ -255,7 +291,7 @@ class AgencyController
                 'brandCount' => $brandCount
             ],
             array_merge(
-                ['tabs' => $this->getTabs($organizationId, 'agencies')],
+                $meta,
                 $this->updateForm->getErrors('There were errors saving the Agency')
             )
         );

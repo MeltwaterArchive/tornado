@@ -10,6 +10,8 @@ use Tornado\Project\Workbook;
 use Test\DataSift\ApplicationBuilder;
 use Test\DataSift\ReflectionAccess;
 
+use Symfony\Component\Validator\ValidatorBuilder;
+
 /**
  * CreateTest
  *
@@ -52,8 +54,8 @@ class CreateTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->buildApplication();
-        $this->validator = $this->container->get('validator');
+        $validatorBuilder = new ValidatorBuilder();
+        $this->validator = $validatorBuilder->getValidator();
     }
 
     /**
@@ -63,10 +65,10 @@ class CreateTest extends \PHPUnit_Framework_TestCase
     public function testGetFields()
     {
         $mocks = $this->getMocks();
-        $form = new Create($this->validator, $mocks['workbookRepo']);
+        $form = new Create($this->validator, $mocks['workbookRepo'], $mocks['templatedAnalyzer']);
 
         $this->assertEquals(
-            ['project_id', 'name', 'recording_id'],
+            ['project_id', 'name', 'recording_id', 'template'],
             $form->getFields()
         );
     }
@@ -91,7 +93,7 @@ class CreateTest extends \PHPUnit_Framework_TestCase
             ->with(['project_id' => $mocks['projectId'], 'name' => $mocks['name']])
             ->andReturnNull();
 
-        $form = new Create($this->validator, $mocks['workbookRepo']);
+        $form = new Create($this->validator, $mocks['workbookRepo'], $mocks['templatedAnalyzer']);
 
         $this->assertEquals(false, $form->isSubmitted());
         $this->assertEquals(false, $form->isValid());
@@ -135,7 +137,7 @@ class CreateTest extends \PHPUnit_Framework_TestCase
         $mocks['workbookRepo']->shouldReceive('findOne')
             ->never();
 
-        $form = new Create($this->validator, $mocks['workbookRepo']);
+        $form = new Create($this->validator, $mocks['workbookRepo'], $mocks['templatedAnalyzer']);
 
         $this->assertEquals(false, $form->isSubmitted());
         $this->assertEquals(false, $form->isValid());
@@ -179,13 +181,13 @@ class CreateTest extends \PHPUnit_Framework_TestCase
     public function testReturnsErrorsUnlessValidDataGiven()
     {
         $mocks = $this->getMocks();
-        $inputData = ['project_id' => 'string', 'name' => 123, 'recording_id' => 'string'];
+        $inputData = ['project_id' => 'string', 'name' => 123, 'recording_id' => 'string', 'template' => ''];
         $mocks['workbookRepo']->shouldReceive('findOne')
             ->once()
             ->with(['project_id' => 'string', 'name' => 123])
             ->andReturnNull();
 
-        $form = new Create($this->validator, $mocks['workbookRepo']);
+        $form = new Create($this->validator, $mocks['workbookRepo'], $mocks['templatedAnalyzer']);
 
         $this->assertEquals(false, $form->isSubmitted());
         $this->assertEquals(false, $form->isValid());
@@ -233,7 +235,7 @@ class CreateTest extends \PHPUnit_Framework_TestCase
             ->with(['project_id' => $mocks['projectId'], 'name' => $mocks['name']])
             ->andReturn($mocks['workbook']);
 
-        $form = new Create($this->validator, $mocks['workbookRepo']);
+        $form = new Create($this->validator, $mocks['workbookRepo'], $mocks['templatedAnalyzer']);
 
         $this->assertEquals(false, $form->isSubmitted());
         $this->assertEquals(false, $form->isValid());
@@ -271,10 +273,23 @@ class CreateTest extends \PHPUnit_Framework_TestCase
         $name = 'test';
         $recordingId = 33;
         $workbook = new Workbook();
+        $template = 'test1';
+
+        $templates = [
+            'test1' => ['title' => 'Test 1'],
+            'test2' => ['title' => 'Test 2'],
+        ];
+
+        $templatedAnalyzer = Mockery::mock('\Tornado\Analyze\TemplatedAnalyzer');
+
+        $templatedAnalyzer->shouldReceive('getTemplates')
+            ->andReturn($templates);
+
         $inputData = [
             'project_id' => $projectId,
             'name' => $name,
-            'recording_id' => $recordingId
+            'recording_id' => $recordingId,
+            'template' => $template
         ];
         $workbookRepo = Mockery::mock('Tornado\Project\Workbook\DataMapper');
 
@@ -284,7 +299,10 @@ class CreateTest extends \PHPUnit_Framework_TestCase
             'inputData' => $inputData,
             'name' => $name,
             'projectId' => $projectId,
-            'recordingId' => $recordingId
+            'recordingId' => $recordingId,
+            'template' => $template,
+            'templates' => $templates,
+            'templatedAnalyzer' => $templatedAnalyzer
         ];
     }
 }

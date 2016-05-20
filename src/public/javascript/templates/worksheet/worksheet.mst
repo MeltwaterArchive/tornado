@@ -1,0 +1,79 @@
+<div class="worksheet__actions-groups">
+
+    <div class="worksheet__actions-group worksheet__actions-group--hints">
+        {{#if filters }}
+            <button type="button"
+                    class="worksheet__hint-button"
+                    data-worksheet-hint-toggle="filters">
+                Filtered by ...
+            </button>
+        {{/if}}
+        {{#if comparison }}
+            <button type="button"
+                    class="worksheet__hint-button"
+                    data-worksheet-hint-toggle="comparison">
+                Compared to
+            </button>
+        {{/if}}
+    </div>
+
+    <div class="worksheet__actions-group worksheet__actions-group--pagination">
+        {{#unless sample}}
+            <div class="pagination">
+                    <span data-paging-action="previous"
+                          class="pagination-direction pagination-direction--previous"></span>
+                    <span class="pagination-current">
+                        <span data-paging-state="current">1</span>/<span data-paging-state="total">1</span>
+                    </span>
+                <span data-paging-action="next" class="pagination-direction pagination-direction--next"></span>
+            </div>
+        {{/unless}}
+    </div>
+
+    <div class="worksheet__actions-group">
+
+        {{#unless sample}}
+            <ul class="worksheet__actions">
+                <li class="worksheet__action">
+                    <a data-loader="[data-tornado-view='page-content']:Refreshing" data-worksheet-refresh
+                       data-tooltip="Refresh this worksheet"
+                       class="worksheet__action__button worksheet__action__button--refresh" href="#"></a>
+                </li>
+                <li class="worksheet__action">
+                    <a data-change-display-mode
+                       class="worksheet__action__button worksheet__action__button--active single"
+                       href="#"></a>
+                </li>
+            </ul>
+            <select name="measures" id="worksheet-measures" class="worksheet-measuresw">
+                <option value="unique_authors"
+                        data-data='{"description":"The total number of authors removing duplicates"}'>
+                    Unique Authors
+                </option>
+                <option value="interactions"
+                        data-data='{"description":"Total number of interactions irrespective of whether they are from the same author"}'>
+                    Total Interactions
+                </option>
+            </select>
+        {{/unless}}
+        {{#if sample}}
+            <div class="worksheet__actions-group worksheet__action-show-more-posts">
+                <button type="button"
+                        class="worksheet__hint-button fetch-more-posts__action">
+                    Show more Posts
+                </button>
+            </div>
+        {{/if }}
+    </div>
+
+</div>
+
+<div class="worksheet__hints-wrapper">
+    {{#if filters }}
+        <div data-worksheet-hint="filters" class="worksheet__hint">{{ filters }}</div>
+    {{/if }}
+    {{#if comparison }}
+        <div data-worksheet-hint="comparison"
+             class="worksheet__hint{{#if filters }} worksheet__hint--has-filters{{/if }}">{{ comparison }}</div>
+    {{/if}}
+</div>

@@ -422,6 +422,94 @@ class IdentityControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * DataProvider for testTokenList
+     *
+     * @return array
+     */
+    public function tokenListProvider()
+    {
+        return [
+            'Happy path' => [
+                'request' => $this->getApiRequest([], []),
+                'id' => 'abc123',
+                'expectedPage' => 1,
+                'expectedPerPage' => 25
+            ],
+            'Paginated' => [
+                'request' => $this->getApiRequest(
+                    [],
+                    [
+                        'page' => 10,
+                        'per_page' => 20
+                    ]
+                ),
+                'id' => 'abc123',
+                'expectedPage' => 10,
+                'expectedPerPage' => 20
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider tokenListProvider
+     *
+     * @covers \Controller\PylonApi\IdentityController::tokenList
+     *
+     * @param \DataSift\Http\Request $request
+     * @param string $id
+     * @param integer $expectedPage
+     * @param integer $expectedPerPage
+     */
+    public function testTokenList(Request $request, $id, $expectedPage, $expectedPerPage)
+    {
+        $response = new JsonResponse();
+        $mocks = $this->getMocks();
+        $mocks['identityTokenApi']->expects($this->once())
+            ->method('getAll')
+            ->with($id, $expectedPage, $expectedPerPage)
+            ->will($this->returnValue($response));
+        $controller = $this->getController($mocks);
+
+        $this->assertEquals($response, $controller->tokenList($request, $id));
+    }
+
+    /**
+     * DataProvider for testTokenService
+     *
+     * @return array;
+     */
+    public function tokenServiceProvider()
+    {
+        return [
+            'Happy path' => [
+                'id' => 'abc123',
+                'service' => 'facebook'
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider tokenServiceProvider
+     *
+     * @covers \Controller\PylonApi\IdentityController::tokenService
+     *
+     * @param string $id
+     * @param string $service
+     */
+    public function testTokenService($id, $service)
+    {
+        $response = new JsonResponse();
+        $mocks = $this->getMocks();
+        $mocks['identityTokenApi']->expects($this->once())
+            ->method('get')
+            ->with($id, $service)
+            ->will($this->returnValue($response));
+        $controller = $this->getController($mocks);
+
+        $this->assertEquals($response, $controller->tokenService($this->getApiRequest([]), $id, $service));
+    }
+
+    /**
      * DataProvider for testLimitList
      *
      * @return array

@@ -113,6 +113,38 @@ class TemplatedAnalyzerTest extends \PHPUnit_Framework_TestCase
                         ]
                     ]
                 ]
+            ],
+            'filter specified' => [
+                'template' => [
+                    'title' => 'Everything',
+                    'analyses' => [
+                        [
+                            'title' => 'Basic Demographics',
+                            'type' => 'tornado',
+                            'dimensions' => [
+                                ['target' => 'fb.author.gender'],
+                                ['target' => 'fb.author.age']
+                            ],
+                            'start' => '1 week ago',
+                            'end' => '1 day ago',
+                            'filters' => [
+                                'csdl' => 'interaction.content exists'
+                            ]
+                        ],
+                        [
+                            'title' => 'Countries',
+                            'type' => 'histogram',
+                            'dimensions' => [
+                                ['target' => 'fb.author.country']
+                            ]
+                        ],
+                        [
+                            'title' => 'Time Series',
+                            'type' => 'timeseries',
+                            'start' => '2 weeks ago'
+                        ]
+                    ]
+                ]
             ]
         ];
     }
@@ -162,8 +194,11 @@ class TemplatedAnalyzerTest extends \PHPUnit_Framework_TestCase
                         'span' => isset($analysisTemplate['span']) ? $analysisTemplate['span'] : 1,
                         'interval' => isset($analysisTemplate['interval'])
                             ? $analysisTemplate['interval']
-                            : Analyzer::INTERVAL_DAY
-                    ]
+                            : Analyzer::INTERVAL_DAY,
+                    ],
+                    (isset($analysisTemplate['filters'], $analysisTemplate['filters']['csdl']))
+                    ? $analysisTemplate['filters']['csdl']
+                    : null
                 )
                 ->andReturn($analysis);
         }

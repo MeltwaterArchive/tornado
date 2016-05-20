@@ -13,6 +13,8 @@ use Tornado\Project\Worksheet\DataMapper as WorksheetRepository;
 use Tornado\Project\Worksheet;
 use Tornado\Project\Workbook;
 
+use Tornado\Project\Worksheet\FilterCsdlGenerator;
+
 /**
  * Worksheets generator.
  *
@@ -75,6 +77,13 @@ class Generator
     protected $chartFactory;
 
     /**
+     * The CSDL Generator
+     *
+     * @var Tornado\Project\Worksheet\FilterCsdlGenerator
+     */
+    protected $csdlGenerator;
+
+    /**
      * Constructor.
      *
      * @param WorksheetRepository $worksheetRepository Worksheet repository.
@@ -83,6 +92,7 @@ class Generator
      * @param AnalyzeForm         $analyzeForm         Analyze form.
      * @param DataSetGenerator    $datasetGenerator    Dataset generator.
      * @param ChartFactory        $chartFactory        Chart factory.
+     * @param FilterCsdlGenerator $csdlGenerator       CSDL Generator
      */
     public function __construct(
         WorksheetRepository $worksheetRepository,
@@ -131,7 +141,8 @@ class Generator
                 'span' => $analysisTemplate['span'],
                 'interval' => $analysisTemplate['interval'],
                 'start' => $analysisTemplate['start'],
-                'end' => $analysisTemplate['end']
+                'end' => $analysisTemplate['end'],
+                'filters' => $analysisTemplate['filters']
             ];
 
             $worksheet = $this->createWorksheet($worksheetData, $recording);
@@ -186,7 +197,7 @@ class Generator
                 unset($data[$field]);
             }
         }
-        
+
         $this->analyzeForm->submit(
             array_merge(['worksheet_id' => 0], $data),
             new Worksheet(),

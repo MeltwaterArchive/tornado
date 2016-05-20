@@ -1,0 +1,23 @@
+/**
+ * Zipline ~ Skin Colours
+ */
+
+/** base/_colour overrides */
+$colour-blue-facebook: #0093b7;
+$colour-green-bright: #83c07d;
+
+/** base/_button overrides */
+$button-hovered-background-colour: #0083A2;
+$button-submit-hovered-background-colour: #77AF72;
+
+/** common/_main-menu overrides */
+$main-menu-background-colour: $colour-blue-facebook;
+$main-menu-item-colour: transparent;
+$main-menu-item-hovered-background-colour: #287494;
+$main-menu-item-active-colour: transparent;
+$main-menu-item-active-background-colour: #215b73;
+$main-menu-item-icon-fill: #fff;
+
+/** common/_chart overrides */
+$trace-left-group-main-fill: #0093b7;
+$trace-right-group-main-fill: #215b73;

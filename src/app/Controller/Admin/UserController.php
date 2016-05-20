@@ -43,7 +43,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  * @license     http://mediasift.com/licenses/internal MediaSift Internal License
  * @link        https://github.com/datasift/tornado
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects,PHPMD.ExcessiveClassComplexity,PHPMD.ExcessiveParameterList)
  */
 class UserController
 {
@@ -87,6 +87,13 @@ class UserController
     protected $brandRepo;
 
     /**
+     * The session handler
+     *
+     * @var \SessionHandlerInterface
+     */
+    protected $sessionHandler;
+
+    /**
      *
      *
      * @param \Tornado\Organization\Organization\DataMapper $organizationRepo
@@ -98,6 +105,7 @@ class UserController
      * @param \Tornado\Organization\Role\DataMapper $roleRepo
      * @param \Tornado\Organization\Agency\DataMapper $agencyRepo
      * @param \Tornado\Organization\Brand\DataMapper $brandRepo
+     * @param \SessionHandlerInterface $sessionHandler
      */
     public function __construct(
         OrganizationDataMapper $organizationRepo,
@@ -108,7 +116,8 @@ class UserController
         UpdateForm $updateForm,
         RoleDataMapper $roleRepo,
         AgencyDataMapper $agencyRepo,
-        BrandDataMapper $brandRepo
+        BrandDataMapper $brandRepo,
+        \SessionHandlerInterface $sessionHandler
     ) {
         $this->organizationRepo = $organizationRepo;
         $this->userRepo = $userRepo;
@@ -119,6 +128,7 @@ class UserController
         $this->roleRepo = $roleRepo;
         $this->agencyRepo = $agencyRepo;
         $this->brandRepo = $brandRepo;
+        $this->sessionHandler = $sessionHandler;
     }
 
     /**
@@ -130,7 +140,11 @@ class UserController
      */
     public function index(Request $request, $id)
     {
+        /** @var Organization $organization */
         $organization = $this->getOrganization($id);
+        $usersCount = $this->userRepo->count(['organization_id' => $id]);
+        $hasReachedAccLimit = $organization->hasReachedAccountLimit($usersCount);
+
         $paginator = new Paginator(
             $this->userRepo,
             $request->get('page', 1),
@@ -142,7 +156,8 @@ class UserController
 
         return new Result([
             'organization' => $organization,
-            'users' => $paginator->getCurrentItems()
+            'users' => $paginator->getCurrentItems(),
+            'account_limit_reached' => $hasReachedAccLimit
         ], [
             'pagination' => $paginator,
             'count' => $paginator->getCurrentItemsCount(),
@@ -157,13 +172,16 @@ class UserController
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Tornado\Controller\Result
      *
-     * @throws AccessDeniedHttpException if Session User can not access the Brand.
+     * @throws AccessDeniedHttpException if Session User cannot access the Brand.
      */
     public function create(Request $request, $id)
     {
+        /** @var Organization $organization */
         $organization = $this->getOrganization($id);
+        $usersCount = $this->userRepo->count(['organization_id' => $id]);
+        $hasReachedAccLimit = $organization->hasReachedAccountLimit($usersCount);
 
-        if ($request->getMethod() == Request::METHOD_POST) {
+        if ($request->getMethod() == Request::METHOD_POST && !$hasReachedAccLimit) {
             $postParams = $request->getPostParams();
             $postParams['organizationId'] = $organization->getId();
             $this->createForm->submit($postParams, null, $this->getCurrentUser()->isSuperAdmin());
@@ -182,7 +200,8 @@ class UserController
         return new Result(
             [
                 'user' => $this->createForm->getNormalizedData(),
-                'organization' => $organization
+                'organization' => $organization,
+                'account_limit_reached' => $hasReachedAccLimit
             ],
             array_merge(
                 ['tabs' => $this->getTabs($id, 'users')],
@@ -258,7 +277,6 @@ class UserController
      * The single-organization path for batch modification
      *
      * @param \DataSift\Http\Request $request
-     * @param integer $id
      *
      * @return mixed
      */
@@ -297,6 +315,14 @@ class UserController
             if ($this->updateForm->isValid()) {
                 $this->userRepo->update($user);
                 $this->processUserRoles($user, $postParams['permissions']);
+
+                if ($user->isDisabled()) {
+                    /**
+                     * Fetch the session id of the user from session storage and then destroy it
+                     */
+                    $this->sessionHandler->destroy($this->sessionHandler->read("session-{$user->getId()}"));
+                }
+
                 $this->flashSuccess('User saved successfully');
                 return new RedirectResponse(
                     $this->getUrl('user.edit', $id, $organizationId)
@@ -446,14 +472,18 @@ class UserController
             $request->get('perPage', 20),
             $request->get('order', DataMapperInterface::ORDER_ASCENDING)
         );
-        $paginator->paginate(['agency_id' => array_keys($userAgencies)]);
+
+        $keys = array_keys($userAgencies);
+        if (count($keys)) {
+            $paginator->paginate(['agency_id' => $keys]);
+        }
 
         return new Result(
             [
                 'organization' => $organization,
                 'user' => $user,
                 'user_agencies' => $userAgencies,
-                'user_brands' => $userBrands,
+                'user_brands' => $userBrands
             ],
             [
                 'tabs' => $this->getTabs($organizationId, 'users'),

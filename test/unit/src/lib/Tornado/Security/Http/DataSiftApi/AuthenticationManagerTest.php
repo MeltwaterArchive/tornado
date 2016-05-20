@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 
 use DataSift\Http\Request;
 
+use Tornado\Organization\Organization;
 use Tornado\Organization\Agency;
 use Tornado\Organization\Brand;
 use Tornado\Security\Http\DataSiftApi\AuthenticationManager;
@@ -123,14 +124,36 @@ class AuthenticationManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * DataProvider for testAuthByBrand
+     *
+     * @return array
+     */
+    public function authByBrandProvider()
+    {
+        return [
+            'Happy path' => [
+                'mocks' => $this->getMocks()
+            ],
+            'Org not allowed path' => [
+                'mocks' => $this->getMocks(false),
+                'expectedException' => '\Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException'
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider authByBrandProvider
+     *
      * @covers ::__construct
      * @covers ::auth
      * @covers ::extractCredentials
      * @covers ::authByBrand
+     *
+     * @param array $mocks
+     * @param string $expectedException
      */
-    public function testAuthByBrand()
+    public function testAuthByBrand(array $mocks, $expectedException = '')
     {
-        $mocks = $this->getMocks();
         $mocks['request'] = $this->getRequest([
             'auth' => $mocks['username'] . ':' . $mocks['apiKey']
         ]);
@@ -142,6 +165,10 @@ class AuthenticationManagerTest extends \PHPUnit_Framework_TestCase
             ->once()
             ->with(['agency_id' => $mocks['agencyId'], 'datasift_apikey' => $mocks['apiKey']])
             ->andReturn($mocks['brand']);
+
+        if ($expectedException) {
+            $this->setExpectedException($expectedException);
+        }
 
         $manager = $this->getManager($mocks);
         $res = $manager->auth($mocks['request']);
@@ -175,21 +202,46 @@ class AuthenticationManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * DataProvider for testAuthByAgency
+     *
+     * @return array
+     */
+    public function authByAgencyProvider()
+    {
+        return [
+            'Happy path' => [
+                'mocks' => $this->getMocks()
+            ],
+            'Org not allowed path' => [
+                'mocks' => $this->getMocks(false),
+                'expectedException' => '\Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException'
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider authByAgencyProvider
+     *
      * @covers ::__construct
      * @covers ::auth
      * @covers ::extractCredentials
      * @covers ::authByAgency
+     *
+     * @param array $mocks
+     * @param string $expectedException
      */
-    public function testAuthByAgency()
+    public function testAuthByAgency(array $mocks, $expectedException = '')
     {
-        $mocks = $this->getMocks();
         $mocks['request'] = $this->getRequest([
             'auth' => $mocks['username'] . ':' . $mocks['apiKey']
         ]);
         $mocks['agencyRepository']->shouldReceive('findOne')
-            ->once()
             ->with(['datasift_username' => $mocks['username'], 'datasift_apikey' => $mocks['apiKey']])
             ->andReturn($mocks['agency']);
+
+        if ($expectedException) {
+            $this->setExpectedException($expectedException);
+        }
 
         $manager = $this->getManager($mocks);
         $res = $manager->auth($mocks['request'], AuthenticationManager::TYPE_AGENCY);
@@ -279,13 +331,14 @@ class AuthenticationManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testAuth(Request $request, $type, array $credentials, $expectedException = '')
     {
+        $organizationRepository = Mockery::mock('Tornado\Organization\Organization\DataMapper');
         $agencyRepository = Mockery::mock('Tornado\Organization\Agency\DataMapper');
         $brandRepository = Mockery::mock('Tornado\Organization\Brand\DataMapper');
 
         $authByMethod = ($type == AuthenticationManager::TYPE_AGENCY) ? 'authByAgency' : 'authByBrand';
         $manager = Mockery::Mock(
             'Tornado\Security\Http\DataSiftApi\AuthenticationManager',
-            [$agencyRepository, $brandRepository]
+            [$organizationRepository, $agencyRepository, $brandRepository]
         )->makePartial()->shouldAllowMockingProtectedMethods();
 
         $expected = 'Result';
@@ -303,17 +356,31 @@ class AuthenticationManagerTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    protected function getMocks()
+    protected function getMocks($orgHasApiPermission = true)
     {
+
         $agencyRepository = Mockery::mock('Tornado\Organization\Agency\DataMapper');
         $brandRepository = Mockery::mock('Tornado\Organization\Brand\DataMapper');
         $request = Mockery::mock(Request::class);
 
         $username = 'username';
         $apiKey = 'apiKey';
+
+        $organizationId = 2;
+        $organization = Mockery::mock('Tornado\Organization\Organization');
+        $organizationRepository = Mockery::mock('Tornado\Organization\Organization\DataMapper');
+        $organizationRepository->shouldReceive('findOne')
+            ->with(['id' => $organizationId])
+            ->atLeast(0)
+            ->andReturn($organization);
+        $organization->shouldReceive('hasPermission')
+            ->with('api')
+            ->andReturn($orgHasApiPermission);
+
         $agencyId = 1;
         $agency = new Agency();
         $agency->setId($agencyId);
+        $agency->setOrganizationId($organizationId);
         $agency->setDatasiftUsername($username);
         $agency->setDatasiftApiKey($apiKey);
 
@@ -321,8 +388,11 @@ class AuthenticationManagerTest extends \PHPUnit_Framework_TestCase
         $brand->setAgencyId($agencyId);
 
         return [
+            'organizationRepository' => $organizationRepository,
             'agencyRepository' => $agencyRepository,
             'brandRepository' => $brandRepository,
+            'organization' => $organization,
+            'organizationId' => $organizationId,
             'agency' => $agency,
             'agencyId' => $agencyId,
             'brand' => $brand,
@@ -340,6 +410,7 @@ class AuthenticationManagerTest extends \PHPUnit_Framework_TestCase
     protected function getManager(array $mocks)
     {
         return new AuthenticationManager(
+            $mocks['organizationRepository'],
             $mocks['agencyRepository'],
             $mocks['brandRepository']
         );

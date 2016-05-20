@@ -2,7 +2,7 @@
 
 Each command must be registered as a service and extends the `Symfony\Component\Console\Command\Command`.
 
-To create a new command, you need to add it to the [commands file](../src/config/commands.yml). It should look something like this:
+To create a new command, you need to add it to the [commands file](../src/config/console/commands.yml). It should look something like this:
 
 ```yml
   command.something:

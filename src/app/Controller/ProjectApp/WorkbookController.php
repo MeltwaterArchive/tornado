@@ -204,17 +204,13 @@ class WorkbookController implements ProjectDataAwareInterface
         ];
 
         // if the project is fresh then also generate default worksheets for it
-        if ($project->isFresh()) {
+        if ($postParams['template']) {
             $recording = $this->recordingRepository->findOne(['id' => $workbook->getRecordingId()]);
             $resultData['worksheets'] = $this->worksheetsGenerator->generateFromTemplate(
                 $workbook,
                 $recording,
-                $this->defaultTemplate
+                $postParams['template']
             );
-
-            // and now this project is no longer fresh :(
-            $project->setFresh(0);
-            $this->projectRepository->update($project);
         }
 
         return new Result($resultData, [], Response::HTTP_CREATED);
@@ -512,6 +508,30 @@ class WorkbookController implements ProjectDataAwareInterface
         ));
 
         return $response;
+    }
+
+    /**
+     * Gets a list of available Workbook templates
+     *
+     * @return \Tornado\Controller\Result
+     */
+    public function templates()
+    {
+        $templates = $this->templatedAnalyzer->getTemplates();
+
+        $outp = [
+            ['id' => '', 'title' => '', 'description' => ''] // No template
+        ];
+
+        foreach ($templates as $key => $template) {
+            $outp[] = [
+                'id' => $key,
+                'title' => $template['title'],
+                'description' => (isset($template['description'])) ? $template['description'] : ''
+            ];
+        }
+
+        return new Result($outp);
     }
 
     /**

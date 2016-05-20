@@ -27,6 +27,7 @@ services:
             - @organization.user.form.forgotpassword
             - @organization.user.form.resetpassword
             - @organization.user.passwordmanager
+            - @session.storage.handler
         tags:
             - { name: flash_aware }
 

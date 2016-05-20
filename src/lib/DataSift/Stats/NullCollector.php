@@ -70,4 +70,12 @@ class NullCollector implements Collector
     {
         return false;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function forceFlush()
+    {
+        return true;
+    }
 }

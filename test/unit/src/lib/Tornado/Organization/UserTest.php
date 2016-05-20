@@ -74,16 +74,16 @@ class UserTest extends \PHPUnit_Framework_TestCase
                 'expected' => 'datasift'
             ],
             [
-                'setter' => 'setEmail',
-                'value' => 'test@datasift.com',
-                'getter' => 'getImage',
-                'expected' => '//www.gravatar.com/avatar/' . md5('test@datasift.com')
-            ],
-            [
                 'setter' => 'setType',
                 'value' => User::TYPE_NORMAL,
                 'getter' => 'getType',
                 'expected' => User::TYPE_NORMAL
+            ],
+            [
+                'setter' => 'setDisabled',
+                'value' => true,
+                'getter' => 'isDisabled',
+                'expected' => true
             ],
         ];
     }
@@ -104,9 +104,10 @@ class UserTest extends \PHPUnit_Framework_TestCase
      * @covers  ::getPassword
      * @covers  ::setUsername
      * @covers  ::getUsername
-     * @covers  ::getImage
      * @covers  ::setType
      * @covers  ::getType
+     * @covers  ::setDisabled
+     * @covers  ::isDisabled
      *
      * @param string $setter
      * @param mixed  $value
@@ -348,14 +349,15 @@ class UserTest extends \PHPUnit_Framework_TestCase
     public function toFromArrayProvider()
     {
         return [
-            [
+            'Happy path' => [
                 'data' => [
                     'id' => 10,
                     'organization_id' => 20,
                     'email' => 'test@email.com',
                     'password' => 'plainPassword',
                     'username' => 'newName',
-                    'type' => User::TYPE_IDENTITY_API
+                    'type' => User::TYPE_IDENTITY_API,
+                    'disabled' => true
                 ],
                 'getters' => [
                     'getId' => 10,
@@ -363,7 +365,8 @@ class UserTest extends \PHPUnit_Framework_TestCase
                     'getEmail' => 'test@email.com',
                     'getPassword' => 'plainPassword',
                     'getUsername' => 'newName',
-                    'getType' => User::TYPE_IDENTITY_API
+                    'getType' => User::TYPE_IDENTITY_API,
+                    'isDisabled' => true
                 ],
                 'expected' => [
                     'id' => 10,
@@ -371,7 +374,37 @@ class UserTest extends \PHPUnit_Framework_TestCase
                     'email' => 'test@email.com',
                     'password' => 'plainPassword',
                     'username' => 'newName',
-                    'type' => User::TYPE_IDENTITY_API
+                    'type' => User::TYPE_IDENTITY_API,
+                    'disabled' => true
+                ]
+            ],
+            'Camel case organizationId' => [
+                'data' => [
+                    'id' => 10,
+                    'organizationId' => 20,
+                    'email' => 'test@email.com',
+                    'password' => 'plainPassword',
+                    'username' => 'newName',
+                    'type' => User::TYPE_IDENTITY_API,
+                    'disabled' => true
+                ],
+                'getters' => [
+                    'getId' => 10,
+                    'getOrganizationId' => 20,
+                    'getEmail' => 'test@email.com',
+                    'getPassword' => 'plainPassword',
+                    'getUsername' => 'newName',
+                    'getType' => User::TYPE_IDENTITY_API,
+                    'isDisabled' => true
+                ],
+                'expected' => [
+                    'id' => 10,
+                    'organization_id' => 20,
+                    'email' => 'test@email.com',
+                    'password' => 'plainPassword',
+                    'username' => 'newName',
+                    'type' => User::TYPE_IDENTITY_API,
+                    'disabled' => true
                 ]
             ]
         ];
@@ -410,8 +443,6 @@ class UserTest extends \PHPUnit_Framework_TestCase
         foreach ($data as &$item) {
             unset($item['getters']);
             unset($item['expected']['password']);
-            $item['getters']['getImage'] = '//www.gravatar.com/avatar/' . md5($item['data']['email']);
-            $item['expected']['image'] = $item['getters']['getImage'];
             $item['expected'] = json_encode($item['expected']);
         }
         return $data;

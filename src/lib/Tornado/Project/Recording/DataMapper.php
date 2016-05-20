@@ -79,6 +79,35 @@ class DataMapper extends DoctrineRepository
     }
 
     /**
+     * Finds Recordings for a given set of Workbooks
+     *
+     * @param array $workbooks
+     *
+     * @return array
+     */
+    public function findRecordingsByWorkbooks(array $workbooks)
+    {
+        if (!count($workbooks)) {
+            return [];
+        }
+
+        $ids = array_walk(
+            $workbooks,
+            function ($workbook) {
+                return $workbook->getRecordingId();
+            }
+        );
+        $qb = $this->createQueryBuilder();
+        $qb->select('*')
+            ->from($this->tableName)
+            ->add('where', $qb->expr()->in('id', $ids));
+
+        return $this->mapResults(
+            $qb->execute()
+        );
+    }
+
+    /**
      * Finds a Recording for the given workbook.
      *
      * @param  Workbook $workbook

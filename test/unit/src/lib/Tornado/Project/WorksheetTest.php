@@ -429,6 +429,7 @@ class WorksheetTest extends \PHPUnit_Framework_TestCase
                     'start' => 123456,
                     'end' => 123456,
                     'parent_worksheet_id' => null,
+                    'display_option' => '{}',
                     'created_at' => 123456789,
                     'updated_at' => 223456789,
                 ],
@@ -449,6 +450,7 @@ class WorksheetTest extends \PHPUnit_Framework_TestCase
                     'getStart' => 123456,
                     'getEnd' => 123456,
                     'getParentWorksheetId' => null,
+                    'getDisplayOptions' => null,
                     'getCreatedAt' => 123456789,
                     'getUpdatedAt' => 223456789
                 ],
@@ -469,6 +471,7 @@ class WorksheetTest extends \PHPUnit_Framework_TestCase
                     'start' => 123456,
                     'end' => 123456,
                     'parent_worksheet_id' => null,
+                    'display_options' => '{}',
                     'created_at' => 123456789,
                     'updated_at' => 223456789
                 ],
@@ -491,6 +494,7 @@ class WorksheetTest extends \PHPUnit_Framework_TestCase
                     'start' => 123456,
                     'end' => 123456,
                     'parent_worksheet_id' => 20,
+                    'display_options' => '{"sort":"label:desc","outliers":false}',
                     'created_at' => 123456789,
                     'updated_at' => 123456780
                 ],
@@ -511,6 +515,7 @@ class WorksheetTest extends \PHPUnit_Framework_TestCase
                     'getStart' => 123456,
                     'getEnd' => 123456,
                     'getParentWorksheetId' => 20,
+                    'getDisplayOptions' => json_decode('{"sort":"label:desc","outliers":false}'),
                     'getCreatedAt' => 123456789,
                     'getUpdatedAt' => 123456780
                 ],
@@ -531,6 +536,7 @@ class WorksheetTest extends \PHPUnit_Framework_TestCase
                     'start' => 123456,
                     'end' => 123456,
                     'parent_worksheet_id' => 20,
+                    'display_options' => '{"sort":"label:desc","outliers":false}',
                     'created_at' => 123456789,
                     'updated_at' => 123456780
                 ],
@@ -557,6 +563,8 @@ class WorksheetTest extends \PHPUnit_Framework_TestCase
                     'getStart' => null,
                     'getEnd' => null,
                     'getParentWorksheetId' => null,
+                    'getDisplayOptions' => null,
+                    'getRawDisplayOptions' => '{}',
                     'getCreatedAt' => null,
                     'getUpdatedAt' => null
                 ],
@@ -577,6 +585,7 @@ class WorksheetTest extends \PHPUnit_Framework_TestCase
                     'start' => null,
                     'end' => null,
                     'parent_worksheet_id' => null,
+                    'display_options' => '{}',
                     'created_at' => null,
                     'updated_at' => null
                 ],
@@ -627,6 +636,7 @@ class WorksheetTest extends \PHPUnit_Framework_TestCase
             );
             // in JSON we want to have an array here, not double JSON encoded string
             $item['expected']['filters'] = json_decode($item['expected']['filters']);
+            $item['expected']['display_options'] = json_decode($item['expected']['display_options']);
 
             $item['expected']['span'] = 1;
             $item['expected']['interval'] = 'day';
@@ -650,6 +660,30 @@ class WorksheetTest extends \PHPUnit_Framework_TestCase
         $obj->loadFromArray($data);
 
         $this->assertEquals($expected, json_encode($obj));
+    }
+
+    /**
+     * @dataProvider toFromArrayProvider
+     *
+     * @covers       ::__clone
+     *
+     * @param array $data
+     * @param array $getters
+     * @param array $expected
+     */
+    public function testClone(array $data, array $getters, array $expected)
+    {
+        unset($getters);
+        $obj = new Worksheet();
+        $obj->loadFromArray($data);
+        $expected['id'] = null;
+        $expected['created_at'] = null;
+        $expected['updated_at'] = null;
+        $expected['rank'] = null;
+
+        $newWorksheet = clone($obj);
+
+        $this->assertEquals($expected, $newWorksheet->toArray());
     }
 
     /**

@@ -7,6 +7,9 @@
 		<env name="APRE_ENVIRONMENT_OVERRIDE" value="1"/>
 		<env name="APRE_ENVIRONMENT" value="testing"/>
 	</php>
+    <listeners>
+        <listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener" />
+    </listeners>
 	<testsuites>
 		<testsuite name="ms-app-tornado Test Suite">
 			<directory>test</directory>

@@ -74,7 +74,10 @@ class AuthenticationFirewall
         if ((!$user || !$user instanceof User)
             && $access == self::AUTHENTICATION_ON
         ) {
-            return new RedirectResponse($loginUrl);
+            $path = $this->request->getPathInfo();
+            $query = $this->request->getQueryString();
+            $redirect = urlencode($path . (($query) ? "?$query" : ''));
+            return new RedirectResponse($loginUrl . (($redirect) ? "?redirect=$redirect" : ''));
         }
 
         if (strtoupper($this->request->getMethod()) == 'GET'

@@ -1,0 +1,111 @@
+/**
+ * Common ~ Button
+ */
+
+/**
+ * Button variables
+ */
+$button-background-colour: $colour-blue-facebook !default;
+$button-hovered-background-colour: #4968a6 !default;
+$button-colour: #fff !default;
+$button-disabled-background-colour: #e9eaee !default;
+$button-disabled-colour: #bebfc2 !default;
+$button-submit-background-colour: $colour-green-bright !default;
+$button-submit-hovered-background-colour: #74B637 !default;
+$button-cancel-colour: $colour-blue-facebook !default;
+$button-cancel-background-colour: transparent !default;
+$button-cancel-hovered-background-colour: transparent !default;
+$button-warning-colour: #fff !default;
+$button-warning-background-colour: $colour-red-error !default;
+$button-clear-colour: $colour-blue-facebook !default;
+$button-clear-border-colour: $colour-grey-light !default;
+$button-clear-background-colour: #fff !default;
+$button-clear-hovered-colour: #fff !default;
+$button-clear-hovered-background-colour: $colour-blue-facebook !default;
+
+/**
+ * Button styles
+ */
+%button,
+.button,
+button {
+    position: relative;
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: rem(12);
+    line-height: 12px;
+    color: $button-colour;
+    background-color: $button-background-colour;
+    border-radius: 3px;
+    cursor: pointer;
+    &:hover {
+        background-color: $button-hovered-background-colour;
+    }
+    &:focus {
+        outline: none;
+    }
+    &[disabled] {
+        color: $button-disabled-colour;
+        background-color: $button-disabled-background-colour;
+        &:hover {
+            background-color: $button-disabled-background-colour;
+            cursor: default;
+            border-color: $button-clear-border-colour;
+            color: $button-disabled-colour;
+        }
+    }
+}
+
+%submit-button,
+.submit-button {
+    @extend %button;
+    background-color: $button-submit-background-colour;
+    &:hover {
+        background-color: $button-submit-hovered-background-colour;
+    }
+
+    &.disabled {
+        color: $button-disabled-colour;
+        background-color: $button-disabled-background-colour;
+        &:hover {
+            background-color: $button-disabled-background-colour;
+        }
+    }
+}
+
+%cancel-button,
+.cancel-button {
+    @extend %button;
+    padding: 10px 0;
+    color: $button-cancel-colour;
+    background-color: $button-cancel-background-colour;
+    &:hover {
+        background-color: $button-cancel-hovered-background-colour;
+    }
+}
+
+%warning-button,
+.warning-button {
+    @extend %button;
+    color: $button-warning-colour;
+    background-color: $button-warning-background-colour;
+    &:hover {
+        background-color: $button-warning-background-colour;
+    }
+}
+
+// Used mainly on brand and project management
+// AKA `The Cancel Button`
+%clear-button,
+.clear-button {
+    @extend %button;
+    padding: 9px 20px;
+    color: $button-clear-colour;
+    background-color: $button-clear-background-colour;
+    border: 1px solid $button-clear-border-colour;
+    &:hover {
+        color: $button-clear-hovered-colour;
+        background-color: $button-clear-hovered-background-colour;
+        border-color: $button-clear-hovered-background-colour;
+    }
+}

@@ -7,11 +7,19 @@ test:
       -  qunit
 
 build:
-  # run the unit tests
-  - test
+
+  # copy over the files to dist first, we will be editing the paths in these
+  # files for string-replace next
+  - copy
+  # replace the cache buster and make sure the image directory is correct
+  - string-replace
   # build the sass
   - 'sass:dist'
+  # optimize js
+  - uglify
+  # minify the images
+  - imagemin
 
-watch:
+watchsass:
   # check for changes in the sass and rebuild
   - 'watch:sass:dev'

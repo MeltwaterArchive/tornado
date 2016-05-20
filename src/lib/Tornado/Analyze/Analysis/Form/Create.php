@@ -3,6 +3,7 @@
 namespace Tornado\Analyze\Analysis\Form;
 
 use Tornado\DataMapper\DataObjectInterface;
+use Tornado\Project\Chart;
 use Tornado\Project\Worksheet;
 use Tornado\Project\Worksheet\Form;
 use Tornado\Project\Recording;
@@ -51,6 +52,9 @@ class Create extends Form
      */
     protected function getConstraints(Recording $recording = null)
     {
+        if (isset($this->inputData['chart_type']) && $this->inputData['chart_type'] == Chart::TYPE_SAMPLE) {
+            return [];
+        }
         $constraints = parent::getConstraints($recording);
 
         // no, we cannot use validation groups as they don't apply

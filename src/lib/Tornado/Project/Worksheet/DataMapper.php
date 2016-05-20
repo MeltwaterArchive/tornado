@@ -55,6 +55,10 @@ class DataMapper extends DoctrineRepository
             return [];
         }
 
+        if (empty($sortBy)) {
+            $sortBy['rank'] = DataMapperInterface::ORDER_ASCENDING;
+        }
+
         $ids = ObjectUtils::pluck($workbooks, 'id');
 
         $queryBuilder = $this->createQueryBuilder();
@@ -122,6 +126,7 @@ class DataMapper extends DoctrineRepository
     {
         $object->setCreatedAt(time());
         $object->setUpdatedAt(time());
+        $object->setRank($this->getNextRank($object));
         return parent::create($object);
     }
 
@@ -132,5 +137,53 @@ class DataMapper extends DoctrineRepository
     {
         $object->setUpdatedAt(time());
         return parent::update($object);
+    }
+
+    /**
+     * Gets the next rank for the passed Worksheet
+     *
+     * @param \Tornado\Project\Worksheet $worksheet
+     *
+     * @return integer
+     */
+    public function getNextRank(Worksheet $worksheet)
+    {
+        if ($worksheet->getId()) {
+            return $worksheet->getRank();
+        }
+
+        $lastWorksheet = $this->find(
+            ['workbook_id' => $worksheet->getWorkbookId()],
+            ['rank' => DataMapperInterface::ORDER_DESCENDING],
+            1
+        );
+        return (count($lastWorksheet)) ? $lastWorksheet[0]->getRank() + 1 : 1;
+    }
+
+    /**
+     * Generates a unique name for the passed Worksheet
+     *
+     * @param \Tornado\Project\Worksheet $worksheet
+     * @param string $originalName
+     *
+     * @return string
+     */
+    public function getUniqueName(Worksheet $worksheet, $originalName)
+    {
+        $name = $originalName;
+        $cnt = 1;
+        do {
+            $existingWorksheet = $this->findOne(
+                [
+                    'workbook_id' => $worksheet->getWorkbookId(),
+                    'name' => $name
+                ]
+            );
+            if ($existingWorksheet) {
+                $name = "{$originalName} (" . $cnt++  . ")";
+            }
+        } while ($existingWorksheet);
+
+        return $name;
     }
 }

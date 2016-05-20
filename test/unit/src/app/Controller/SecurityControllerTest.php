@@ -7,6 +7,8 @@ use \Mockery;
 use Controller\SecurityController;
 
 use Tornado\Organization\User;
+use Tornado\Application\Flash\Message as Flash;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * SecurityControllerTest
@@ -26,87 +28,171 @@ use Tornado\Organization\User;
  */
 class SecurityControllerTest extends \PHPUnit_Framework_TestCase
 {
+
     /**
-     * @covers  ::__construct
-     * @covers  ::login
+     * DataProvider for testLogin
+     *
+     * @return array
      */
-    public function testLoginGetRequest()
+    public function loginProvider()
     {
-        $session = Mockery::mock('\Symfony\Component\HttpFoundation\Session\SessionInterface');
-        $form = Mockery::mock('\DataSift\Form\FormInterface');
-        $urlGenerator = Mockery::mock('\Symfony\Component\Routing\Generator\UrlGenerator');
-        $request = Mockery::mock('\DataSift\Http\Request', [
-            'getMethod' => 'GET'
-        ]);
-
-        $request->query = new \Symfony\Component\HttpFoundation\ParameterBag();
-
-        $jwt = Mockery::mock('\Tornado\Security\Authorization\JWT\Provider');
-        $mapper = Mockery::mock('\Tornado\Organization\User\DataMapper');
-        $roleMapper = Mockery::mock('\Tornado\Organization\Role\DataMapper');
-        $passwordManager = Mockery::mock('\Tornado\Organization\User\PasswordManager');
-
-        $ctrl = new SecurityController(
-            $session,
-            $form,
-            $urlGenerator,
-            $jwt,
-            $mapper,
-            $roleMapper,
-            $form,
-            $form,
-            $passwordManager
-        );
-        
-        $result = $ctrl->login($request);
-
-        $this->assertInstanceOf('\Tornado\Controller\Result', $result);
-        $this->assertEquals([], $result->getData());
-        $this->assertEquals([], $result->getMeta());
-        $this->assertEquals(200, $result->getHttpCode());
+        return [
+            'Plain get request' => [
+                'method' => 'GET',
+                'postParams' => [],
+                'queryParams' => [],
+                'expectedResponse' => ['data' => ['redirect' => ''], 'meta' => [], 'status' => Response::HTTP_OK]
+            ],
+            'Get request, with redirect' => [
+                'method' => 'GET',
+                'postParams' => [],
+                'queryParams' => ['redirect' => '/projects'],
+                'expectedResponse' => [
+                    'data' => ['redirect' => '/projects'],
+                    'meta' => [],
+                    'status' => Response::HTTP_OK
+                ]
+            ],
+            'Unsuccessful login, invalid form' => [
+                'method' => 'POST',
+                'postParams' => ['login' => 'test', 'password' => 'why', 'redirect' => '/projects'],
+                'queryParams' => ['redirect' => '/projects'],
+                'expectedResponse' => [
+                    'data' => ['redirect' => '/projects'],
+                    'meta' => ['error' => 'message'],
+                    'status' => Response::HTTP_BAD_REQUEST
+                ],
+                'expectedRedirect' => '',
+                'loginSuccessful' => false,
+                'formValid' => false,
+                'userDisabled' => false,
+                'formErrors' => ['error' => 'message']
+            ],
+            'Unsuccessful login, disabled user' => [
+                'method' => 'POST',
+                'postParams' => ['login' => 'test', 'password' => 'why', 'redirect' => '/projects'],
+                'queryParams' => ['redirect' => '/projects'],
+                'expectedResponse' => [
+                    'data' => [],
+                    'meta' => ['__notification' => ['message' => 'Account disabled', 'level' => Flash::LEVEL_ERROR]],
+                    'status' => Response::HTTP_BAD_REQUEST
+                ],
+                'expectedRedirect' => '',
+                'loginSuccessful' => false,
+                'formValid' => true,
+                'userDisabled' => true,
+                'formErrors' => []
+            ],
+            'Successful login' => [
+                'method' => 'POST',
+                'postParams' => ['login' => 'test', 'password' => 'test', 'redirect' => ''],
+                'queryParams' => [],
+                'expectedResponse' => ['data' => ['redirect' => ''], 'meta' => [], 'status' => Response::HTTP_OK],
+                'expectedRedirect' => '/',
+                'loginSuccessful' => true
+            ],
+            'Successful login with redirect' => [
+                'method' => 'POST',
+                'postParams' => ['login' => 'test', 'password' => 'test', 'redirect' => '/projects'],
+                'queryParams' => [],
+                'expectedResponse' => [
+                    'data' => ['redirect' => ''],
+                    'meta' => [],
+                    'status' => Response::HTTP_TEMPORARY_REDIRECT
+                ],
+                'expectedRedirect' => '/projects',
+                'loginSuccessful' => true
+            ],
+            'Successful login, removes dangerous redirect' => [
+                'method' => 'POST',
+                'postParams' => ['login' => 'test', 'password' => 'test', 'redirect' => 'http://bbc.com/projects'],
+                'queryParams' => [],
+                'expectedResponse' => [
+                    'data' => ['redirect' => ''],
+                    'meta' => [],
+                    'status' => Response::HTTP_TEMPORARY_REDIRECT
+                ],
+                'expectedRedirect' => '/projects',
+                'loginSuccessful' => true
+            ]
+        ];
     }
 
     /**
+     * @dataProvider loginProvider
+     *
      * @covers  ::__construct
      * @covers  ::login
+     *
+     * @param string $method
+     * @param array $postParams
+     * @param string $queryString
      */
-    public function testSuccessfulLogin()
-    {
+    public function testLogin(
+        $method,
+        array $postParams,
+        array $queryParams,
+        array $expectedResponse,
+        $expectedRedirect = '',
+        $loginSuccessful = false,
+        $formValid = true,
+        $userDisabled = false,
+        array $formErrors = []
+    ) {
+        $session = Mockery::mock('\Symfony\Component\HttpFoundation\Session\SessionInterface');
+        $userId = 10;
+        $sessionId = 'abc123';
+
         $user = new User();
-        $postParams = ['login' => 'test', 'password' => 'test'];
-        $request = Mockery::mock('\DataSift\Http\Request', [
-            'getMethod' => 'POST'
-        ]);
-        $request->shouldReceive('getPostParams')
-            ->once()
-            ->andReturn($postParams);
+        $user->setId($userId);
+        $user->setDisabled(($userDisabled) ? 1 : 0);
+
         $form = Mockery::mock('\DataSift\Form\FormInterface', [
             'submit' => true,
-            'isValid' => true,
-            'getData' => $user
+            'isValid' => $formValid,
+            'getData' => $user,
+            'getErrors' => $formErrors
         ]);
-        $session = Mockery::mock('\Symfony\Component\HttpFoundation\Session\SessionInterface');
-        $session->shouldReceive('start')
-            ->once()
-            ->withNoArgs();
-        $session->shouldReceive('set')
-            ->once()
-            ->withArgs(['user', $user]);
+
         $urlGenerator = Mockery::mock('\Symfony\Component\Routing\Generator\UrlGenerator');
         $urlGenerator->shouldReceive('generate')
-            ->once()
             ->withArgs(['home'])
             ->andReturn('/');
+
+        $request = Mockery::mock('\DataSift\Http\Request', [
+            'getMethod' => $method,
+        ]);
+
+        $request->query = new \Symfony\Component\HttpFoundation\ParameterBag($queryParams);
+        $request->shouldReceive('getPostParams')
+            ->andReturn($postParams);
+
+        $roles = [Mockery::mock('\Tornado\Organization\Role')];
 
         $jwt = Mockery::mock('\Tornado\Security\Authorization\JWT\Provider');
         $mapper = Mockery::mock('\Tornado\Organization\User\DataMapper');
         $roleMapper = Mockery::mock('\Tornado\Organization\Role\DataMapper');
         $roleMapper->shouldReceive('findUserAssigned')
-            ->once()
+            ->times(($loginSuccessful) ? 1 : 0)
             ->with($user)
-            ->andReturn([]);
+            ->andReturn($roles);
 
         $passwordManager = Mockery::mock('\Tornado\Organization\User\PasswordManager');
+        $sessionHandler = Mockery::mock('\SessionHandlerInterface');
+        if ($loginSuccessful) {
+            $session->shouldReceive('start')
+                ->once()
+                ->withNoArgs();
+            $session->shouldReceive('set')
+                ->once()
+                ->withArgs(['user', $user]);
+
+            $session->shouldReceive('getId')
+                ->once()
+                ->andReturn($sessionId);
+            $sessionHandler->shouldReceive('write')
+                ->with("session-{$userId}", $sessionId);
+        }
 
         $ctrl = new SecurityController(
             $session,
@@ -117,69 +203,24 @@ class SecurityControllerTest extends \PHPUnit_Framework_TestCase
             $roleMapper,
             $form,
             $form,
-            $passwordManager
+            $passwordManager,
+            $sessionHandler
         );
 
         $result = $ctrl->login($request);
 
-        $this->assertInstanceOf('\Symfony\Component\HttpFoundation\RedirectResponse', $result);
-        $this->assertEquals('/', $result->getTargetUrl());
-        $this->assertEquals(302, $result->getStatusCode());
-    }
-
-    /**
-     * @covers  ::__construct
-     * @covers  ::login
-     */
-    public function testSuccessfulLoginUnlessInvalidData()
-    {
-        $postParams = ['login' => 'test', 'password' => 'test'];
-        $request = Mockery::mock('\DataSift\Http\Request', [
-            'getMethod' => 'POST'
-        ]);
-        $request->shouldReceive('getPostParams')
-            ->once()
-            ->andReturn($postParams);
-        $form = Mockery::mock('\DataSift\Form\FormInterface', [
-            'submit' => true,
-            'isValid' => false,
-            'getErrors' => ['password' => 'Incorrect password.']
-        ]);
-        $session = Mockery::mock('\Symfony\Component\HttpFoundation\Session\SessionInterface');
-        $session->shouldReceive('start')
-            ->never();
-        $session->shouldReceive('set')
-            ->never();
-        $urlGenerator = Mockery::mock('\Symfony\Component\Routing\Generator\UrlGenerator');
-        $urlGenerator->shouldReceive('generate')
-            ->never();
-
-        $jwt = Mockery::mock('\Tornado\Security\Authorization\JWT\Provider');
-        $mapper = Mockery::mock('\Tornado\Organization\User\DataMapper');
-        $roleMapper = Mockery::mock('\Tornado\Organization\Role\DataMapper');
-
-        $passwordManager = Mockery::mock('\Tornado\Organization\User\PasswordManager');
-
-        $ctrl = new SecurityController(
-            $session,
-            $form,
-            $urlGenerator,
-            $jwt,
-            $mapper,
-            $roleMapper,
-            $form,
-            $form,
-            $passwordManager
-        );
-
-        $result = $ctrl->login($request);
-
-        $this->assertNotInstanceOf('\Symfony\Component\HttpFoundation\RedirectResponse', $result);
-        $this->assertInstanceOf('\Tornado\Controller\Result', $result);
-
-        $this->assertEquals([], $result->getData());
-        $this->assertEquals(['password' => 'Incorrect password.'], $result->getMeta());
-        $this->assertEquals(400, $result->getHttpCode());
+        if ($expectedRedirect) {
+            $this->assertInstanceOf('\Symfony\Component\HttpFoundation\RedirectResponse', $result);
+            $this->assertEquals($expectedRedirect, $result->getTargetUrl());
+        } else {
+            $this->assertInstanceOf('\Tornado\Controller\Result', $result);
+            $this->assertEquals($expectedResponse['data'], $result->getData());
+            $this->assertEquals($expectedResponse['meta'], $result->getMeta());
+            $this->assertEquals($expectedResponse['status'], $result->getHttpCode());
+            if ($loginSuccessful) {
+                $this->assertEquals($roles, $user->getRoles());
+            }
+        }
     }
 
     /**
@@ -205,6 +246,8 @@ class SecurityControllerTest extends \PHPUnit_Framework_TestCase
 
         $passwordManager = Mockery::mock('\Tornado\Organization\User\PasswordManager');
 
+        $sessionHandler = Mockery::mock('\SessionHandlerInterface');
+
         $ctrl = new SecurityController(
             $session,
             $form,
@@ -214,7 +257,8 @@ class SecurityControllerTest extends \PHPUnit_Framework_TestCase
             $roleMapper,
             $form,
             $form,
-            $passwordManager
+            $passwordManager,
+            $sessionHandler
         );
 
         $result = $ctrl->logout();
@@ -327,6 +371,7 @@ class SecurityControllerTest extends \PHPUnit_Framework_TestCase
         $roleMapper = Mockery::mock('\Tornado\Organization\Role\DataMapper');
 
         $passwordManager = Mockery::mock('\Tornado\Organization\User\PasswordManager');
+        $sessionHandler = Mockery::mock('\SessionHandlerInterface');
 
         $ctrl = new SecurityController(
             $session,
@@ -337,7 +382,8 @@ class SecurityControllerTest extends \PHPUnit_Framework_TestCase
             $roleMapper,
             $form,
             $form,
-            $passwordManager
+            $passwordManager,
+            $sessionHandler
         );
 
         $result = $ctrl->login($request);

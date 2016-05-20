@@ -6,6 +6,10 @@ use Tornado\Controller\ProjectDataAwareInterface;
 use Tornado\Controller\ProjectDataAwareTrait;
 use Tornado\Controller\Result;
 
+use Tornado\Project\Recording\DataMapper as RecordingDataMapper;
+use Tornado\Project\Recording\DataSiftRecording;
+use Tornado\Project\Workbook;
+
 /**
  * The main project SPA entry point.
  *
@@ -25,6 +29,32 @@ class AppController implements ProjectDataAwareInterface
     use ProjectDataAwareTrait;
 
     /**
+     * The Recording Repository for this Controller
+     *
+     * @var Tornado\Project\Recording\DataMapper
+     */
+    private $recordingRepo;
+
+    /**
+     * The DataSift Recording adapter for this Controller
+     *
+     * @var Tornado\Project\Recording\DataSiftRecording
+     */
+    private $datasiftRecording;
+
+    /**
+     * Constructs a new AppController
+     *
+     * @param \Tornado\Project\Recording\DataMapper $recordingRepo
+     * @param \Tornado\Project\Recording\DataSiftRecording $datasiftRecording
+     */
+    public function __construct(RecordingDataMapper $recordingRepo, DataSiftRecording $datasiftRecording)
+    {
+        $this->recordingRepo = $recordingRepo;
+        $this->datasiftRecording = $datasiftRecording;
+    }
+
+    /**
      * Retrieves all required info for the given project id.
      *
      * @param  integer $projectId ID of the project.
@@ -34,7 +64,11 @@ class AppController implements ProjectDataAwareInterface
     public function get($projectId)
     {
         $project = $this->getProject($projectId);
+
         $workbooks = $this->workbookRepository->findByProject($project);
+        $recordings = $this->recordingRepo->findRecordingsByWorkbooks($workbooks);
+        $workbooks = $this->datasiftRecording->decorateWorkbooks($workbooks, $recordings);
+
         $worksheets = $this->worksheetRepository->findByWorkbooks($workbooks);
 
         return new Result([

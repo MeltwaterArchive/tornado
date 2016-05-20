@@ -6,7 +6,7 @@
                 "fb.author.age",
                 "fb.author.gender",
                 "fb.author.country",
-                "fb.author.region",
+                "fb.author.country_region",
                 "fb.author.highest_education",
                 "fb.author.relationship_status",
                 "fb.author.type",
@@ -14,7 +14,7 @@
                 "fb.parent.author.country",
                 "fb.parent.author.gender",
                 "fb.parent.author.highest_education",
-                "fb.parent.author.region",
+                "fb.parent.author.country_region",
                 "fb.parent.author.relationship_status",
                 "fb.parent.author.type"
             ]
@@ -25,7 +25,7 @@
                 "fb.language",
                 "fb.link",
                 "fb.topics.category",
-                "fb.topics.name",
+                "fb.topics.category_name",
                 "fb.sentiment",
                 "interaction.media_type",
                 "interaction.subtype",
@@ -47,7 +47,7 @@
                 "fb.parent.language",
                 "fb.parent.link",
                 "fb.parent.media_type",
-                "fb.parent.topics.name",
+                "fb.parent.topics.category_name",
                 "fb.parent.sentiment",
                 "fb.parent.og_action_type",
                 "fb.parent.og_object",
@@ -63,7 +63,8 @@
                 "interaction.tags",
                 "links.domain",
                 "links.normalized_url",
-                "links.url"
+                "links.url",
+                "links.title"
             ]
         },
          {

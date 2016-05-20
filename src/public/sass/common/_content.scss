@@ -1,0 +1,75 @@
+/**
+ * Common ~ Content
+ *
+ * The content block styles of a page (common/main)
+ */
+
+/**
+ * Content variables
+ */
+$content-title-colour: #313540 !default;
+$content-action-separator-colour: #9197a3 !default;
+$content-action-link-colour: #9197a3 !default;
+$content-action-link-hovered-colour: #878d99 !default;
+$content-action-link-active-colour: #313540 !default;
+$content-background-colour: #fff !default;
+$content-border-colour: #d3d6db !default;
+$content-max-width: 900px !default;
+
+/**
+ * Content styles
+ */
+.content-wrapper {
+    @include outer-container(780px);
+    margin: 0 auto;
+    padding: 20px 0 130px;
+    // content-wrapper overrides for the SPA
+    .main-menu ~ .page & {
+        @include outer-container(100%);
+        margin: 0;
+        padding: 20px 30px;
+    }
+}
+
+.content__header {
+    float: left;
+    width: 100%;
+    max-width: $content-max-width;
+    padding: 20px;
+    border: 1px solid $content-border-colour;
+    border-bottom: 0;
+    background-color: $content-background-colour;
+
+    &:empty {
+        display: none;
+    }
+}
+
+.content__title {
+    float: left;
+    display: inline-block;
+    margin: 0;
+    font-size: rem(14);
+    line-height: 21px;
+    color: $content-title-colour;
+}
+
+.content {
+    float: left;
+    clear: both;
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    max-width: $content-max-width;
+    padding: 20px;
+    background-color: $content-background-colour;
+    border: 1px solid $content-border-colour;
+}
+
+.content__footer {
+    float: left;
+    clear: both;
+    overflow: hidden;
+    width: 100%;
+    max-width: $content-max-width;
+}

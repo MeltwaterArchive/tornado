@@ -15,6 +15,11 @@
 
 {% block page_content %}
     <div class="brand-management__column-content">
+        {% if data.account_limit_reached %}
+            <div class="notification notification-warning">
+                Cannot create more users, account limit reached.
+            </div>
+        {% endif %}
         <form data-batch-form action="{{ orgPath('users.batch', data.organization.id) }}" method="post">
             <ul class="list-actions">
                 {# Don't show sorting or bulk actions when there are no projects #}
@@ -44,9 +49,11 @@
                         </ul>
                     </li>
                 {% endif %}
-                <li class="list-action list-action--new-project">
-                    <a href="{{ orgPath('user.create', data.organization.id) }}">New User</a>
-                </li>
+                {% if not data.account_limit_reached %}
+                    <li class="list-action list-action--new-project">
+                        <a href="{{ orgPath('user.create', data.organization.id) }}">New User</a>
+                    </li>
+                {% endif %}
             </ul>
             {# Display items when there are items #}
             {% if pagination.totalItemsCount > 0 %}
@@ -63,6 +70,9 @@
                                 <a class="list-item__link" href="{{ orgPath('user.edit', user.id, user.organizationId) }}">
                                     {{ user.username }}
                                 </a>
+                                {% if user.isDisabled %}
+                                    <span class="list-item__status">- DISABLED</span>
+                                {% endif %}
                             </div>
                             <div class="list-item__cell list-item__cell--actions">
                                 <div class="list-item__actions">
@@ -108,7 +118,7 @@
 {% endblock %}
 
 {% block javascript_additional %}
-    data-main="/assets/javascript/brand/brand"
+    data-main="{{ cs_build_location }}/javascript/brand"
 {% endblock %}
 
 {% block delete_templates %}

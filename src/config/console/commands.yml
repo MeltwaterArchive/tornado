@@ -56,3 +56,25 @@ services:
             - @organization.brand.repository
         tags:
             - { name: command }
+
+    command.dataset_process:
+        class: Command\DatasetProcess
+        arguments:
+            - @organization.agency.repository
+            - @organization.brand.repository
+            - @analyze.dataset.repository
+            - @project.recording.repository
+            - @analyze.dataset.generator
+            - @stats
+        tags:
+            - { name: command }
+
+    command.sample:
+        class: Command\Sample
+        arguments:
+            - @project.recording.repository
+            - @organization.agency.repository
+            - @organization.brand.repository
+            - @doctrine.dbal.connection
+        tags:
+            - { name: command }

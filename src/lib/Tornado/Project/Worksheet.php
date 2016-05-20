@@ -22,7 +22,8 @@ use Tornado\Project\Chart\Generator as ChartGenerator;
  * @license     http://mediasift.com/licenses/internal MediaSift Internal License
  * @link        https://github.com/datasift/tornado
  *
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity,PHPMD.TooManyFields,PHPMD.ExcessivePublicCount,PHPMD.LongVariable)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity,PHPMD.TooManyFields,PHPMD.ExcessivePublicCount,PHPMD.LongVariable,
+ *     PHPMD.ExcessiveClassLength)
  */
 class Worksheet implements DataObjectInterface
 {
@@ -137,6 +138,13 @@ class Worksheet implements DataObjectInterface
      * @var integer|null
      */
     protected $parentWorksheetId;
+
+    /**
+     * Saves a json object with the defined display options for this worksheet
+     *
+     * @var \StdClass
+     */
+    protected $displayOptions;
 
     /**
      * Creation date of this Worksheet
@@ -333,6 +341,7 @@ class Worksheet implements DataObjectInterface
             Chart::TYPE_TORNADO,
             Chart::TYPE_HISTOGRAM,
             Chart::TYPE_TIME_SERIES,
+            Chart::TYPE_SAMPLE,
         ];
 
         if (!in_array($chartType, $chartTypes)) {
@@ -365,7 +374,7 @@ class Worksheet implements DataObjectInterface
      */
     public function setAnalysisType($analysisType)
     {
-        $analysisTypes = [Analysis::TYPE_FREQUENCY_DISTRIBUTION, Analysis::TYPE_TIME_SERIES];
+        $analysisTypes = [Analysis::TYPE_FREQUENCY_DISTRIBUTION, Analysis::TYPE_TIME_SERIES, Analysis::TYPE_SAMPLE];
 
         if (!in_array($analysisType, $analysisTypes)) {
             throw new \InvalidArgumentException(sprintf(
@@ -436,17 +445,17 @@ class Worksheet implements DataObjectInterface
         }
 
         foreach ([
-            'keywords',
-            'links',
-            'country',
-            'region',
-            'gender',
-            'age',
-            'csdl',
-            'generated_csdl',
-            'start',
-            'end'
-        ] as $key) {
+                     'keywords',
+                     'links',
+                     'country',
+                     'region',
+                     'gender',
+                     'age',
+                     'csdl',
+                     'generated_csdl',
+                     'start',
+                     'end'
+                 ] as $key) {
             if (!property_exists($filters, $key)) {
                 $filters->{$key} = null;
             }
@@ -624,7 +633,7 @@ class Worksheet implements DataObjectInterface
      * Set a single filter.
      *
      * @param string $filterKey Filter key.
-     * @param mixed  $value     Filter value.
+     * @param mixed $value Filter value.
      */
     public function setFilter($filterKey, $value)
     {
@@ -808,6 +817,73 @@ class Worksheet implements DataObjectInterface
     }
 
     /**
+     * Gets the display options
+     *
+     * @return null|array
+     */
+    public function getDisplayOptions()
+    {
+        return $this->displayOptions;
+    }
+
+    /**
+     * Gets the raw display options
+     *
+     * @return null|string
+     */
+    public function getRawDisplayOptions()
+    {
+        if (!$this->displayOptions) {
+            return json_encode(new \StdClass());
+        }
+
+        return json_encode($this->getDisplayOptions());
+    }
+
+    /**
+     * Sets the display options
+     *
+     * @param null|string $displayOptions
+     */
+    public function setDisplayOptions($displayOptions)
+    {
+        if (!$displayOptions) {
+            $displayOptions = new \StdClass();
+        }
+
+        if (is_string($displayOptions)) {
+            $displayOptions = json_decode($displayOptions);
+        }
+
+        if (is_array($displayOptions)) {
+            $displayOptions = (object)$displayOptions;
+        }
+
+        if (!$displayOptions instanceof \StdClass) {
+            throw new \InvalidArgumentException(sprintf(
+                '%s expect display options to be json string or array. "%s" given.',
+                __METHOD__,
+                gettype($displayOptions)
+            ));
+        }
+
+        $this->displayOptions = $displayOptions;
+    }
+
+    /**
+     * Sets raw display options
+     *
+     * @param string $displayOptions
+     */
+    public function setRawDisplayOptions($displayOptions)
+    {
+        if (is_string($displayOptions)) {
+            $displayOptions = json_decode($displayOptions);
+        }
+        $this->displayOptions = $displayOptions;
+    }
+
+    /**
      * Gets the created at timestamp
      *
      * @return int
@@ -869,6 +945,7 @@ class Worksheet implements DataObjectInterface
             'start' => 'setStart',
             'end' => 'setEnd',
             'parent_worksheet_id' => 'setParentWorksheetId',
+            'display_options' => 'setRawDisplayOptions',
             'created_at' => 'setCreatedAt',
             'updated_at' => 'setUpdatedAt'
         ];
@@ -902,6 +979,7 @@ class Worksheet implements DataObjectInterface
             'start' => 'getStart',
             'end' => 'getEnd',
             'parent_worksheet_id' => 'getParentWorksheetId',
+            'display_options' => 'getRawDisplayOptions',
             'created_at' => 'getCreatedAt',
             'updated_at' => 'getUpdatedAt'
         ];
@@ -930,7 +1008,21 @@ class Worksheet implements DataObjectInterface
         // extract few more items
         $data['span'] = $this->getSpan();
         $data['interval'] = $this->getInterval();
-        
+
+        // in JSON use an array of display options
+        $data['display_options'] = json_decode($data['display_options']);
+
         return $data;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __clone()
+    {
+        $this->id = null;
+        $this->createdAt = null;
+        $this->updatedAt = null;
+        $this->rank = null;
     }
 }

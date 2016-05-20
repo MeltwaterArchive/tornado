@@ -32,7 +32,7 @@ interface DataMapperInterface
      *                                     already been saved in persistent store.
      */
     public function create(DataObjectInterface $object);
-    
+
     /**
      * Update an object in persistent store.
      *
@@ -42,7 +42,7 @@ interface DataMapperInterface
      *                                previously saved in persistent store.
      */
     public function update(DataObjectInterface $object);
-    
+
     /**
      * Delete an object from persistent store.
      *
@@ -52,7 +52,16 @@ interface DataMapperInterface
      *                                previously saved in persistent store.
      */
     public function delete(DataObjectInterface $object);
-    
+
+    /**
+     * Removes objects by their id
+     *
+     * @param array $ids
+     *
+     * @return int number of deleted items
+     */
+    public function deleteByIds(array $ids);
+
     /**
      * Finds objects in a persistent store.
      *
@@ -63,7 +72,7 @@ interface DataMapperInterface
      * @return DataObjectInterface[]
      */
     public function find(array $filter = [], array $sortBy = [], $limit = 0, $offset = 0);
-    
+
     /**
      * Finds an object in persistent store.
      *

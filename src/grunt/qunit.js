@@ -1,7 +1,7 @@
 module.exports = {
 	all: {
         options: {
-            urls: ['http://localhost:8080/assets/javascript/test/main.html']
+            urls: ['http://localhost:8080/javascript/test/main.html']
         }
     }
 };

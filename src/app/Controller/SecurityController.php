@@ -21,6 +21,7 @@ use Tornado\Organization\Role\DataMapper as RoleRepository;
 use Tornado\Security\Authorization\JWT\Provider as JwtProvider;
 
 use Tornado\Application\Flash\AwareTrait as FlashAwareTrait;
+use Tornado\Application\Flash\Message as Flash;
 
 use Firebase\JWT\JWT;
 
@@ -39,7 +40,7 @@ use Firebase\JWT\JWT;
  * @license     http://mediasift.com/licenses/internal MediaSift Internal License
  * @link        https://github.com/datasift/tornado
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects,PHPMD.ExcessiveParameterList)
  */
 class SecurityController
 {
@@ -91,6 +92,13 @@ class SecurityController
     protected $passwordManager;
 
     /**
+     * The session handler
+     *
+     * @var \SessionHandlerInterface
+     */
+    protected $sessionHandler;
+
+    /**
      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
      * @param \DataSift\Form\FormInterface                               $loginForm
      * @param \Symfony\Component\Routing\Generator\UrlGenerator          $urlGenerator
@@ -100,6 +108,7 @@ class SecurityController
      * @param \DataSift\Form\FormInterface                               $forgottenPassForm
      * @param \DataSift\Form\FormInterface                               $resetPasswordForm
      * @param \Tornado\Organization\User\PasswordManager                 $passwordManager
+     * @param \SessionHandlerInterface                                   $sessionHandler
      */
     public function __construct(
         SessionInterface $session,
@@ -110,7 +119,8 @@ class SecurityController
         RoleRepository $roleRepository,
         FormInterface $forgottenPassForm,
         FormInterface $resetPasswordForm,
-        PasswordManager $passwordManager
+        PasswordManager $passwordManager,
+        \SessionHandlerInterface $sessionHandler
     ) {
         $this->session = $session;
         $this->loginForm = $loginForm;
@@ -121,6 +131,7 @@ class SecurityController
         $this->forgottenPassForm = $forgottenPassForm;
         $this->resetPasswordForm = $resetPasswordForm;
         $this->passwordManager = $passwordManager;
+        $this->sessionHandler = $sessionHandler;
     }
 
     /**
@@ -128,37 +139,76 @@ class SecurityController
      * form errors.
      *
      * @param Request $request
+     * @param string $jwt
      *
      * @return RedirectResponse|Result
      */
-    public function login(Request $request)
+    public function login(Request $request, $jwt = false)
     {
         if ('POST' === $request->getMethod()) {
-            $this->loginForm->submit($request->getPostParams());
-
-            if (!$this->loginForm->isValid()) {
-                return new Result(
-                    [],
-                    $this->loginForm->getErrors('Invalid login details'),
-                    Response::HTTP_BAD_REQUEST
-                );
-            }
-
-            $user = $this->loginForm->getData();
-            $roles = $this->roleRepository->findUserAssigned($user);
-            $user->setRoles($roles);
-
-            $this->session->start();
-            $this->session->set('user', $user);
-
-            return new RedirectResponse(
-                $this->urlGenerator->generate('home')
-            );
+            return $this->doLogin($request);
         } elseif ($request->query->get('jwt', false)) {
             return $this->doJwt($request->query->get('jwt'));
+        } elseif ($jwt !== false) {
+            return $this->doJwt($jwt);
         }
 
-        return new Result([]);
+        return new Result(['redirect' => urldecode($request->query->get('redirect'))]);
+    }
+
+    /**
+     * The login flow for Tornado
+     *
+     * @param \DataSift\Http\Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Tornado\Controller\Result
+     */
+    private function doLogin(Request $request)
+    {
+        $postParams = $request->getPostParams();
+        $redirect = '';
+        if (isset($postParams['redirect'])) {
+            $parts = parse_url($postParams['redirect']);
+            $redirect = $parts['path'] . ((isset($parts['query']) && $parts['query']) ? "?{$parts['query']}" : '');
+        }
+
+        $this->loginForm->submit($postParams);
+
+        if (!$this->loginForm->isValid()) {
+            return new Result(
+                ['redirect' => $redirect],
+                $this->loginForm->getErrors('Invalid login details'),
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
+        $user = $this->loginForm->getData();
+
+        if ($user->isDisabled()) {
+            $meta = [];
+            $this->setRequestFlash('Account disabled', Flash::LEVEL_ERROR, $meta);
+            return new Result(
+                [],
+                $meta,
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
+        $roles = $this->roleRepository->findUserAssigned($user);
+        $user->setRoles($roles);
+
+        $this->session->start();
+        $this->session->set('user', $user);
+
+        $id = $this->session->getId();
+
+        /**
+         * Store the session id of the user in the session storage
+         */
+        $this->sessionHandler->write("session-{$user->getId()}", $id);
+
+        $redirect = ($redirect) ? $redirect : $this->urlGenerator->generate('home');
+        return new RedirectResponse($redirect);
     }
 
     /**

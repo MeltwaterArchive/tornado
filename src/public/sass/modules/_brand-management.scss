@@ -1,0 +1,114 @@
+/**
+ * Module ~ Brand management
+ */
+
+/**
+ * Brand management variables
+ */
+$brand-management-link-colour: $colour-blue-facebook !default;
+$brand-management-column-content-background-colour: #fff !default;
+$brand-management-column-content-border-colour: $colour-grey-light !default;
+$brand-management-tab-active-background-colour: #fff !default;
+$brand-management-tab-active-border-colour: $colour-grey-light !default;
+$brand-management-tab-hovered-background-colour: #e3e5ea !default;
+$brand-management-tab-link-colour: #333 !default;
+$divider-colour: $colour-grey-light !default;
+
+/**
+ * Brand management styles
+ */
+.brand-management {
+    a {
+        font-size: rem(12);
+        color: $brand-management-link-colour;
+    }
+    .pagination {
+        margin-top: 15px;
+        padding: 10px 0;
+    }
+}
+
+.brand-management__sidebar {
+    @include span-columns(3.5);
+}
+
+.brand-management__content {
+    @include span-columns(8.5);
+    // Not necessary, but needed to prevent jumpy rendering when
+    // re-loading the page (using the pagination, sorting etc)
+    float: right;
+}
+
+.divider {
+    margin: 0 0 20px;
+    border-color: $divider-colour;
+}
+
+%brand-management__column-header {
+    display: inline-block;
+    width: 100%;
+    h6 {
+        display: inline-block;
+        margin-bottom: 25px;
+        font-size: rem(12);
+        font-weight: bold;
+    }
+}
+
+.brand-management__column-content,
+%brand-management__column-content {
+    display: inline-block;
+    width: 100%;
+    padding: 20px;
+    background-color: $brand-management-column-content-background-colour;
+    border: 1px solid $brand-management-column-content-border-colour;
+}
+
+%brand-management__content-action {
+    display: inline-block;
+    margin: 0 5px;
+    &:last-child {
+        margin-right: 0;
+    }
+}
+
+// Projects and Recordings tabs
+.brand-management__tabs {
+    @extend %brand-management__column-header;
+    float: left;
+    // Nesting for style overrides
+    .brand-management__tab {
+        position: relative;
+        float: left;
+        width: 50%;
+        margin: 0 0 -1px;
+        z-index: 2;
+        text-transform: uppercase;
+        &:hover:not(.brand-management__tab--active) {
+            background-color: $brand-management-tab-hovered-background-colour;
+        }
+        &--active {
+            background-color: $brand-management-tab-active-background-colour;
+            border: 1px solid $brand-management-tab-active-border-colour;
+            border-width: 1px 1px 0;
+        }
+        .brand-management__tab__link {
+            display: inline-block;
+            width: 100%;
+            padding: 19px 0;
+            font-weight: bold;
+            color: $brand-management-tab-link-colour;
+            text-align: center;
+        }
+    }
+
+    &-three {
+        .brand-management__tab {
+            width: 33%;
+        }
+
+        .brand-management__tab:last-child {
+            width: 34%;
+        }
+    }
+}

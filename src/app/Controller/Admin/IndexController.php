@@ -28,17 +28,7 @@ use Symfony\Component\Routing\Generator\UrlGenerator;
 class IndexController
 {
     use OrganizationControllerTrait;
-
-    /**
-     * @var SessionInterface
-     */
-    protected $session;
-
-    /**
-     * @var UrlGenerator
-     */
-    protected $urlGenerator;
-
+    
     /**
      * @param SessionInterface $session
      * @param UrlGenerator $urlGenerator

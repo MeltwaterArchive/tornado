@@ -1,0 +1,64 @@
+body {
+	font-family: HelveticaNeue,"Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+.main-menu__item {
+	border-left: 5px solid $main-menu-background-colour;
+	&:hover {
+		border-left: 5px solid $link-colour;
+		background-color: #161616;
+	}
+}
+
+.main-menu__item--active {
+	&:before {
+		display:none;
+	}
+	border-left: 5px solid $link-colour;
+	color: #FFF;
+
+}
+
+.main-menu__item--active, .main-menu__item__link {
+	color: #FFF !important;
+	font-size: 0.8rem;
+	letter-spacing: 0.4px;
+}
+
+
+.header .logo {
+	background: url('#{$image-path}/skins/netflix/logo.png') no-repeat;
+	background-size: contain;
+	padding-left: 120px;
+	color: #fff;
+}
+
+li.worksheet a {
+	font-size: rem(13) !important;
+}
+
+%button,
+.button,
+button {
+	border-radius: 1px;
+	background-color: $button-background-colour;
+	color: $button-colour;
+
+	&:hover {
+		color: $button-hover-colour !important;
+		background-color: $button-hovered-background-colour;
+	}
+}
+
+.selectize-input {
+	border-radius: 1px;
+	font-size: rem(13);
+}
+
+.worksheet__action__button {
+	border-radius: 1px;
+}
+
+.worksheet__hint-button {
+	border: 0;
+}

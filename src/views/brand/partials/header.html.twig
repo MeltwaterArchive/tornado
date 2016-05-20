@@ -1,0 +1,16 @@
+{# Includes Projects and Recordings  (active) tabs #}
+<div class="brand-management__tabs{% if sessionUser.isSuperAdmin %} brand-management__tabs-three{% endif %}">
+    <h6 class="brand-management__tab{% if selected == "projects" %} brand-management__tab--active{% endif %}">
+        <a class="brand-management__tab__link" href="{{ path('brand.get', {'brandId': selectedBrand.id}) }}">Projects</a>
+    </h6>
+
+    <h6 class="brand-management__tab{% if selected == "recordings" %} brand-management__tab--active{% endif %}">
+        <a class="brand-management__tab__link" href="{{ path('brand.get.recordings', {'brandId': selectedBrand.id}) }}">Recordings</a>
+    </h6>
+
+    {% if sessionUser.isSuperAdmin %}
+    <h6 class="brand-management__tab{% if selected == "datasets" %} brand-management__tab--active{% endif %}">
+        <a class="brand-management__tab__link" href="{{ path('brand.datasets', {'brandId': selectedBrand.id}) }}">Datasets</a>
+    </h6>
+    {% endif %}
+</div>

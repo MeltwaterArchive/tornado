@@ -207,13 +207,13 @@
             "is_filterable": true,
             "type": "string",
             "is_tokenized": true,
-            "description": "One of 'page' or 'user'. All actor_* columns for Pages will be NULL or 'unknown'."
+            "description": "The content of a Facebook message, hydrated onto its child engagements. "
         },
         {
             "target": "fb.parent.hashtags",
             "is_analysable": true,
             "is_filterable": true,
-            "description": "infinite values possible"
+            "description": "Hashtags in a Facebook story, hydrated onto its child engagements."
         },
         {
             "target": "fb.parent.language",
@@ -282,13 +282,13 @@
             "is_analysable": true,
             "is_filterable": true,
             "is_tokenized": true,
-            "description": "Raw FBIDs of inferred topics. These are usually Pages."
+            "description": "The name of an inferred topic in a story, looked up from a raw FBID and hydrated onto child engagements."
         },
         {
             "target": "fb.topic_ids",
             "is_analysable": true,
             "is_filterable": true,
-            "description": "URL entered by a Facebook user which may or may not begin with http://. This is usually the website for a company or organization as input by a Facebook Page admin."
+            "description": "Raw FBID representing a topic inferred in a story."
         },
         {
             "target": "fb.topics.category",
@@ -302,7 +302,7 @@
             "is_analysable": true,
             "is_filterable": true,
             "is_tokenized": true,
-            "description": "Raw FBIDs of inferred topics. These are usually Pages."
+            "description": "The name of an inferred topic in a story, looked up from a raw FBID."
         },
         {
             "target": "fb.topics.category_name",
@@ -317,6 +317,20 @@
             "is_filterable": true,
             "is_tokenized": true,
             "description": "A pipe '|' separated concatenation of fb.parent.topics.category and fb.parent.topics.name"
+        },
+        {
+            "target": "fb.topic_graph",
+            "is_analysable": true,
+            "is_filterable": false,
+            "is_tokenized": false,
+            "description": "A list of objects which represent topics that co-occur on the same interactions"
+        },
+        {
+            "target": "fb.parent.topic_graph",
+            "is_analysable": true,
+            "is_filterable": false,
+            "is_tokenized": false,
+            "description": "A list of objects which represent topics that co-occur on the same interactions"
         },
         {
             "target": "fb.topics.website",
@@ -419,7 +433,8 @@
             "is_filterable": false,
             "is_primary_key": true,
             "perms": [],
-            "is_mandatory": true
+            "is_mandatory": true,
+            "description":"DataSift-generated, unique ID for each interaction."
         },
         {
             "target": "interaction.media_type",
@@ -433,7 +448,8 @@
             "target": "interaction.ml.categories",
             "is_analysable": true,
             "is_filterable": true,
-            "description": "argmax analysis of scored tags"
+            "description": "argmax analysis of scored tags",
+            "perms": ["scoring","internal"]
         },
         {
             "target": "interaction.received_at",
@@ -461,7 +477,7 @@
             "target": "links.code",
             "is_analysable": true,
             "is_filterable": true,
-            "description": "The status codes of visiting the links"
+            "description": "The status codes of visiting the links; this is always 200."
         },
         {
             "target": "links.domain",
@@ -474,14 +490,14 @@
             "is_analysable": true,
             "is_filterable": true,
             "is_tokenized": true,
-            "description": "normalized version of the original URL"
+            "description": "Normalized version of the original URL with UTM codes and anchor tags stripped out."
         },
         {
             "target": "links.url",
             "is_analysable": true,
             "is_filterable": true,
             "is_tokenized": true,
-            "description": "normalized version of the original URL"
+            "description": "Un-altered URL detected by DataSift in a Facebook story."
         },
         {
             "target": "fb.link_title",
@@ -499,7 +515,7 @@
         },
         {
             "target": "links.title",
-            "is_analysable": false,
+            "is_analysable": true,
             "is_filterable": true,
             "is_tokenized": true,
             "description": "Page titles that Facebook collects when building link previews"

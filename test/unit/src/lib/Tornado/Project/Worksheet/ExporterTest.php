@@ -10,6 +10,8 @@ use Tornado\Project\Chart\Generator as ChartGenerator;
 use Tornado\Project\Worksheet\Exporter;
 use Tornado\Project\Worksheet;
 
+use Tornado\Project\Recording\Sample;
+
 use Test\DataSift\FixtureLoader;
 
 /**
@@ -40,19 +42,27 @@ class ExporterTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideWorksheetData
      *
-     * @param  array  $targets
-     * @param  bool|string $comparison
-     * @param  array  $chartsData
-     * @param  array  $expectedHeaders
-     * @param  array  $expectedRows
+     * @param array  $targets
+     * @param bool|string $comparison
+     * @param array  $chartsData
+     * @param array  $expectedHeaders
+     * @param array  $expectedRows
+     * @param string $worksheetChartType
+     * @param array  $samples
      */
     public function testExportWorksheet(
         array $targets,
         $comparison,
         array $chartsData,
         array $expectedHeaders,
-        array $expectedRows
+        array $expectedRows,
+        $worksheetChartType = Chart::TYPE_HISTOGRAM,
+        array $samples = []
     ) {
+
+        $workbookId = 10;
+        $recordingId = 20;
+
         // prepare worksheet
         $worksheet = new Worksheet();
         $worksheet->setDimensions($targets);
@@ -60,6 +70,8 @@ class ExporterTest extends \PHPUnit_Framework_TestCase
             $worksheet->setComparison($comparison);
             $worksheet->setSecondaryRecordingId(23); // doesn't matter what ID
         }
+        $worksheet->setChartType($worksheetChartType);
+        $worksheet->setWorkbookId($workbookId);
 
         // prepare charts
         $charts = [];
@@ -72,12 +84,30 @@ class ExporterTest extends \PHPUnit_Framework_TestCase
         }
 
         $chartRepository = Mockery::mock(ChartRepository::class);
-        $chartRepository->shouldReceive('findByWorksheet')
+        $workbookRepo = Mockery::Mock('Tornado\Project\Workbook\DataMapper');
+        $recordingSampleRepo = Mockery::Mock('Tornado\Project\Recording\Sample\DataMapper');
+        
+        if ($worksheetChartType == Chart::TYPE_SAMPLE) {
+            $workbook = Mockery::mock('Tornado\Project\Workbook', ['getRecordingId' => $recordingId]);
+            $workbookRepo->shouldReceive('findOne')
+                ->with(['id' => $workbookId])
+                ->andReturn($workbook);
+
+            $recordingSampleRepo->shouldReceive('find')
+                ->with(['recording_id' => $recordingId])
+                ->andReturn($samples);
+
+            $chartRepository->shouldReceive('findByWorksheet')->never();
+        } else {
+            $workbookRepo->shouldReceive('findOne')->never();
+            $recordingSampleRepo->shouldReceive('find')->never();
+            $chartRepository->shouldReceive('findByWorksheet')
             ->with($worksheet)
             ->andReturn($charts)
             ->once();
+        }
 
-        $exporter = new Exporter($chartRepository);
+        $exporter = new Exporter($chartRepository, $workbookRepo, $recordingSampleRepo);
 
         $expected = array_merge([$expectedHeaders], $expectedRows);
         $this->assertEquals($expected, $exporter->exportWorksheet($worksheet));
@@ -359,7 +389,33 @@ class ExporterTest extends \PHPUnit_Framework_TestCase
                     'unique_authors'
                 ],
                 'expectedRows' => $this->loadJSONFixture('nev-522-expected')
+            ],
+            'Sample worksheet' => [
+                'targets' => [],
+                'comparison' => false,
+                'chartsData' => [],
+                'expectedHeaders' => ['a', 'b', 'c.d', 'c.f'],
+                'expectedRows' => [
+                    ['test', '', '', ''],
+                    ['test 2', 'x', '', ''],
+                    ['', 'x 1', '', ''],
+                    ['test 3', '', 10, 20]
+                ],
+                'worksheetChartType' => Chart::TYPE_SAMPLE,
+                'samples' => [
+                    $this->getSample((object)['a' => 'test']),
+                    $this->getSample((object)['a' => 'test 2', 'b' => 'x']),
+                    $this->getSample((object)['b' => 'x 1']),
+                    $this->getSample((object)['a' => 'test 3', 'c' => (object)['d' => 10, 'f' => 20]]),
+                ]
             ]
         ];
+    }
+
+    private function getSample($data)
+    {
+        $sample = new Sample();
+        $sample->setData($data);
+        return $sample;
     }
 }

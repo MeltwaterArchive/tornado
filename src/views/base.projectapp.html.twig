@@ -1,6 +1,6 @@
 {# Base file used for the SPA (worksheet/workbook/chart management) #}
 <!DOCTYPE html>
-<html class="no-js" lang="">
+<html class="no-js" lang="en">
     {% block head %}
         <head>
             <meta charset="utf-8">
@@ -13,13 +13,24 @@
             {# Included CSS Files #}
             {% block stylesheets %}
                 {% if app.request.attributes.get("skin") %}
-                <link rel="stylesheet" href="/assets/css/skins/{{ app.request.attributes.get("skin") }}.css">
+                    <link rel="stylesheet" href="{{ cs_build_location }}/css/skins/{{ app.request.attributes.get("skin") }}.css">
                 {% elseif organization is defined and organization.skin %}
-                <link rel="stylesheet" href="/assets/css/skins/{{ organization.skin }}.css">
+                    <link rel="stylesheet" href="{{ cs_build_location }}/css/skins/{{ organization.skin }}.css">
                 {% else %}
-                <link rel="stylesheet" href="/assets/css/tornado.css">
+                    <link rel="stylesheet" href="{{ cs_build_location }}/css/tornado.css">
                 {% endif %}
             {% endblock %}
+
+            <link rel="icon" href="{{ cs_build_location }}/images/common/favicon.png">
+
+            <script src="//twemoji.maxcdn.com/2/twemoji.min.js"></script>
+
+            {# Include Kissimetrics #}
+            {% include 'partials/kissmetrics.html.twig' %}
+            {# Include Zendesk #}
+            {% include 'partials/zendesk.html.twig' %}
+            {# Include GA #}
+            {% include 'partials/ga.html.twig' %}
         </head>
     {% endblock %}
 
@@ -31,7 +42,8 @@
             {% if not sessionUser.isSpaOnly %}
                 {% block header %}
                     <div class="header">
-                        <a class="logo" href="{{ path('home') }}">Tornado</a>
+                        {{ workbook.name }}
+                        <a class="logo" href="{% if data.project.brandId %}{{ path('brand.get', { brandId : data.project.brandId }) }}{% else %}{{ path('home') }}{% endif %}">Tornado</a>
                         {% include 'partials/profile.html.twig' %}
                     </div>
                 {% endblock %}
@@ -56,12 +68,9 @@
 
             {% block page %}
                 <div class="page{% block page_class %}{% endblock %}">
-                    <div class="page__header">
-                        <h1 class="page__title" data-tornado-view="page-title">{% block page_header_title %}My project{% endblock %}</h1>
-                        <span data-workbook-sidebar-toggle class="workbook-sidebar__button workbook-sidebar__button--open">Workbooks</span>
-                        {% block worksheet_list %}
-                        {% endblock %}
-                    </div>
+
+                    <header>
+                    </header>
                     <div class="content-wrapper">
                         {% block page_content %}
                             <div class="content__header">
@@ -83,7 +92,13 @@
 
         {# Global Javascript #}
         {% block javascript %}
-            <script src="/assets/javascript/library/requirejs/require.js" data-main="/assets/javascript/bootstrap.projectapp" async></script>
+
+            {% if cs_javascript_location is defined %}
+
+            <script src="{{ cs_bower_location }}/requirejs/require.js" data-main="{{ cs_javascript_location }}/bootstrap.projectapp" async></script>
+
+            {% endif %}
+
         {% endblock %}
 
         {# View specific Javascript #}

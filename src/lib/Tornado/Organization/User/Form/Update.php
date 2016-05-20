@@ -47,6 +47,7 @@ class Update extends Create
         $data = [
             'email' => $this->inputData['email'],
             'username' => $this->inputData['username'],
+            'disabled' => (isset($this->inputData['disabled'])) ?: 0
         ];
 
         if (isset($this->inputData['password']) && $this->inputData['password']) {
@@ -103,6 +104,10 @@ class Update extends Create
                     'choices' => $permissionChoices,
                     'message' => 'Invalid permission given'
                 ])
+            ]),
+            'disabled' => new Optional([
+                new NotBlank(),
+                new Choice(['choices' => [0, 1], 'message' => 'Invalid value given'])
             ])
         ]);
     }

@@ -221,6 +221,20 @@ class DoctrineRepository implements DataMapperInterface, PaginatorProviderInterf
     }
 
     /**
+     * {@inheritdoc}
+     *
+     */
+    public function deleteByIds(array $ids)
+    {
+        $qb = $this->createQueryBuilder();
+        $qb
+            ->delete($this->tableName)
+            ->add('where', $qb->expr()->in('id', $ids));
+
+        return $qb->execute();
+    }
+
+    /**
      * Finds objects in a persistent store.
      *
      * @param array $filter Filter to apply when finding objects.

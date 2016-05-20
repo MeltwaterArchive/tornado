@@ -98,11 +98,11 @@ class TornadoTest extends \PHPUnit_Framework_TestCase
                 ),
                 'expected' => [
                     [
-                        'getName' => 'Alabama: fb.author.gender x fb.author.age',
+                        'getName' => 'Alabama',
                         'getData' => $this->loadDataFromFixture('tornado/from-dataset-2a')
                     ],
                     [
-                        'getName' => 'Alaska: fb.author.gender x fb.author.age',
+                        'getName' => 'Alaska',
                         'getData' => $this->loadDataFromFixture('tornado/from-dataset-2b')
                     ]
                 ]
@@ -123,11 +123,11 @@ class TornadoTest extends \PHPUnit_Framework_TestCase
                 ),
                 'expected' => [
                     [
-                        'getName' => 'Alabama: fb.author.gender x fb.author.age',
+                        'getName' => 'Alabama',
                         'getData' => $this->loadDataFromFixture('tornado/from-dataset-3a')
                     ],
                     [
-                        'getName' => 'Alaska: fb.author.gender x fb.author.age',
+                        'getName' => 'Alaska',
                         'getData' => $this->loadDataFromFixture('tornado/from-dataset-3b')
                     ]
                 ],
@@ -157,11 +157,11 @@ class TornadoTest extends \PHPUnit_Framework_TestCase
                 ),
                 'expected' => [
                     [
-                        'getName' => 'Alabama: fb.author.gender x fb.author.age',
+                        'getName' => 'Alabama',
                         'getData' => $this->loadDataFromFixture('tornado/from-dataset-4a')
                     ],
                     [
-                        'getName' => 'Alaska: fb.author.gender x fb.author.age',
+                        'getName' => 'Alaska',
                         'getData' => $this->loadDataFromFixture('tornado/from-dataset-4b')
                     ]
                 ],
@@ -190,11 +190,11 @@ class TornadoTest extends \PHPUnit_Framework_TestCase
                 ),
                 'expected' => [
                     [
-                        'getName' => 'Alabama: fb.author.gender x fb.author.age',
+                        'getName' => 'Alabama',
                         'getData' => $this->loadDataFromFixture('tornado/from-dataset-5a')
                     ],
                     [
-                        'getName' => 'Alaska: fb.author.gender x fb.author.age',
+                        'getName' => 'Alaska',
                         'getData' => $this->loadDataFromFixture('tornado/from-dataset-5b')
                     ]
                 ],
@@ -224,11 +224,11 @@ class TornadoTest extends \PHPUnit_Framework_TestCase
                 ),
                 'expected' => [
                     [
-                        'getName' => 'Alabama: fb.author.gender x fb.author.age',
+                        'getName' => 'Alabama',
                         'getData' => $this->loadDataFromFixture('tornado/from-dataset-6a')
                     ],
                     [
-                        'getName' => 'Alaska: fb.author.gender x fb.author.age',
+                        'getName' => 'Alaska',
                         'getData' => $this->loadDataFromFixture('tornado/from-dataset-6b')
                     ]
                 ],
@@ -257,11 +257,11 @@ class TornadoTest extends \PHPUnit_Framework_TestCase
                 ),
                 'expected' => [
                     [
-                        'getName' => 'Alabama: fb.author.gender x fb.author.age',
+                        'getName' => 'Alabama',
                         'getData' => $this->loadDataFromFixture('tornado/from-dataset-7a')
                     ],
                     [
-                        'getName' => 'Alaska: fb.author.gender x fb.author.age',
+                        'getName' => 'Alaska',
                         'getData' => $this->loadDataFromFixture('tornado/from-dataset-7b')
                     ]
                 ],
@@ -308,11 +308,11 @@ class TornadoTest extends \PHPUnit_Framework_TestCase
                 ),
                 'expected' => [
                     [
-                        'getName' => 'Alabama: fb.author.gender x fb.author.age',
+                        'getName' => 'Alabama',
                         'getData' => $this->loadDataFromFixture('tornado/from-dataset-9a')
                     ],
                     [
-                        'getName' => 'Alaska: fb.author.gender x fb.author.age',
+                        'getName' => 'Alaska',
                         'getData' => $this->loadDataFromFixture('tornado/from-dataset-9b')
                     ]
                 ],

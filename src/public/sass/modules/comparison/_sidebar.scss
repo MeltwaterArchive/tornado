@@ -1,0 +1,41 @@
+/**
+ * Module ~ Comparison sidebar
+ */
+
+/**
+ * Comparison sidebar variables
+ */
+$comparison-header-border-bottom-colour: $colour-grey-light !default;
+
+/**
+ * Comparison sidebar styles
+ */
+.comparison-sidebar {
+    .page-sidebar__action-button--submit {
+        margin-left: 5px;
+    }
+}
+
+.comparison-options {
+    display: none;
+
+    &--active {
+        display: block;
+    }
+}
+
+.comparison-data-list,
+.comparison-mode-list {
+    padding: 0;
+    @extend %no-list-style;
+}
+
+.comparison-modes {
+    @extend %no-list-style;
+    margin: 0;
+    padding: 0;
+}
+
+.comparison-mode {
+    margin-bottom: 10px;
+}

@@ -1,7 +1,7 @@
 module.exports = {
 	sass: {
 		// watch the sass files
-	    files: ['public/assets/scss/{,**/}*.scss'],
+	    files: ['public/sass/{,**/}*.scss'],
 	    tasks: ['sass:dev']
 	}
 };

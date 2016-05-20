@@ -2,10 +2,10 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="/assets/javascript/libs/csdl-editor/csdleditor.min.css">
-    <link rel="stylesheet" href="/assets/javascript/libs/ion.rangeSlider/css/ion.rangeSlider.css">
-    <link rel="stylesheet" href="/assets/javascript/libs/ion.rangeSlider/css/ion.rangeSlider.skinFlat.css">
-    <link rel="stylesheet" href="/assets/javascript/libs/selectize/selectize.default.css">
+    <link rel="stylesheet" href="{{ cs_build_location }}/javascript/libs/csdl-editor/csdleditor.min.css">
+    <link rel="stylesheet" href="{{ cs_build_location }}/javascript/libs/ion.rangeSlider/css/ion.rangeSlider.css">
+    <link rel="stylesheet" href="{{ cs_build_location }}/javascript/libs/ion.rangeSlider/css/ion.rangeSlider.skinFlat.css">
+    <link rel="stylesheet" href="{{ cs_build_location }}/javascript/libs/selectize/selectize.default.css">
 {% endblock %}
 
 {% block body_class %}{% endblock %}
@@ -15,14 +15,14 @@
 
 {% block page_content %}
     <div data-tornado-view="page-header" class="content__header"></div>
-    <div data-tornado-view="page-content" class="content" data-show-outliers="off"></div>
+    <div data-tornado-view="page-content" class="content" data-show-outliers="on"></div>
     <div data-tornado-view="page-footer" class="content__footer"></div>
 {% endblock %}
 
 {% block worksheet_list %}
     <div class="worksheet-list worksheet-list--disabled">
         <ul data-tornado-view="worksheet-list" class="worksheet-list__items"></ul>
-        <span data-modallica="New Worksheet:worksheet-create-modal" class="worksheet-list__create-worksheet"></span>
+        <span class="worksheet-list__create-worksheet"></span>
     </div>
 {% endblock %}
 
@@ -57,9 +57,6 @@
 
     {# Dimension related templates #}
     {% include 'projectapp/partials/dimensions.html.twig' %}
-
-    {# Filters related templates #}
-    {% include 'projectapp/partials/filters.html.twig' %}
 
     {# Timespan related templates #}
     {% include 'projectapp/partials/timespan.html.twig' %}

@@ -17,6 +17,7 @@
             <input class="login__input" type="password" name="password" value="" placeholder="Password">
             <button class="login__submit" type="submit">Sign In</button>
             <a class="login__forgot" href="{{ path('login.forgotpassword') }}">Forgot password?</a>
+            <input type="hidden" name="redirect" value="{{ data.redirect }}" />
         </form>
     </div>
 {% endblock %}

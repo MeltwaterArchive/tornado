@@ -14,6 +14,7 @@ use DataSift\Form\FormInterface;
 
 use Tornado\Controller\ProjectDataAwareInterface;
 use Tornado\Controller\ProjectDataAwareTrait;
+use Tornado\Application\Flash\AwareTrait as FlashAwareTrait;
 use Tornado\Controller\Result;
 use Tornado\DataMapper\DataMapperInterface;
 
@@ -36,6 +37,7 @@ use Tornado\DataMapper\DataMapperInterface;
 class ProjectController implements ProjectDataAwareInterface
 {
     use ProjectDataAwareTrait;
+    use FlashAwareTrait;
 
     const BATCH_DELETE = 'delete';
     static protected $BATCH_ACTIONS = [self::BATCH_DELETE];
@@ -90,7 +92,7 @@ class ProjectController implements ProjectDataAwareInterface
      * @return \Tornado\Controller\Result|RedirectResponse
      *
      * @throws NotFoundHttpException When Brand was not found.
-     * @throws AccessDeniedHttpException if Session User can not access the Brand.
+     * @throws AccessDeniedHttpException if Session User cannot access the Brand.
      */
     public function create(Request $request, $brandId)
     {
@@ -107,7 +109,11 @@ class ProjectController implements ProjectDataAwareInterface
             $this->createForm->submit($postParams);
 
             if (!$this->createForm->isValid()) {
-                return new Result($responseData, $this->createForm->getErrors(), 400);
+                return new Result(
+                    $responseData,
+                    $this->createForm->getErrors('There were errors with your form; please try again'),
+                    400
+                );
             }
 
             $project = $this->createForm->getData();
@@ -130,7 +136,7 @@ class ProjectController implements ProjectDataAwareInterface
      * @return \Tornado\Controller\Result
      *
      * @throws NotFoundHttpException When Project was not found.
-     * @throws AccessDeniedHttpException if Session User can not access the Project.
+     * @throws AccessDeniedHttpException if Session User cannot access the Project.
      */
     public function update(Request $request, $projectId)
     {
@@ -148,11 +154,19 @@ class ProjectController implements ProjectDataAwareInterface
             $this->updateForm->submit($postParams, $project);
 
             if (!$this->updateForm->isValid()) {
-                return new Result($responseData, $this->updateForm->getErrors(), 400);
+                return new Result(
+                    $responseData,
+                    $this->updateForm->getErrors('There were errors with your form; please try again'),
+                    400
+                );
             }
 
             $project = $this->updateForm->getData();
             $this->projectRepository->update($project);
+            $this->flashSuccess('Project updated successfully');
+            return new RedirectResponse(
+                $this->urlGenerator->generate('project.update', ['projectId' => $project->getId()])
+            );
         }
 
         return new Result($responseData);
@@ -166,18 +180,15 @@ class ProjectController implements ProjectDataAwareInterface
      * @return \Tornado\Controller\Result
      *
      * @throws NotFoundHttpException When Project was not found.
-     * @throws AccessDeniedHttpException if Session User can not access the Project.
+     * @throws AccessDeniedHttpException if Session User cannot access the Project.
      */
     public function delete($projectId)
     {
         $project = $this->getProject($projectId);
         $brandId = $project->getBrandId();
         $this->projectRepository->delete($project);
-
-        return new Result(
-            [],
-            ['redirect_uri' => $this->urlGenerator->generate('brand.get', ['brandId' => $brandId])]
-        );
+        $redirectUri = $this->urlGenerator->generate('brand.get', ['brandId' => $brandId]);
+        return new Result([], ['redirect_uri' => $redirectUri]);
     }
 
     /**
@@ -224,7 +235,7 @@ class ProjectController implements ProjectDataAwareInterface
      * @return \Tornado\Organization\Brand
      *
      * @throws NotFoundHttpException When such Brand was not found.
-     * @throws AccessDeniedHttpException if Session User can not access the Brand
+     * @throws AccessDeniedHttpException if Session User cannot access the Brand
      */
     protected function getBrand($brandId)
     {
@@ -234,7 +245,7 @@ class ProjectController implements ProjectDataAwareInterface
         }
 
         if (!$this->authorizationManager->isGranted($brand)) {
-            throw new AccessDeniedHttpException('You can not access this Brand.');
+            throw new AccessDeniedHttpException('You cannot access this Brand.');
         }
 
         return $brand;

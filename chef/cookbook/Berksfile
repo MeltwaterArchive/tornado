@@ -2,6 +2,7 @@ source 'https://supermarket.chef.io'
 
 metadata
 
+cookbook 'rsyslog', '~> 2.2.0'
 cookbook 'php', '~> 1.5.0'
 cookbook 'php-fpm', '~> 0.7.4'
 cookbook 'supervisor', '~> 0.4.12'

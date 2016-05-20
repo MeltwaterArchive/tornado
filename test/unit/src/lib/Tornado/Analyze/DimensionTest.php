@@ -19,7 +19,7 @@ use Tornado\Analyze\Dimension;
  * @license     http://mediasift.com/licenses/internal MediaSift Internal License
  * @link        https://github.com/datasift/tornado
  *
- * @covers      \Tornado\Analyze\Dimension
+ * @coversDefaultClass \Tornado\Analyze\Dimension
  */
 class DimensionTest extends \PHPUnit_Framework_TestCase
 {
@@ -49,8 +49,8 @@ class DimensionTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider constructProvider
      *
-     * @covers       \Tornado\Analyze\Dimension::__construct
-     * @covers       \Tornado\Analyze\Dimension::getTarget
+     * @covers ::__construct
+     * @covers ::getTarget
      *
      * @param string       $target
      * @param integer|null $cardinality
@@ -87,8 +87,8 @@ class DimensionTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getSetCardinalityProvider
      *
-     * @covers       \Tornado\Analyze\Dimension::getCardinality
-     * @covers       \Tornado\Analyze\Dimension::setCardinality
+     * @covers ::getCardinality
+     * @covers ::setCardinality
      *
      * @param integer|null $cardinality
      * @param integer|null $expected
@@ -133,7 +133,7 @@ class DimensionTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider toJsonProvider
      *
-     * @covers       \Tornado\Analyze\Dimension::jsonSerialize
+     * @covers ::jsonSerialize
      *
      * @param array  $data
      * @param string $expected
@@ -142,5 +142,14 @@ class DimensionTest extends \PHPUnit_Framework_TestCase
     {
         $obj = new Dimension($data['target'], $data['cardinality'], $data['label'], $data['threshold']);
         $this->assertEquals($expected, json_encode($obj));
+    }
+
+    /**
+     * @covers ::__toString
+     */
+    public function testToString()
+    {
+        $obj = new Dimension('test', 10, 'test', 10);
+        $this->assertEquals('test', (string)$obj);
     }
 }

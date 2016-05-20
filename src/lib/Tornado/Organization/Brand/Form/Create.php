@@ -102,6 +102,7 @@ class Create extends Form
 
         $data = [
             'name' => '',
+            'datasiftUsername' => '',
             'datasiftIdentityId' => '',
             'datasiftApikey' => '',
             'agencyId' => null,
@@ -138,15 +139,17 @@ class Create extends Form
                 ]),
                 new Callback($this->brandExists())
             ]),
+            'datasiftUsername' => new Required([
+                new Optional()
+            ]),
             'datasiftIdentityId' => new Required([
                 new NotBlank([
                     'message' => 'The DataSift Identity ID is missing.'
-                ]),
-                new Callback($this->identityExists())
+                ])
             ]),
             'datasiftApikey' => new Required([
                 new NotBlank([
-                    'message' => 'The DataSift API key is missing.'
+                    'message' => 'The Identity API key is missing.'
                 ])
             ])
         ]);
@@ -204,7 +207,7 @@ class Create extends Form
     }
 
     /**
-     * Validates if a brand with the given name already exists
+     * Validates if a brand with the given identity id already exists
      *
      * @return callable
      *

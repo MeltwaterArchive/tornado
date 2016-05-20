@@ -64,7 +64,7 @@ class Explore extends Create
             'name' => (isset($data['name'])) ? $data['name'] : null,
             'chart_type' => (isset($data['chart_type'])) ? $data['chart_type'] : null,
             'type' => (isset($data['type'])) ? $data['type'] : null,
-            'explore' => (isset($data['explore'])) ? $data['explore'] : null,
+            'explore' => (isset($data['explore'])) ? $data['explore'] : [],
             'start' => (isset($data['start'])) ? $data['start'] : null,
             'end' => (isset($data['end'])) ? $data['end'] : null
         ];
@@ -102,7 +102,7 @@ class Explore extends Create
                 new NotBlank(),
                 new Choice([
                     'choices' => [Chart::TYPE_TORNADO, Chart::TYPE_HISTOGRAM, Chart::TYPE_TIME_SERIES],
-                    'message' => 'Invalid Chart type given. Available types: tornado, histogram or timeSeries'
+                    'message' => 'Invalid Chart type given. Available types: tornado, histogram or timeseries'
                 ])
             ]),
             'type' => new Required([
@@ -115,7 +115,6 @@ class Explore extends Create
                 ])
             ]),
             'explore' => new Required([
-                new NotBlank(),
                 new Type([
                     'type' => 'array',
                     'message' => 'Explore must be an object.'
@@ -137,7 +136,9 @@ class Explore extends Create
                     'message' => 'Analysis start time must represent a UNIX timestamp.'
                 ]),
                 new LessThan([
-                    'value' => isset($this->inputData['end']) ? $this->inputData['end'] : 99999999
+                    'value' => (isset($this->inputData['end']) && $this->inputData['end'])
+                                ? $this->inputData['end']
+                                : PHP_INT_MAX
                 ])
             ]);
         }
@@ -150,7 +151,9 @@ class Explore extends Create
                     'message' => 'Analysis end time must represent a UNIX timestamp.'
                 ]),
                 new GreaterThan([
-                    'value' => isset($this->inputData['start']) ? $this->inputData['start'] : 0
+                    'value' => (isset($this->inputData['start']) && $this->inputData['start'])
+                                ? $this->inputData['start']
+                                : 0
                 ])
             ]);
         }

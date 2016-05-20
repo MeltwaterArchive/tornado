@@ -1,0 +1,207 @@
+/**
+ * Module ~ Single Item ~ Recording
+ */
+
+/**
+ * Single Item ~ Recording variables
+ */
+$recording-editor-tab-hovered-background-colour: #fbfbfb !default;
+$white: #fff;
+$jcsdl-heading-color: #333;
+$jcsdl-overlay-color: #3b404d;
+
+/**
+ * Single Item ~ Recording styles
+ */
+.recording__editor-tab {
+    float: left;
+    width: 50%;
+    margin-bottom: 20px;
+    padding: 10px 0;
+    font-size: rem(12);
+    text-align: center;
+    border: 1px solid $colour-grey-light;
+    cursor: pointer;
+    &:hover {
+        background-color: $recording-editor-tab-hovered-background-colour;
+    }
+    &--csdl {
+        border-width: 1px 0 1px 1px;
+    }
+    &--active {
+        border-bottom: none;
+        cursor: default;
+        &:hover {
+            background-color: transparent;
+        }
+    }
+}
+
+.recording__editor-tab--active {
+    &.recording__editor-tab--csdl {
+        ~ .input-wrapper .recording__editor--csdl {
+            position: relative;
+            width: 100%;
+            opacity: 1;
+            visibility: visible;
+        }
+    }
+    &.recording__editor-tab--vqb {
+        ~ .input-wrapper .recording__editor--vqb {
+            position: relative;
+            width: 100%;
+            opacity: 1;
+            visibility: visible;
+        }
+    }
+}
+
+// Error styles for editors
+[data-form-field="csdl"][data-buzzkill-form-field-error] {
+    .csdl-container {
+        border-color: $colour-red-warning;
+    }
+
+    &::before {
+        display: block;
+        position: relative;
+        white-space: normal;
+    }
+}
+
+// Editor overrides
+.recording__editor--csdl,
+.recording__editor--vqb {
+    display: inline-block;
+    width: 0;
+    position: absolute;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.dataset__editor--csdl {
+    position: relative;
+    width: 100%;
+    opacity: 1;
+    visibility: visible;
+    border-width: 1px 0 1px 1px;
+}
+
+.recording__editor--csdl,
+.dataset__editor--csdl {
+    margin-bottom: 20px;
+    .csdl-container {
+        min-width: 0;
+        // scss-lint:disable SelectorFormat
+        .CodeMirror {
+            height: 250px;
+        }
+        // scss-lint:enable SelectorFormat
+    }
+    .csdl-button {
+        @extend %button;
+        &.csdl-geoselect,
+        &.csdl-listeditor,
+        &.csdl-theme,
+        &.csdl-view-open,
+        &.csdl-view-close,
+        &.csdl-save {
+            display: none !important;
+        }
+    }
+}
+
+.recording__editor--vqb {
+    input {
+        box-sizing: border-box;
+    }
+    .jcsdl-container {
+        overflow: initial;
+    }
+    .jcsdl-header {
+        padding: 0;
+        .jcsdl-row:first-child {
+            margin: 0;
+        }
+        h3 {
+            display: none;
+        }
+        .jcsdl-filters-logic {
+            margin-bottom: 5px;
+        }
+        .jcsdl-mainview-actions {
+            float: left;
+        }
+    }
+    .jcsdl-search {
+        width: 100%;
+        .jcsdl-search-results {
+            width: 100%;
+        }
+    }
+    .jcsdl-list-search {
+        margin: 5px 0 0;
+    }
+    .jcsdl-list-add-input {
+        margin: 0;
+    }
+    .jcsdl-operators-select {
+        margin: 0;
+    }
+    .jcsdl-filter {
+        margin: 0 0 10px;
+    }
+    .jcsdl-footer {
+        margin-bottom: 20px;
+        padding: 0;
+    }
+}
+
+.recording--create {
+    .jcsdl-overlay {
+        background-color: $jcsdl-overlay-color;
+        opacity: 0.9;
+    }
+    .jcsdl-popup {
+        box-shadow: none;
+        .jcsdl-popup-header {
+            height: auto;
+            padding: 10px 20px;
+            background: none;
+            background-color: $white;
+            border: none;
+            h4 {
+                color: $jcsdl-heading-color;
+            }
+            .jcsdl-popup-close {
+                top: 50%;
+                right: 20px;
+                width: 20px;
+                height: 20px;
+                margin-top: -10px;
+                background-image: url("#{$image-path}/common/sidebar/close.svg");
+                background-size: 100% auto;
+                background-repeat: no-repeat;
+                background-position: center center;
+                // scss-lint:disable NestingDepth
+                &:active {
+                    top: 50%;
+                }
+                // scss-lint:enable NestingDepth
+            }
+        }
+        .jcsdl-popup-content {
+            padding: 20px;
+            background-color: #e9eaee;
+        }
+        .jcsdl-copy-to-clipboard {
+            top: 70px;
+            right: 0;
+            width: auto;
+            font-weight: normal;
+            .jcsdl-picto {
+                margin-right: 0;
+            }
+        }
+    }
+}

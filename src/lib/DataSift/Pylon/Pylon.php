@@ -22,15 +22,15 @@ class Pylon extends \DataSift_Pylon
 {
 
     /**
-     * @var DataSift_User
+     * @var \DataSift_User
      */
     protected $user;
 
     /**
      * Construct the Datasift_Pylon object
      *
-     * @param Datasift_User $user The Datasift user object
-     * @param array $data Data used to populate the attributes of this object
+     * @param \Datasift_User $user The Datasift user object
+     * @param array|boolean $data Data used to populate the attributes of this object
      *
      * @return DataSift_Pylon
      */
@@ -99,5 +99,17 @@ class Pylon extends \DataSift_Pylon
         }
 
         return (isset($ret['created_at']));
+    }
+
+    /**
+     * Gets the identity details for the specified identity id
+     *
+     * @param $identityId
+     * @return mixed
+     */
+    public function getIdentity($identityId)
+    {
+        $identity = new \DataSift_Account_Identity($this->user);
+        return $identity->get($identityId);
     }
 }

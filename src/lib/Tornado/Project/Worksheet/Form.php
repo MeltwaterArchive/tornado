@@ -92,12 +92,13 @@ abstract class Form extends BaseForm
 
     /**
      * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator
-     * @param \DataSift\Pylon\Schema\Provider                           $schemaProvider
-     * @param \Tornado\Analyze\Dimension\Factory                        $dimensionFactory
-     * @param \Tornado\Project\Worksheet\FilterCsdlGenerator            $filterCsdlGenerator
-     * @param \DataSift\Pylon\Regions                                   $regions
-     * @param \Tornado\DataMapper\DataMapperInterface                   $workbookRepo
-     * @param \Tornado\DataMapper\DataMapperInterface                   $worksheetRepo
+     * @param \DataSift\Pylon\Schema\Provider $schemaProvider
+     * @param \Tornado\Analyze\Dimension\Factory $dimensionFactory
+     * @param \Tornado\Project\Worksheet\FilterCsdlGenerator $filterCsdlGenerator
+     * @param \DataSift\Pylon\Regions $regions
+     * @param \Tornado\DataMapper\DataMapperInterface $workbookRepo
+     * @param \Tornado\DataMapper\DataMapperInterface $worksheetRepo
+     * @param array $targetPermissions
      */
     public function __construct(
         ValidatorInterface $validator,
@@ -164,6 +165,7 @@ abstract class Form extends BaseForm
         $this->modelData->setInterval($this->normalizedData['interval']);
         $this->modelData->setStart($this->normalizedData['start']);
         $this->modelData->setEnd($this->normalizedData['end']);
+
 
         return $this->modelData;
     }
@@ -272,7 +274,7 @@ abstract class Form extends BaseForm
         }
 
         $targetFilter = [];
-        $typeChoices = [Analysis::TYPE_TIME_SERIES, Analysis::TYPE_FREQUENCY_DISTRIBUTION];
+        $typeChoices = [Analysis::TYPE_TIME_SERIES, Analysis::TYPE_FREQUENCY_DISTRIBUTION, Analysis::TYPE_SAMPLE];
         if (isset($this->inputData['chart_type']) && $this->inputData['chart_type'] == Chart::TYPE_TIME_SERIES) {
             $targetFilter = ['is_time' => true];
             $typeChoices = [Analysis::TYPE_TIME_SERIES];
@@ -331,8 +333,13 @@ abstract class Form extends BaseForm
             'chart_type' => new Required([
                 new NotBlank(),
                 new Choice([
-                    'choices' => [Chart::TYPE_TORNADO, Chart::TYPE_HISTOGRAM, Chart::TYPE_TIME_SERIES],
-                    'message' => 'Invalid Chart type given. Available types: tornado, histogram or timeSeries'
+                    'choices' => [
+                        Chart::TYPE_TORNADO,
+                        Chart::TYPE_HISTOGRAM,
+                        Chart::TYPE_TIME_SERIES,
+                        Chart::TYPE_SAMPLE
+                    ],
+                    'message' => 'Invalid Chart type given. Available types: tornado, histogram or timeseries'
                 ])
             ]),
             'type' => new Required([
@@ -521,7 +528,7 @@ abstract class Form extends BaseForm
                 new LessThan([
                     'value' => time()
                 ])
-            ]),
+            ])
         ]);
     }
 
@@ -546,7 +553,7 @@ abstract class Form extends BaseForm
 
             if ($worksheet && (!isset($this->modelData) || $worksheet->getId() !== $this->modelData->getId())) {
                 $context
-                    ->buildViolation('Title already in use.')
+                    ->buildViolation($this->inputData['name'] . ' already in use.')
                     ->addViolation();
             }
         };

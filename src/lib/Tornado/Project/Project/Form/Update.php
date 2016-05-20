@@ -29,6 +29,11 @@ use Tornado\Project\Project;
 class Update extends Create
 {
     /**
+     * @var string
+     */
+    const CONFLICT_MESSAGE_SUFFIX = 'already in use.';
+
+    /**
      * {@inheritdoc}
      */
     public function submit(array $data, DataObjectInterface $object = null)
@@ -111,8 +116,9 @@ class Update extends Create
             if ($project && $project->getId() !== $this->modelData->getId()) {
                 $context
                     ->buildViolation(sprintf(
-                        'Project with name "%s" already in use.',
-                        $this->inputData['name']
+                        'Project with name "%s" %s',
+                        $this->inputData['name'],
+                        static::CONFLICT_MESSAGE_SUFFIX
                     ))
                     ->addViolation();
             }

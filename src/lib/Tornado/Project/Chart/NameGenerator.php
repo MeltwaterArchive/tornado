@@ -54,18 +54,15 @@ class NameGenerator
      */
     protected function generateTornadoName(Collection $dimensionsCol, $lowestDimVal = null)
     {
-        $name = '';
         if ($lowestDimVal && 3 === count($dimensionsCol->getDimensions())) {
             // we must clone the collection to prevent real element removing
             $dimensionsCol = clone $dimensionsCol;
-
-            $name = sprintf('%s: ', ucfirst($lowestDimVal));
             $dimensionsCol->removeElement(count($dimensionsCol->getDimensions()) - 1);
+            return sprintf('%s', ucfirst($lowestDimVal));
         }
 
         $labels = $this->getLabels($dimensionsCol);
-
-        return sprintf('%s%s', $name, join($labels, ' x '));
+        return sprintf('%s', join($labels, ' x '));
     }
 
     /**

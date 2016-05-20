@@ -6,15 +6,15 @@ module.exports = {
         },
         files: [{
             expand: true,
-            cwd: 'public/assets/scss',
+            cwd: 'public/sass',
             src: 'tornado.scss',
-            dest: 'public/assets/css',
+            dest: 'public/css',
             ext: '.css'
         }, {
             expand: true,
-            cwd: 'public/assets/scss/skins',
+            cwd: 'public/sass/skins',
             src: '*.scss',
-            dest: 'public/assets/css/skins',
+            dest: 'public/css/skins',
             ext: '.css'
         }]
     },
@@ -25,15 +25,15 @@ module.exports = {
         },
         files: [{
             expand: true,
-            cwd: 'public/assets/scss',
+            cwd: 'public<%= buildLocation %>/sass',
             src: 'tornado.scss',
-            dest: 'public/assets/css',
+            dest: 'public<%= buildLocation %>/css',
             ext: '.css'
         }, {
             expand: true,
-            cwd: 'public/assets/scss/skins',
+            cwd: 'public<%= buildLocation %>/sass/skins',
             src: '*.scss',
-            dest: 'public/assets/css/skins',
+            dest: 'public<%= buildLocation %>/css/skins',
             ext: '.css'
         }]
     }

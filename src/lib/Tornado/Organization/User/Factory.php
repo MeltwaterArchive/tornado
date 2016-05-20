@@ -56,17 +56,11 @@ class Factory
      */
     protected function setData(User $user, array $data)
     {
-        foreach ($data as $property => $value) {
-            $setter = 'set' . ucfirst($property);
-
-            if (method_exists($user, $setter)) {
-                if ('password' === $property) {
-                    $user->setPassword(password_hash($value, PASSWORD_DEFAULT));
-                } else {
-                    $user->$setter($value);
-                }
-            }
+        if (isset($data['password'])) {
+            $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
         }
+
+        $user->loadFromArray($data);
 
         return $user;
     }

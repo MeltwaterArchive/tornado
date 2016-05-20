@@ -1,0 +1,115 @@
+        {# DataSet name #}
+        <div data-form-field="name" class="input-wrapper">
+            <label class="input-label" for="dataset-name">DataSet Name</label>
+            {% if meta.name is defined %}
+                <span class="input-error">{{ meta.name }}</span>
+            {% endif %}
+            <input id="dataset-name" type="text" name="name" value="{{ dataset.name }}" placeholder="Give your DataSet a name">
+        </div>
+
+        <div data-form-field="visibility" class="input-wrapper">
+            <label class="input-label" for="dataset-visibility">Visibility</label>
+            {% if meta.visibility is defined %}
+                <span class="input-error">{{ meta.visibility }}</span>
+            {% endif %}
+            <select id="dataset-visibility" name="visibility">
+                <option value="private"{% if dataset.visibility is defined and dataset.visibility == 'private' %} selected{% endif %}>Private</option>
+                <option value="public"{% if dataset.visibility is defined and dataset.visibility == 'public' %} selected{% endif %}>Public</option>
+            </select>
+        </div>
+
+        <div data-form-field="recordingId" class="input-wrapper">
+            <label class="input-label" for="dataset-recordingId">Recording</label>
+            {% if meta.recordingId is defined %}
+                <span class="input-error">{{ meta.recordingId }}</span>
+            {% endif %}
+            <select id="dataset-recordingId" name="recordingId">
+                {% for recording in data.recordings %}
+                    <option value="{{ recording.id }}"{% if dataset.recordingId is defined and dataset.recordingId == recording.id %} selected{% endif %}>{{ recording.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div data-form-field="analysisType" class="input-wrapper">
+            <label class="input-label" for="dataset-analysisType">Analysis Type</label>
+            {% if meta.analysisType is defined %}
+                <span class="input-error">{{ meta.analysisType }}</span>
+            {% endif %}
+            <select id="dataset-analysisType" name="analysisType">
+                <option value="freqDist"{% if dataset.analysisType is defined and dataset.analysisType == 'freqDist' %} selected{% endif %}>Frequency Distribution</option>
+            </select>
+        </div>
+
+        <div data-form-field="schedule" class="input-wrapper">
+            <label class="input-label" for="dataset-schedule">Schedule</label>
+            {% if meta.schedule is defined %}
+                <span class="input-error">{{ meta.schedule }}</span>
+            {% endif %}
+            {% if meta.scheduleUnits is defined %}
+                <span class="input-error">{{ meta.scheduleUnits }}</span>
+            {% endif %}
+            <div class="form-left">
+                <input type="text" id="dataset-schedule" name="schedule" value="{{ dataset.schedule }}" placeholder="Number of days, weeks or months" />
+            </div>
+            <div class="form-left">
+            <select id="dataset-scheduleUnits" name="scheduleUnits">
+                <option value="day"{% if dataset.scheduleUnits is defined and dataset.scheduleUnits == 'day' %} selected{% endif %}>Day(s)</option>
+                <option value="week"{% if dataset.scheduleUnits is defined and dataset.scheduleUnits == 'week' %} selected{% endif %}>Week(s)</option>
+                <option value="month"{% if dataset.scheduleUnits is defined and dataset.scheduleUnits == 'month' %} selected{% endif %}>Month(s)</option>
+            </select>
+            </div>
+        </div>
+
+        <div data-form-field="timeRange" class="input-wrapper">
+            <label class="input-label" for="dataset-timeRange">Time Range</label>
+            {% if meta.timeRange is defined %}
+                <span class="input-error">{{ meta.timeRange }}</span>
+            {% endif %}
+            <select id="dataset-timeRange" name="timeRange">
+                <option value="day"{% if dataset.timeRange is defined and dataset.timeRange == 'day' %} selected{% endif %}>Last Day</option>
+                <option value="week"{% if dataset.timeRange is defined and dataset.timeRange == 'week' %} selected{% endif %}>Last Week</option>
+                <option value="fortnight"{% if dataset.timeRange is defined and dataset.timeRange == 'fortnight' %} selected{% endif %}>Last 2 Weeks</option>
+                <option value="month"{% if dataset.timeRange is defined and dataset.timeRange == 'month' %} selected{% endif %}>Last Month</option>
+            </select>
+        </div>
+
+        <div data-form-field="dimensions" class="input-wrapper">
+            <label class="input-label" for="dataset-dimensions">Dimensions</label>
+            {% if meta.dimensions is defined %}
+                <span class="input-error">{{ meta.dimensions }}</span>
+            {% endif %}
+            {% set dimensions = dataset.dimensions.dimensions %}
+            <select id="dataset-dimensions1" name="dimensions[0]" class="filters-select">
+                {% for target in data.targets %}
+                    <option value="{{ target.target }}"{% if dimensions[0] is defined and dimensions[0] == target.target %} selected{% endif %}>{{ target.label }}</option>
+                {% endfor %}
+            </select>
+            <select id="dataset-dimensions2" name="dimensions[1]" class="filters-select">
+                <option value="" />
+                {% for target in data.targets %}
+                    <option value="{{ target.target }}"{% if dimensions[1] is defined and dimensions[1] == target.target %} selected{% endif %}>{{ target.label }}</option>
+                {% endfor %}
+            </select>
+            <select id="dataset-dimensions3" name="dimensions[2]" class="filters-select">
+                <option value="" />
+                {% for target in data.targets %}
+                    <option value="{{ target.target }}"{% if dimensions[2] is defined and dimensions[2] == target.target %} selected{% endif %}>{{ target.label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <script type="text/javascript">
+            var CSDLEditorTargets = {{ data.flatTargets|json_encode|raw }};
+        </script>
+
+        <div data-form-field="filter" class="input-wrapper">
+            <label class="input-label">Filter</label>
+            <textarea style="display: none;" name="filter" id="dataset-filter">{{ dataset.filter }}</textarea>
+            {% if meta.filter is defined %}
+                <span class="input-error">{{ meta.filter }}</span>
+            {% endif %}
+
+            <div data-form-field="csdl" class="input-wrapper">
+                <div data-recording-editor-csdl class="recording__editor dataset__editor--csdl"></div>
+            </div>
+        </div>

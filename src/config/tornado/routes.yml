@@ -26,10 +26,10 @@ login.resetpassword:
         _authentication: off
 
 jwt:
-    path: /jwt
+    path: /login/jwt/{jwt}
     methods: [GET]
     defaults:
-        _controller: 'security.controller:jwt'
+        _controller: 'security.controller:login'
         _template: 'security/login.html.twig'
         _authentication: off
 
@@ -256,6 +256,16 @@ project.worksheet.update:
         projectId: \d+
         worksheetId: \d+
 
+project.worksheet.duplicate:
+    path: /api/project/{projectId}/worksheet/{worksheetId}/duplicate
+    defaults:
+        _controller: 'project.app.worksheet.controller:duplicate'
+        _brand_resolver: 'projectId'
+    methods: [POST]
+    requirements:
+        projectId: \d+
+        worksheetId: \d+
+
 project.worksheet.explore:
     path: /api/project/{projectId}/worksheet/{worksheetId}/explore
     defaults:
@@ -296,11 +306,30 @@ project.worksheet.dimension:
         projectId: \d+
         worksheetId: \d+
 
+project.worksheet.fetch-posts:
+    path: /api/project/{projectId}/worksheet/{worksheetId}/fetch-posts
+    methods: [GET]
+    defaults:
+        _controller: 'analyze.controller:fetchSamplePosts'
+        _brand_resolver: 'projectId'
+    requirements:
+        projectId: \d+
+        worksheetId: \d+
+
 project.workbooks:
     path: /api/project/{projectId}/workbook
     methods: [GET]
     defaults:
         _controller: 'project.app.workbook.controller:workbooks'
+        _brand_resolver: 'projectId'
+    requirements:
+        projectId: \d+
+
+project.workbook.templates:
+    path: /api/project/{projectId}/workbook/templates
+    methods: [GET]
+    defaults:
+        _controller: 'project.app.workbook.controller:templates'
         _brand_resolver: 'projectId'
     requirements:
         projectId: \d+
@@ -314,6 +343,16 @@ project.workbook:
     requirements:
         projectId: \d+
         workbookId: \d+
+
+project.workbook.dimension:
+    path: /api/project/{projectId}/workbook/{workbookId}/dimensions
+    methods: [GET]
+    defaults:
+        _controller: 'project.app.dimension.controller:index'
+        _brand_resolver: 'projectId'
+    requirements:
+        projectId: \d+
+        worksheetId: \d+
 
 project.workbook.create:
     path: /api/project/{projectId}/workbook
@@ -421,6 +460,90 @@ project.recordings:
     methods: [GET]
 
 ##
+# DataSets
+##
+
+brand.datasets:
+    path: /brands/{brandId}/datasets
+    methods: [GET]
+    defaults:
+        _controller: 'dataset.controller:index'
+        _permissions: [ROLE_SUPERADMIN]
+        _template: 'brand/dataset/index.html.twig'
+        _brand_resolver: 'brandId'
+    requirements:
+        brandId: \d+
+
+brand.datasets.batch:
+    path: /brands/{brandId}/dataset/batch
+    methods: [POST]
+    defaults:
+        _controller: 'dataset.controller:batch'
+        _permissions: [ROLE_SUPERADMIN]
+        _brand_resolver: 'brandId'
+    requirements:
+        brandId: \d+
+
+brand.dataset.create:
+    path: /brands/{brandId}/dataset/new
+    methods: [GET,POST]
+    defaults:
+        _controller: 'dataset.controller:create'
+        _permissions: [ROLE_SUPERADMIN]
+        _template: 'brand/dataset/create.html.twig'
+        _brand_resolver: 'brandId'
+    requirements:
+        brandId: \d+
+
+brand.dataset.edit:
+    path: /brands/{brandId}/dataset/{id}
+    methods: [GET,POST]
+    defaults:
+        _controller: 'dataset.controller:edit'
+        _permissions: [ROLE_SUPERADMIN]
+        _template: 'brand/dataset/edit.html.twig'
+        _brand_resolver: 'brandId'
+    requirements:
+        brandId: \d+
+        id: \d+
+
+brand.dataset.pause:
+    path: /brands/{brandId}/dataset/{id}/pause
+    methods: [GET]
+    defaults:
+        _controller: 'dataset.controller:pause'
+        _permissions: [ROLE_SUPERADMIN]
+        _brand_resolver: 'brandId'
+    requirements:
+        brandId: \d+
+        id: \d+
+
+brand.dataset.resume:
+    path: /brands/{brandId}/dataset/{id}/resume
+    methods: [GET]
+    defaults:
+        _controller: 'dataset.controller:resume'
+        _permissions: [ROLE_SUPERADMIN]
+        _brand_resolver: 'brandId'
+    requirements:
+        brandId: \d+
+        id: \d+
+
+dataset:
+    path: /datasets/{workbookId}
+    methods: [GET]
+    defaults:
+        _controller: 'dataset.controller:apiIndex'
+        _brand_resolver: 'workbookId'
+
+dataset.project:
+    path: /datasets/project/{projectId}
+    methods: [GET]
+    defaults:
+        _controller: 'dataset.controller:apiIndex'
+        _brand_resolver: 'projectId'
+
+##
 # EXTRA RESOURCES
 ##
 home:
@@ -436,12 +559,6 @@ analyzer:
     defaults:
         _controller: 'analyze.controller:create'
         _brand_resolver: 'worksheetId'
-
-dataset:
-    path: /datasets
-    methods: [GET]
-    defaults:
-        _controller: 'dataset.controller:index'
 
 regions:
     path: /regions

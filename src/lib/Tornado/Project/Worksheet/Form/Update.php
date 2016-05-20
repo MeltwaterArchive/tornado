@@ -77,6 +77,9 @@ class Update extends Form
         }
 
         $this->modelData->setName($this->normalizedData['name']);
+        if (isset($this->normalizedData['display_options'])) {
+            $this->modelData->setDisplayOptions($this->normalizedData['display_options']);
+        }
 
         return $this->modelData;
     }
@@ -101,7 +104,8 @@ class Update extends Form
                     'message' => 'Worksheet Name must be a string.'
                 ]),
                 new Callback($this->worksheetExists())
-            ])
+            ]),
+            'display_options' => new Optional()
         ]);
     }
 }

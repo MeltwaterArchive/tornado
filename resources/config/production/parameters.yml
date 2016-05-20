@@ -3,6 +3,8 @@ parameters:
 
     routes.path:      %config_dir%
     twig.path:        %root_dir%/views
+    twig.options:
+      strict_variables: false
     monolog.log_file: /var/log/tornado/%env%.log
 
     cache.service_name: cache.memcached

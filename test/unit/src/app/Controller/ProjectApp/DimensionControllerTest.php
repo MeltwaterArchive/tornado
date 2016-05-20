@@ -53,7 +53,8 @@ class DimensionControllerTest extends \PHPUnit_Framework_TestCase
             'fb.author.gender' => ['target' => 'fb.author.gender'],
             'fb.author.location' => ['target' => 'fb.author.location'],
             'fb.story.content' => ['target' => 'fb.story.content'],
-            'interaction.content' => ['target' => 'interaction.content']
+            'interaction.content' => ['target' => 'interaction.content'],
+            'time' => ['target' => 'interaction.content', 'is_time' => true] // this should never appear...
         ];
 
         $groups = [
@@ -101,8 +102,11 @@ class DimensionControllerTest extends \PHPUnit_Framework_TestCase
             ->andReturn($dimensions)
             ->once();
 
+        $dimensions2 = $dimensions;
+        unset($dimensions2['time']); // See FTD-157 - time shouldn't appear in the list
+
         $mocks['schemaGrouper']->shouldReceive('groupObjects')
-            ->with($dimensions)
+            ->with($dimensions2)
             ->andReturn($groups)
             ->once();
 

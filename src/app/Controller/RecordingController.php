@@ -109,7 +109,7 @@ class RecordingController implements BrandDataAwareInterface
      * @return \Tornado\Controller\Result
      *
      * @throws NotFoundHttpException When Brand was not found.
-     * @throws AccessDeniedHttpException if Session User can not access the Brand.
+     * @throws AccessDeniedHttpException if Session User cannot access the Brand.
      */
     public function createForm($brandId)
     {
@@ -141,7 +141,7 @@ class RecordingController implements BrandDataAwareInterface
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Tornado\Controller\Result
      *
      * @throws NotFoundHttpException When Brand was not found.
-     * @throws AccessDeniedHttpException if Session User can not access the Brand.
+     * @throws AccessDeniedHttpException if Session User cannot access the Brand.
      */
     public function create(Request $request, $brandId)
     {
@@ -197,7 +197,7 @@ class RecordingController implements BrandDataAwareInterface
      * @return \Tornado\Controller\Result
      *
      * @throws NotFoundHttpException When Recording was not found.
-     * @throws AccessDeniedHttpException if Session User can not access the Recording.
+     * @throws AccessDeniedHttpException if Session User cannot access the Recording.
      */
     public function delete($recordingId)
     {
@@ -214,7 +214,7 @@ class RecordingController implements BrandDataAwareInterface
 
             return new Result(
                 [],
-                ['error' => sprintf('Recording "%s" error: %s.', $recording->getName(), $e->getMessage())],
+                ['error' => 'There was an error deleting your recording. Please try again.'],
                 $statusCode
             );
         }
@@ -233,7 +233,7 @@ class RecordingController implements BrandDataAwareInterface
      * @return \Tornado\Controller\Result
      *
      * @throws NotFoundHttpException When Recording was not found.
-     * @throws AccessDeniedHttpException if Session User can not access the Recording.
+     * @throws AccessDeniedHttpException if Session User cannot access the Recording.
      */
     public function updateForm($recordingId)
     {
@@ -256,7 +256,7 @@ class RecordingController implements BrandDataAwareInterface
      * @return \Tornado\Controller\Result
      *
      * @throws NotFoundHttpException When Recording was not found.
-     * @throws AccessDeniedHttpException if Session User can not access the Recording.
+     * @throws AccessDeniedHttpException if Session User cannot access the Recording.
      */
     public function update(Request $request, $recordingId)
     {
@@ -415,7 +415,7 @@ class RecordingController implements BrandDataAwareInterface
 
             return new Result(
                 [],
-                ['error' => sprintf('Recording batch delete error: %s.', $e->getMessage())],
+                ['error' => 'There was an error deleting one or more recordings. Please try again'],
                 $statusCode
             );
         }
@@ -436,17 +436,17 @@ class RecordingController implements BrandDataAwareInterface
      * @return \Tornado\Project\Recording
      *
      * @throws NotFoundHttpException When such Recording was not found.
-     * @throws AccessDeniedHttpException if Session User can not access the Recording
+     * @throws AccessDeniedHttpException if Session User cannot access the Recording
      */
     protected function getRecording($recordingId)
     {
         $recording = $this->recordingRepository->findOne(['id' => $recordingId]);
         if (!$recording) {
-            throw new NotFoundHttpException(sprintf('Could not find Recording with ID %s', $recordingId));
+            throw new NotFoundHttpException(sprintf('Could not find recording with ID %s', $recordingId));
         }
 
         if (!$this->authorizationManager->isGranted($recording)) {
-            throw new AccessDeniedHttpException('You can not access this Recording.');
+            throw new AccessDeniedHttpException('You cannot access this recording.');
         }
 
         return $recording;

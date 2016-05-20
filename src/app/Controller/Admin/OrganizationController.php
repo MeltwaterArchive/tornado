@@ -135,22 +135,23 @@ class OrganizationController
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Tornado\Controller\Result
      *
      * @throws NotFoundHttpException When Brand was not found.
-     * @throws AccessDeniedHttpException if Session User can not access the Brand.
+     * @throws AccessDeniedHttpException if Session User cannot access the Brand.
      */
     public function create(Request $request)
     {
         $postParams = $request->getPostParams();
-        $this->createForm->submit($postParams);
-
+        $organization = new Organization();
+        $this->createForm->submit($postParams, $organization);
+        $this->createForm->getData();
         if (!$this->createForm->isValid()) {
             return new Result(
-                [],
-                $this->createForm->getErrors('There were errors saving the Organization.'),
-                Response::HTTP_BAD_REQUEST
+                [
+                    'organization' => $organization
+                ],
+                $this->createForm->getErrors('There were errors saving the Organization.')
             );
         }
 
-        $organization = $this->createForm->getData();
         $this->organizationRepo->create($organization);
 
         $this->setFlash('Organization added successfully', 'success');

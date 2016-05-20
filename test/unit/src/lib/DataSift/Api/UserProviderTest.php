@@ -2,6 +2,7 @@
 
 namespace Test\DataSift\Api;
 
+use DataSift\Pylon\Pylon;
 use Mockery;
 
 use DataSift\Api\UserProvider;
@@ -133,5 +134,148 @@ class UserProviderTest extends \PHPUnit_Framework_TestCase
         $userProvider->setUsername('test');
         $userProvider->setApiKey('hash');
         $userProvider->setApiVersion('2.0');
+    }
+
+    /**
+     *
+     * @expectedException \DataSift_Exception_AccessDenied
+     */
+    public function testValidateCredentialsEmpty()
+    {
+        $userProvider = new UserProvider();
+        $userProvider->validateCredentials();
+    }
+
+    /**
+     * @covers ::validateCredentials
+     * @expectedException \DataSift_Exception_AccessDenied
+     */
+    public function testValidateCredentialsUnhappyPath()
+    {
+        $dataSiftClient = Mockery::mock(\DataSift_User::class);
+        $dataSiftClient->shouldReceive('getUsage')
+            ->once()
+            ->andThrow(\DataSift_Exception_AccessDenied::class);
+
+        /** @var UserProvider $userProvider */
+        $userProvider = Mockery::mock(UserProvider::class)->makePartial();
+        $userProvider->shouldReceive('getInstance')
+            ->once()
+            ->andReturn($dataSiftClient);
+
+        $userProvider->setUsername('test');
+        $userProvider->setApiKey('hash');
+
+        $userProvider->validateCredentials();
+    }
+
+    /**
+     * @covers ::validateCredentials
+     */
+    public function testValidateCredentialsHappyPath()
+    {
+        $dataSiftClient = Mockery::mock(\DataSift_User::class);
+        $dataSiftClient->shouldReceive('getUsage')
+            ->once();
+
+        /** @var UserProvider $userProvider */
+        $userProvider = Mockery::mock(UserProvider::class)->makePartial();
+        $userProvider->shouldReceive('getInstance')
+            ->once()
+            ->andReturn($dataSiftClient);
+
+        $userProvider->setUsername('test');
+        $userProvider->setApiKey('hash');
+
+        $this->assertTrue($userProvider->validateCredentials());
+    }
+
+    /**
+     * @covers ::identityHasPremiumPermissions
+     */
+    public function testIdentityHasPremiumPermissionsHappy()
+    {
+        $pylonClientMock = Mockery::mock(Pylon::class);
+        $pylonClientMock->shouldReceive('getIdentity')
+            ->andReturn(['api_key' => md5('test_api')]);
+        $pylonClientMock->shouldReceive('validate');
+        $userProvider = new UserProvider();
+        $userProvider->setUsername('test');
+        $userProvider->setApiKey('hash');
+        $hasPermissions = $userProvider->identityHasPremiumPermissions(
+            $pylonClientMock
+        );
+
+        $this->assertTrue($hasPermissions);
+    }
+
+    /**
+     * @covers ::identityHasPremiumPermissions
+     */
+    public function testIdentityHasPremiumPermissionsHappyNoPremium()
+    {
+        $pylonClientMock = Mockery::mock(Pylon::class);
+        $pylonClientMock->shouldReceive('getIdentity')
+            ->andReturn(['api_key' => md5('test_api')]);
+        $pylonClientMock->shouldReceive('validate')
+            ->withAnyArgs()
+            ->once()
+            ->andThrow(\DataSift_Exception_InvalidData::class);
+        $userProvider = new UserProvider();
+        $userProvider->setUsername('test');
+        $userProvider->setApiKey('hash');
+
+        $hasPermissions = $userProvider->identityHasPremiumPermissions(
+            $pylonClientMock
+        );
+
+        $this->assertFalse($hasPermissions);
+    }
+
+    /**
+     * DataProvider for testIdentityExists
+     *
+     * @return array
+     */
+    public function identityExistsProvider()
+    {
+        return [
+            'Happy path' => [
+                'identityId' => 'abc123abc123abc123abc123abc123ab',
+                'exists' => true
+            ],
+            'Sad path' => [
+                'identityId' => 'bbc123abc123abc123abc123abc123ab',
+                'exists' => false,
+                'expectedException' => 'DataSift_Exception_APIError'
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider identityExistsProvider
+     *
+     * @covers ::identityExists
+     *
+     * @param string $identityId
+     * @param boolean $exists
+     * @param string $expectedException
+     */
+    public function testIdentityExists($identityId, $exists, $expectedException = null)
+    {
+        $pylonClientMock = Mockery::mock(Pylon::class);
+        $should = $pylonClientMock->shouldReceive('getIdentity')
+            ->with($identityId);
+        $this->setExpectedException($expectedException);
+        if ($exists) {
+            $should->andReturn(['test' => 'value']);
+        } else {
+            $should->andThrow(new \DataSift_Exception_APIError('Identity not found'));
+        }
+
+        $userProvider = new UserProvider();
+        $userProvider->setUsername('test');
+        $userProvider->setApiKey('hash');
+        $this->assertTrue($userProvider->identityExists($identityId, $pylonClientMock));
     }
 }

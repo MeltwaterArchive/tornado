@@ -10,6 +10,7 @@ use Tornado\DataMapper\DataMapperInterface;
 use Tornado\Project\Recording\DataSiftRecording\Collection;
 use Tornado\Project\Recording as RecordingModel;
 use Tornado\Project\Recording;
+use Tornado\Project\Workbook;
 
 /**
  * DataSiftRecording class represents a DataSift recording model and actions which can be make on it
@@ -135,6 +136,38 @@ class DataSiftRecording implements LoggerAwareInterface
             }
         }
         return $recordings;
+    }
+
+    /**
+     * Decorates an array of Workbooks and Recordings with the appropriate PYLON recordings
+     *
+     * @param array $workbooks
+     * @param array $recordings
+     *
+     * @return array
+     */
+    public function decorateWorkbooks(array $workbooks, array $recordings)
+    {
+        $pylonRecordings = $this->getPylonRecordings();
+        $recordingIndex = [];
+        foreach ($recordings as $recording) {
+            if (isset($pylonRecordings[$recording->getDatasiftRecordingId()])) {
+                $recording->fromDataSiftRecording($pylonRecordings[$recording->getDatasiftRecordingId()]);
+            }
+            $recordingIndex[$recording->getId()] = $recording;
+        }
+
+        foreach ($workbooks as $workbook) {
+            if (isset($recordingIndex[$workbook->getRecordingId()])) {
+                $workbook->setStatus(
+                    ($recordingIndex[$workbook->getRecordingId()]->getVolume())
+                    ? Workbook::STATUS_ACTIVE
+                    : Workbook::STATUS_ARCHIVED
+                );
+            }
+        }
+
+        return $workbooks;
     }
 
     /**

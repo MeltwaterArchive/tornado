@@ -1,0 +1,93 @@
+#popup.create-worksheet {
+
+	margin-left: -400px;
+	width: 800px;
+
+	.body {
+		// height for the loading spinner
+		min-height: 100px;
+		position: relative;
+	}
+
+	.body p:first-child {
+		margin-top: 0;
+	}
+
+
+	&.loading {
+
+	}
+
+	.suggestions {
+		border-top: 1px solid $colour-grey-light;
+		border-bottom: 1px solid $colour-grey-light;
+		padding: 10px 0;
+		margin-bottom: 20px;
+
+		p { 
+			margin-bottom: 0;
+		}
+	}
+
+	.submit-button {
+		float: right;
+	}
+
+	.hidden {
+		display: none;
+	}
+
+	.add {
+		display: inline-block;
+		border: 1px solid $colour-grey-light;
+		color: $colour-blue-facebook;
+		font-weight: bold;
+		width: 30px;
+		border-radius: 3px;
+		text-align: center;
+		cursor: pointer;
+		padding: 5px;
+		vertical-align: middle;
+
+		&:hover {
+			border-color: lighten($colour-blue-facebook, 20%);
+			color: lighten($colour-blue-facebook, 20%);
+		}
+	}
+
+	.chosen-container {
+		font-size: inherit;
+	}
+
+	.chosen-single {
+		background: #fff;
+		box-shadow: none;
+	}
+
+	.chosen-container-single .chosen-single {
+		height: 30px;
+		border-color: $colour-grey-light;
+		border-radius: 3px;
+		line-height: 30px;
+	}
+
+	.chosen-container .chosen-drop {
+		border-color: $colour-grey-light;
+	}
+
+	.chosen-container .chosen-results li.highlighted {
+		background: $colour-blue-facebook;
+	}
+
+	.chosen-container-single .chosen-single div b {
+		background-position: 0 4px;
+	}
+	.chosen-container-active.chosen-with-drop .chosen-single div b {
+		background-position: -18px 6px;
+	}
+	.chosen-container-single .chosen-single abbr {
+		background-position: -42px 4px;
+		height: 15px;
+	}
+
+}

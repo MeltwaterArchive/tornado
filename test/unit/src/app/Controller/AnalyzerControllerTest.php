@@ -409,6 +409,12 @@ class AnalyzerControllerTest extends \PHPUnit_Framework_TestCase
             ->method('findOne')
             ->with(['id' => $recordingId])
             ->willReturn($this->getMockObject('Tornado\Project\Recording'));
+        // --- recording sample repo ---
+        $recordingSampleRepo = $this->getMockObject('Tornado\DataMapper\DataMapperInterface', true);
+        $recordingSampleRepo->expects($this->any())
+            ->method('findOne')
+            ->with(['id' => $recordingId])
+            ->willReturn($this->getMockObject('Tornado\Project\Recording\Sample'));
         // --- dataset repo ---
         $dataSetRepo = $this->getMockObject('Tornado\DataMapper\DataMapperInterface', true);
         $dataSetRepo->expects($this->any())
@@ -470,6 +476,7 @@ class AnalyzerControllerTest extends \PHPUnit_Framework_TestCase
             'createForm' => $createForm,
             'worksheetRepo' => $worksheetRepo,
             'recordingRepo' => $recordingRepo,
+            'recordingSampleRepo' => $recordingSampleRepo,
             'brandRepo' => $brandRepo,
             'chartRepo' => $chartRepo,
             'dataSetRepo' => $dataSetRepo,
@@ -493,6 +500,7 @@ class AnalyzerControllerTest extends \PHPUnit_Framework_TestCase
     {
         $controller = Mockery::mock(AnalyzerController::class, [
             $mocks['recordingRepo'],
+            $mocks['recordingSampleRepo'],
             $mocks['chartRepo'],
             $mocks['dataSetRepo'],
             $mocks['createForm'],

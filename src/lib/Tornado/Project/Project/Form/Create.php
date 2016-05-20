@@ -35,6 +35,11 @@ use Tornado\Project\Project;
 class Create extends Form
 {
     /**
+     * @var string
+     */
+    const CONFLICT_MESSAGE_SUFFIX = 'already in use.';
+
+    /**
      * @var ValidatorInterface
      */
     protected $validator;
@@ -46,7 +51,7 @@ class Create extends Form
 
     /**
      * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator
-     * @param \Tornado\DataMapper\DataMapperInterface                   $projectRepo
+     * @param \Tornado\DataMapper\DataMapperInterface $projectRepo
      */
     public function __construct(
         ValidatorInterface $validator,
@@ -64,6 +69,13 @@ class Create extends Form
         $this->inputData = $data;
         $this->normalizedData = $data;
         $this->modelData = $object;
+
+        foreach ($data as $key => $value) {
+            if (is_string($value)) {
+                $value = trim($value);
+                $data[$key] = $value;
+            }
+        }
 
         $this->errors = $this->validator->validate($data, $this->getConstraints());
         $this->submitted = true;
@@ -100,6 +112,7 @@ class Create extends Form
      */
     protected function getConstraints()
     {
+
         return new Collection([
             'brand_id' => new Required([
                 new NotBlank([
@@ -143,8 +156,9 @@ class Create extends Form
             if ($project) {
                 $context
                     ->buildViolation(sprintf(
-                        'Project with name "%s" already in use.',
-                        $this->inputData['name']
+                        'Project with name "%s" %s',
+                        $this->inputData['name'],
+                        static::CONFLICT_MESSAGE_SUFFIX
                     ))
                     ->addViolation();
             }

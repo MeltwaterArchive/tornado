@@ -18,32 +18,9 @@
 
 {% block page_content %}
     <form class="single-item" method="post" action="{{ orgPath('agency.create', data.organization.id) }}">
-
-        <label class="input-label" for="agency-name">Name</label>
-        {% if meta.name is defined %}
-            <span class="input-error">{{ meta.name }}</span>
-        {% endif %}
-        <input id="agency-name" type="text" name="name" value="{{ data.agency.name }}" placeholder="" />
-
-        <label class="input-label" for="agency-datasiftUsername">DataSift Username</label>
-        {% if meta.datasiftUsername is defined %}
-            <span class="input-error">{{ meta.datasiftUsername }}</span>
-        {% endif %}
-        <input id="user-datasiftUsername" type="text" name="datasiftUsername" value="{{ data.agency.datasiftUsername }}" placeholder="DataSift Username" />
-
-        <label class="input-label" for="agency-datasiftApikey">DataSift API Key</label>
-        {% if meta.datasiftApikey is defined %}
-            <span class="input-error">{{ meta.datasiftApikey }}</span>
-        {% endif %}
-        <input id="user-datasiftApikey" type="text" name="datasiftApikey" value="{{ data.agency.datasiftApikey }}" placeholder="DataSift API Key" />
-
-        {# Footer #}
-        <hr class="divider">
-        <div class="single-item__header">
-            <a href="{{ agenciesLink }}">Cancel</a>
-            <div class="single-item__actions">
-                <button class="single-item__action single-item__action--create" type="submit" data-spinner>Create</button>
-            </div>
-        </div>
+        {{ include('admin/agency/_form.html.twig', {buttonText: 'Save', showManage: false}) }}
     </form>
+{% endblock %}
+{% block javascript_additional %}
+    data-main="{{ cs_build_location }}/javascript/brand"
 {% endblock %}

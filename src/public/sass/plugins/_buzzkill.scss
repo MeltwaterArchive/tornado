@@ -1,0 +1,121 @@
+/**
+ * Plugin ~ Buzzkill
+ */
+
+/**
+ * Buzzkill variables
+ */
+$buzzkill-colour: #fff !default;
+$buzzkill-background-colour: $colour-red-error !default;
+$buzzkill-background-colour-warning: #ff9e2b;
+$buzzkill-hovered-background-colour: darken($buzzkill-background-colour, 10%) !default;
+
+/**
+ * Buzzkill styles
+ */
+.buzzkill {
+    // Our X button
+    &::after {
+        position: relative;
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        background: {
+            image: url("#{$image-path}/modules/dimensions/remove.svg");
+            position: center center;
+            size: 10px 10px;
+            repeat: no-repeat;
+        }
+        content: "";
+    }
+}
+
+.buzzkill--alert {
+    padding-right: 10px;
+    background-color: $buzzkill-background-colour;
+    pointer-events: auto;
+    &::after {
+        top: 1px;
+        margin-left: 10px;
+    }
+    &:hover {
+        background-color: $buzzkill-hovered-background-colour;
+    }
+}
+
+.buzzkill--notice {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    font-size: rem(13);
+    line-height: 13px;
+    color: $buzzkill-colour;
+    text-align: center;
+    background-color: $buzzkill-background-colour;
+    z-index: 99999;
+    opacity: 0;
+    visibility: hidden;
+    @include transform-origin(center bottom);
+    @include transform(translate(0, 100%) scale(0.90));
+    @include transition(0.4s all $slick-ease);
+    &::after {
+        float: right;
+        top: 2px;
+        @include transform(scale(0));
+        @include transition(0.3s transform $bouncy);
+        cursor: pointer;
+    }
+    &.buzzkill--active {
+        opacity: 1;
+        visibility: visible;
+        @include transform(translate(0, 0%) scale(1));
+        &::after {
+            @include transform(scale(1));
+            @include transition-delay(0.45s);
+        }
+    }
+
+    &.warning {
+        background-color: $buzzkill-background-colour-warning;
+    }
+}
+
+// We assign this attribute to an element we want to display
+// the error messages on. It's usually an input and/or
+// label wrapper and must be able to have pseudo
+// elements.
+[data-form-field] {
+    position: relative;
+}
+
+[data-buzzkill-form-field-error] {
+    &::before {
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-size: rem(12);
+        line-height: 12px;
+        color: $input-form-field-error-colour;
+        text-align: right;
+        white-space: nowrap;
+        content: attr(data-buzzkill-form-field-error);
+        opacity: 0;
+        visibility: hidden;
+        @include transform-origin(left center);
+        @include transform(translate(-10px, 0) scale(0.95));
+        @include transition(0.3s all $slick-ease);
+    }
+    input[type="text"] {
+        border-color: $input-error-border-colour;
+        @include transition(0.3s border-color linear);
+    }
+    .buzzkill--active & {
+        &::before {
+            opacity: 1;
+            visibility: visible;
+            @include transform(translate(0, 0) scale(1));
+        }
+    }
+}

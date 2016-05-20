@@ -42,6 +42,20 @@ class Organization implements DataObjectInterface
     protected $jwtSecret;
 
     /**
+     * The user account limit for this Organization
+     *
+     * @var int|null
+     */
+    protected $accountLimit;
+
+    /**
+     * A CSV of permissions for this Organization
+     *
+     * @var string|null
+     */
+    protected $permissions;
+
+    /**
      * Gets this Organization's Id
      *
      * @return integer
@@ -84,7 +98,7 @@ class Organization implements DataObjectInterface
     /**
      * Gets the skin for this Organization
      *
-     * @param string $skin
+     * @return string
      */
     public function getSkin()
     {
@@ -122,6 +136,77 @@ class Organization implements DataObjectInterface
     }
 
     /**
+     * Gets the user account limit or this Organization
+     *
+     * @return int
+     */
+    public function getAccountLimit()
+    {
+        return $this->accountLimit;
+    }
+
+    /**
+     * Sets the user account limit or this Organization
+     *
+     * @param int $accountLimit
+     */
+    public function setAccountLimit($accountLimit)
+    {
+        $this->accountLimit = $accountLimit;
+    }
+
+    /**
+     * Verifies if the user limit has been reached
+     *
+     * @param $currentUserCount
+     * @return bool
+     */
+    public function hasReachedAccountLimit($currentUserCount)
+    {
+        return (int)$this->accountLimit !== 0 && $currentUserCount >= $this->getAccountLimit();
+    }
+
+    /**
+     * Gets the permissions for this Organization
+     *
+     * @return string
+     */
+    public function getPermissions()
+    {
+        return $this->permissions;
+    }
+
+    /**
+     * Sets the permissions for this Organization
+     *
+     * @param string $permissions
+     */
+    public function setPermissions($permissions)
+    {
+        if (is_array($permissions)) {
+            $permissions = implode(',', $permissions);
+        }
+        $this->permissions = $permissions;
+    }
+
+    /**
+     * Returns true if the passed permission is set for the Organization
+     *
+     * @param string $permission
+     *
+     * @return boolean
+     */
+    public function hasPermission($permission)
+    {
+        if ($this->permissions == null) {
+            return false;
+        }
+
+        $permissions = explode(',', $this->permissions);
+        return (in_array($permission, $permissions));
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getPrimaryKey()
@@ -156,7 +241,9 @@ class Organization implements DataObjectInterface
             'id' => 'setId',
             'name' => 'setName',
             'skin' => 'setSkin',
-            'jwt_secret' => 'setJwtSecret'
+            'jwt_secret' => 'setJwtSecret',
+            'account_limit' => 'setAccountLimit',
+            'permissions' => 'setPermissions'
         ];
 
         foreach ($map as $key => $setter) {
@@ -175,7 +262,9 @@ class Organization implements DataObjectInterface
             'id' => 'getId',
             'name' => 'getName',
             'skin' => 'getSkin',
-            'jwt_secret' => 'getJwtSecret'
+            'jwt_secret' => 'getJwtSecret',
+            'account_limit' => 'getAccountLimit',
+            'permissions' => 'getPermissions'
         ];
 
         $ret = [];

@@ -10,7 +10,7 @@ Generates the appropriate analyze queries and the charts representing the data.
 |----------|----------|----|-----------------|
 |worksheet_id|int|Yes|Id of the worksheet|
 |recording_id|int|Yes|Id of the recording|
-|dimensions|list|Yes|List of dimension targets; min 1, max 3|
+|dimensions|list|Yes|List of dimension objects; min 1, max 3|
 |chart_type|string|Yes|Analyze chart type, possible values: *tornado*|
 |type|string|Yes|Analyze type, possible values: *freqDist* or *timeSeries*|
 |comparison|string|No|Comparison mode for the analyze, possible values: *baseline*, *compare*|
@@ -27,7 +27,16 @@ Generates the appropriate analyze queries and the charts representing the data.
 {
     “worksheet_id”: <integer>,
     “recording_id”: “<string>”,
-    “dimensions”: [“<target 1>”,”<target 2>”],
+    “dimensions”: [
+        {
+            "target": "<string>",
+            "threshold": <integer>
+        },
+        {
+            "target": "<string>",
+            "threshold": <integer>
+        }
+    ],
     "chart_type": "tornado",
     “type”: “<freqDist|timeSeries>”,
 	"comparison": "<baseline|compare>",

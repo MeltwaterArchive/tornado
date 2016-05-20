@@ -63,6 +63,19 @@ class AppControllerTest extends \PHPUnit_Framework_TestCase
             ->andReturn($mocks['worksheets'])
             ->once();
 
+        $mocks['recordings'] = [];
+        for ($i = 1; $i < 5; $i++) {
+            $mocks['recordings'][] = Mockery::mock('Tornado\Project\Recording');
+        }
+
+        $mocks['recordingRepo']->shouldReceive('findRecordingsByWorkbooks')
+            ->with($mocks['workbooks'])
+            ->andReturn($mocks['recordings']);
+
+        $mocks['datasiftRecording']->shouldReceive('decorateWorkbooks')
+            ->with($mocks['workbooks'], $mocks['recordings'])
+            ->andReturn($mocks['workbooks']);
+
         $controller = $this->getController($mocks);
         $controller->setWorkbookRepository($mocks['workbookRepo']);
         $controller->setWorksheetRepository($mocks['worksheetRepo']);
@@ -75,7 +88,7 @@ class AppControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(200, $result->getHttpCode());
 
         $this->assertInternalType('array', $resultData);
-        
+
         $this->assertArrayHasKey('project', $resultData);
         $this->assertSame($mocks['project'], $resultData['project']);
 
@@ -104,6 +117,9 @@ class AppControllerTest extends \PHPUnit_Framework_TestCase
             'isGranted' => true
         ]);
 
+        $mocks['recordingRepo'] = Mockery::mock('Tornado\Project\Recording\DataMapper');
+        $mocks['datasiftRecording'] = Mockery::mock('Tornado\Project\Recording\DataSiftRecording');
+
         return $mocks;
     }
 
@@ -112,7 +128,7 @@ class AppControllerTest extends \PHPUnit_Framework_TestCase
      */
     protected function getController(array $mocks)
     {
-        $controller = Mockery::mock(AppController::class)
+        $controller = Mockery::mock(AppController::class, [$mocks['recordingRepo'], $mocks['datasiftRecording']])
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 

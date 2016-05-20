@@ -5,6 +5,7 @@ namespace Tornado\Organization\Organization\Form;
 use Doctrine\Common\Util\Debug;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\Collection;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Optional;
 use Symfony\Component\Validator\Constraints\Type;
@@ -62,7 +63,11 @@ class Update extends Create
             ]),
             'skin' => new Optional([
                 new Type(['type' => 'string'])
-            ])
+            ]),
+            'account_limit' => new Optional([
+                new GreaterThanOrEqual(0)
+            ]),
+            'permissions' => new Optional()
         ]);
     }
 
@@ -75,17 +80,22 @@ class Update extends Create
             return null;
         }
 
-        if (isset($this->inputData['name'])) {
-            $this->modelData->setName($this->inputData['name']);
+        $map = [
+            'name' => 'setName',
+            'jwt_secret' => 'setJwtSecret',
+            'skin' => 'setSkin',
+            'account_limit' => 'setAccountLimit',
+        ];
+
+        foreach ($map as $key => $setter) {
+            if (isset($this->inputData[$key])) {
+                $this->modelData->{$setter}($this->inputData[$key]);
+            }
         }
 
-        if (isset($this->inputData['jwt_secret'])) {
-            $this->modelData->setJwtSecret($this->inputData['jwt_secret']);
-        }
-
-        if (isset($this->inputData['skin'])) {
-            $this->modelData->setSkin($this->inputData['skin']);
-        }
+        $this->modelData->setPermissions(
+            (isset($this->inputData['permissions'])) ? $this->inputData['permissions'] : ''
+        );
 
         return $this->modelData;
     }

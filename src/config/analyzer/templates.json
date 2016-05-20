@@ -1,6 +1,137 @@
 {
-    "default": {
-        "title": "Default Analyses",
+    "demographics": {
+        "title": "Demographics",
+        "description": "A broad demographic overview of the recording",
+        "analyses": [
+            {
+                "title": "Audiences Overview",
+                "type": "tornado",
+                "dimensions": [
+                    {"target":"fb.author.gender"},
+                    {"target":"fb.author.age"},
+                    {"target":"fb.author.country"}
+                ],
+                "start": "1 month ago"
+            },
+            {
+                "title": "Engaged Audiences",
+                "type": "tornado",
+                "dimensions": [
+                    {"target":"fb.author.gender"},
+                    {"target":"fb.author.age"},
+                    {"target":"fb.author.country"}
+                ],
+                "start": "1 month ago",
+                "filters": {
+                    "csdl": "interaction.subtype in \"comment,like,reshare\""
+                }
+            },
+            {
+                "title": "Influential Audiences",
+                "type": "tornado",
+                "dimensions": [
+                    {"target":"fb.parent.author.gender"},
+                    {"target":"fb.parent.author.age"},
+                    {"target":"fb.parent.author.country"}
+                ],
+                "start": "1 month ago"
+            },
+            {
+                "title": "Top Regions",
+                "type": "tornado",
+                "dimensions": [
+                    {"target":"fb.author.gender"},
+                    {"target":"fb.author.age"},
+                    {"target":"fb.author.country_region"}
+                ],
+                "start": "1 month ago"
+            }
+        ]
+    },
+    "topics": {
+        "title": "Topics",
+        "description": "A look at the topics in this recording",
+        "analyses": [
+            {
+                "title": "Top Topics Discussed",
+                "type": "tornado",
+                "dimensions": [
+                    {"target":"fb.author.gender"},
+                    {"target":"fb.author.age"},
+                    {"target":"fb.topics.category_name"}
+                ],
+                "start": "1 month ago"
+            },
+            {
+                "title": "Topic Categories Discussed",
+                "type": "tornado",
+                "dimensions": [
+                    {"target":"fb.author.gender"},
+                    {"target":"fb.author.age"},
+                    {"target":"fb.topics.category"}
+                ],
+                "start": "1 month ago"
+            },
+            {
+                "title": "Top Engaged Hashtags",
+                "type": "tornado",
+                "dimensions": [
+                    {"target":"fb.author.gender"},
+                    {"target":"fb.author.age"},
+                    {"target":"fb.parent.hashtags"}
+                ],
+                "start": "1 month ago"
+            },
+            {
+                "title": "Media Types by Engagement",
+                "type": "tornado",
+                "dimensions": [
+                    {"target":"fb.author.gender"},
+                    {"target":"fb.author.age"},
+                    {"target":"fb.parent.media_type"}
+                ],
+                "start": "1 month ago"
+            }
+        ]
+    },
+    "links": {
+        "title": "Links",
+        "description": "Analysis of the links contained in this recording",
+        "analyses": [
+            {
+                "title": "Top Shared Links",
+                "type": "tornado",
+                "dimensions": [
+                    {"target":"fb.author.gender"},
+                    {"target":"fb.author.age"},
+                    {"target":"links.url"}
+                ],
+                "start": "1 month ago"
+            },
+            {
+                "title": "Link Domains",
+                "type": "tornado",
+                "dimensions": [
+                    {"target":"fb.author.gender"},
+                    {"target":"fb.author.age"},
+                    {"target":"links.domain"}
+                ],
+                "start": "1 month ago"
+            },
+            {
+                "title": "Normalized Links",
+                "type": "tornado",
+                "dimensions": [
+                    {"target":"fb.author.gender"},
+                    {"target":"fb.author.age"},
+                    {"target":"links.normalized_url"}
+                ],
+                "start": "1 month ago"
+            }
+        ]
+    },
+    "overview": {
+        "title": "Overview",
         "analyses": [
             {
                 "title": "Basic Demographics",
@@ -16,7 +147,7 @@
                 "title": "Top Regions",
                 "type": "histogram",
                 "dimensions": [
-                    {"target":"fb.author.region", "threshold": 20}
+                    {"target":"fb.author.country_region", "threshold": 20}
                 ],
                 "start": "1 week ago"
             },

@@ -1,0 +1,30 @@
+<% groups.forEach(function (group) { %>
+<div class="page-sidebar__section">
+    <h4 class="page-sidebar__section-headline"><%= group.name %></h4>
+    <% if (group.items && group.items.length > 0) { %>
+        <ul class="dimensions">
+            <% group.items.forEach(function (item) { 
+                
+                var tooltip = '<strong>' + item.label + '</strong><br><br>' + item.description;
+                if (item.disabled) {
+                    tooltip = 'This dimension is not compatible with your current dimensions';
+                }
+
+                %>
+                <li
+                    data-tooltip="<strong><%= item.label %></strong><br><br><%= item.description %>"
+                    data-draggaball-item
+                    data-dimension-item="<%= item.label %>"
+                    data-dimension-target="<%= item.target %>"
+                    data-dimension-description="<%= item.description %>"
+                    data-cardinality="<%= item.cardinality %>"
+                    <%= item.disabled ? 'data-disabled=""' : '' %>
+                    class="dimension"
+                ><%= item.label ? item.label : item.target %></li>
+            <% }) %>
+        </ul>
+    <% } else { %>
+        <p>No results (try removing a dimension or changing your search query)</p>
+    <% } %>
+</div>
+<% }) %>

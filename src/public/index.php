@@ -25,7 +25,7 @@ $env = getenv('APP_ENV') ?: 'production';
 $configPath = realpath(__DIR__ . '/../config/tornado');
 $resourcesPath = (is_dir('/etc/tornado')) ? '/etc/tornado' : realpath(__DIR__ . '/../../resources/config');
 
-// Catches Silex early errors which can not be handle by Silex Application Error Hanlder
+// Catches Silex early errors which cannot be handle by Silex Application Error Hanlder
 try {
     $bootstrap = new \DataSift\Silex\Bootstrap($configPath, $resourcesPath, $env);
 
@@ -54,5 +54,7 @@ try {
     echo $error;
     exit(1);
 }
+
+header('P3P: CP="CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR"');
 
 $app->run();

@@ -80,12 +80,12 @@ class IdentityController
     /**
      * Constructor.
      *
-     * @param DataSift_User                   $client           DataSift API User.
-     * @param DataSift_Account_Identity       $identityApi      DataSift Account Identity API client.
+     * @param DataSift_User $client DataSift API User.
+     * @param DataSift_Account_Identity $identityApi DataSift Account Identity API client.
      * @param DataSift_Account_Identity_Token $identityTokenApi DataSift Account Identity Service Token API client.
      * @param DataSift_Account_Identity_Limit $identityLimitApi DataSift Account Identity Service Limit API client.
-     * @param BrandRepository                 $brandRepository  Brand repository.
-     * @param UserRepository                  $userRepository   User repository.
+     * @param BrandRepository $brandRepository Brand repository.
+     * @param UserRepository $userRepository User repository.
      */
     public function __construct(
         DataSift_User $client,
@@ -124,7 +124,7 @@ class IdentityController
     /**
      * Proxies to `GET account/identity/{id}` DS API endpoint.
      *
-     * @param  string  $id      Identity ID which should be fetched.
+     * @param  string $id Identity ID which should be fetched.
      *
      * @return JsonResponse
      */
@@ -145,11 +145,20 @@ class IdentityController
      */
     public function create(Request $request)
     {
-        $response = $this->client->proxyResponse(function () use ($request) {
-            $label = $request->get('label');
-            $status = $request->get('status', 'active');
-            $master = $request->get('master', false);
 
+        $label = $request->get('label');
+        $status = $request->get('status', 'active');
+        $master = $request->get('master', false);
+
+
+        //does a brand with the same label exist?
+        $brand = $this->brandRepository->findOne(['name' => $label]);
+
+        if ($brand) {
+            return new JsonResponse(['error' => 'An Identity with that label already exists'], Response::HTTP_CONFLICT);
+        }
+
+        $response = $this->client->proxyResponse(function () use ($request, $label, $master, $status) {
             $this->identityApi->create($label, $master, $status);
         });
 
@@ -168,17 +177,20 @@ class IdentityController
         $brand->setDatasiftIdentityId($data['id']);
         $brand->setDatasiftApiKey($data['api_key']);
 
+
         $this->brandRepository->create($brand);
 
         // also create a user
         $user = new User();
         $user->setOrganizationId($agency->getOrganizationId());
         $user->setEmail($data['id']); // will be used later to identify this user as linked with the identity
-        $user->setPassword('identity-'. md5($data['api_key'] . time()));
+        $user->setPassword('identity-' . md5($data['api_key'] . time()));
         $user->setUsername($data['label']);
         $user->setType(User::TYPE_IDENTITY_API);
 
         $this->userRepository->create($user);
+        $this->userRepository->addBrands($user, [$brand]);
+
 
         return $response;
     }
@@ -188,7 +200,7 @@ class IdentityController
      * Brand and User in Tornado DB.
      *
      * @param  Request $request Request.
-     * @param  string  $id      Identity ID.
+     * @param  string $id Identity ID.
      *
      * @return JsonResponse
      */
@@ -253,7 +265,7 @@ class IdentityController
      * Proxies to `PUT account/identity/{id}/token/{service}` DS API endpoint.
      *
      * @param  Request $request Request.
-     * @param  string  $id      Identity ID.
+     * @param  string $id Identity ID.
      *
      * @return JsonResponse
      */
@@ -268,7 +280,7 @@ class IdentityController
      * Proxies to `POST account/identity/{id}/token` DS API endpoint.
      *
      * @param  Request $request Request.
-     * @param  string  $id      Identity ID.
+     * @param  string $id Identity ID.
      *
      * @return JsonResponse
      */
@@ -280,6 +292,47 @@ class IdentityController
     }
 
     /**
+     * Gets a list of identity tokens
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param string $id
+     *
+     * @return JsonResponse
+     */
+    public function tokenList(Request $request, $id)
+    {
+        $page = $request->query->get('page', 1);
+        $perPage = $request->query->get('per_page', 25);
+
+        return $this->client->proxyResponse(function () use ($id, $page, $perPage) {
+            $this->identityTokenApi->getAll(
+                $id,
+                $page,
+                $perPage
+            );
+        });
+    }
+
+    /**
+     * Gets the token for the identity and service
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param string $id
+     * @param string $service
+     *
+     * @return JsonResponse
+     */
+    public function tokenService(Request $request, $id, $service)
+    {
+        return $this->client->proxyResponse(function () use ($id, $service) {
+            $this->identityTokenApi->get(
+                $id,
+                $service
+            );
+        });
+    }
+
+    /**
      * Deletes an Identity
      * - NB This endpoint will work in future, but for now it is being added to
      *      properly emulate the DataSift API
@@ -287,7 +340,7 @@ class IdentityController
      * @see https://jiradatasift.atlassian.net/browse/NEV-425
      *
      * @param  Request $request Request.
-     * @param  string  $id      Identity ID.
+     * @param  string $id Identity ID.
      *
      * @return JsonResponse
      */
@@ -400,6 +453,26 @@ class IdentityController
     {
         return $this->client->proxyResponse(function () use ($id, $service) {
             $this->identityLimitApi->delete(
+                $id,
+                $service
+            );
+        });
+    }
+
+    /**
+     * Deletes a token for the given Identity
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param string $id
+     * @param string $service
+     *
+     * @return JsonResponse
+     */
+    public function tokenRemove(Request $request, $id, $service)
+    {
+
+        return $this->client->proxyResponse(function () use ($id, $service) {
+            $this->identityTokenApi->delete(
                 $id,
                 $service
             );

@@ -138,7 +138,7 @@ abstract class Application extends \Silex\Application
         // stat response as late as possible (low priority)
         $this->on(KernelEvents::RESPONSE, function ($event) use ($container) {
             $container->get('stats.http_collector')->onResponse($event);
-            $container->get('buffered_stats')->forceFlush();
+            $container->get('stats')->forceFlush();
         }, -999999);
 
         $this->on(KernelEvents::EXCEPTION, function ($event) use ($container) {
@@ -147,7 +147,7 @@ abstract class Application extends \Silex\Application
 
         // terminate is triggered in console
         $this->on(KernelEvents::TERMINATE, function ($event) use ($container) {
-            $container->get('buffered_stats')->forceFlush();
+            $container->get('stats')->forceFlush();
         });
     }
 

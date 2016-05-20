@@ -1,0 +1,38 @@
+/**
+ * Module ~ Create Workbook Modal
+ */
+
+/**
+ * Create Workbook variables
+ */
+
+/**
+ * Create Workbook styles
+ */
+.create-workbook__select {
+    &--disabled {
+        opacity: 0;
+    }
+}
+
+.create-workbook__template-description {
+    margin: 0;
+    p {
+        margin-top: -10px;
+        font-size: 0.85em;
+        color: #333;
+        font-style: italic;
+        text-align: center;
+        padding: 0 10px;
+    }
+}
+
+div[data-modallica-template-name="workbook-create-modal"] {
+    div[data-blocker="block"] {
+        button {
+            line-height: 1rem;
+            text-align: left;
+            padding: 10px 40px 10px 15px;
+        }
+    }
+}

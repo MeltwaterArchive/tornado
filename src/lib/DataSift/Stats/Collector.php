@@ -72,4 +72,9 @@ interface Collector
      * @param float  $elapsed Elapsed time (in microseconds)
      */
     public function addTiming($key, $elapsed);
+
+    /**
+     * Forces the flushing of this collector's buffer
+     */
+    public function forceFlush();
 }

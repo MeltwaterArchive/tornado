@@ -6,7 +6,11 @@ use \Mockery;
 
 use DataSift\Pylon\Schema\Schema;
 
+
+use DataSift\Pylon\SubscriptionInterface;
+use Tornado\Analyze\Dimension;
 use Tornado\Analyze\Dimension\Factory;
+use Tornado\Analyze\Dimension\Collection as DimensionCollection;
 
 use Test\DataSift\ReflectionAccess;
 
@@ -29,6 +33,15 @@ use Test\DataSift\ReflectionAccess;
 class FactoryTest extends \PHPUnit_Framework_TestCase
 {
     use ReflectionAccess;
+
+    /**
+     * {@inheridoc}
+     */
+    public function tearDown()
+    {
+        Mockery::close();
+        parent::tearDown();
+    }
 
     /**
      * @covers ::__construct
@@ -169,5 +182,74 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
                 'cardinality' => 249,
             ]
         ];
+    }
+
+    public function decorateDimensionCollectionProvider()
+    {
+        return [
+            'Happy path' => [
+                'collection' => new DimensionCollection([
+                    new Dimension('target.a'),
+                    new Dimension('target.b'),
+                    new Dimension('target.c'),
+                ]),
+                'cardinalities' => [
+                    'target.a' => 10,
+                    'target.b' => 5,
+                    'target.c' => null
+                ]
+            ],
+            'No cardinality' => [
+                'collection' => new DimensionCollection([
+                    new Dimension('target.a'),
+                    new Dimension('target.b'),
+                    new Dimension('target.c'),
+                ]),
+                'cardinalities' => [
+                    'target.a' => 10,
+                    'target.b' => 5,
+                    'target.c' => false
+                ]
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider decorateDimensionCollectionProvider
+     *
+     * @covers ::decorateDimensionCollection
+     *
+     * @param \Tornado\Analyze\Dimension\Collection $collection
+     * @param array $cardinalities
+     * @param \DataSift\Pylon\SubscriptionInterface $subscription
+     */
+    public function testDecorateDimensionCollection(
+        DimensionCollection $collection,
+        array $cardinalities,
+        SubscriptionInterface $subscription = null
+    ) {
+        $schema = Mockery::mock('\DataSift\Pylon\Schema\Schema');
+        foreach ($cardinalities as $target => $cardinality) {
+            $response = ['cardinality' => $cardinality];
+            if ($cardinality === false) {
+                $response = [];
+            }
+            $schema->shouldReceive('findObjectByTarget')
+                ->with($target, ['premium', 'internal'])
+                ->andReturn($response);
+        }
+
+        $provider = Mockery::mock('\DataSift\Pylon\Schema\Provider');
+        $provider->shouldReceive('getSchema')
+            ->with($subscription)
+            ->andReturn($schema);
+
+        $factory = new Factory($provider);
+        $factory->decorateDimensionCollection($collection, $subscription);
+
+        foreach ($collection->getDimensions() as $dimension) {
+            $cardinality = $cardinalities[$dimension->getTarget()];
+            $this->assertEquals(($cardinality) ?: null, $dimension->getCardinality());
+        }
     }
 }

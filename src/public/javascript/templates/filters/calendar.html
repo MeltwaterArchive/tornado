@@ -1,0 +1,21 @@
+<div id="calendar">
+	<div class="controls">
+		<div class="from">
+			<input type="text" placeholder="YYYY-MM-DD" name="from-date" class="date" value="<%= start.format('YYYY-MM-DD') %>"/>
+			<input type="time" placeholder="HH:MM" name="from-time" class="time" value="<%= start.format('hh:mm') %>"/>
+		</div>
+		<div class="span">-</div>
+		<div class="to">
+			<input type="text" placeholder="YYYY-MM-DD" name="to-date" class="date" value="<%= end.format('YYYY-MM-DD') %>"/>
+			<input type="time" name="to-time" placeholder="HH:MM" class="time" value="<%= end.format('hh:mm') %>"/>
+		</div>
+	</div>
+
+	<div class="calendar-wrapper">
+	</div>
+
+	<div class="buttons">
+		<div class="clear-button">Reset</div>
+		<div class="submit-button">OK</div>
+	</div>
+</div>

@@ -197,6 +197,82 @@ class DataMapperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::findRecordingsByWorkbooks
+     */
+    public function testFindRecordingsByWorkbooks()
+    {
+        $dbName = 'recording';
+        $ids = [1, 2];
+        $queryBuilder = Mockery::mock('Doctrine\DBAL\Query\QueryBuilder');
+        $expressionBuilder = Mockery::mock('Doctrine\DBAL\Query\Expression\ExpressionBuilder');
+        $expressionBuilder->shouldReceive('in')
+            ->once()
+            ->with('id', $ids)
+            ->andReturn('id IN (1,2)');
+        $queryBuilder->shouldReceive('select')
+            ->with('*')
+            ->andReturn($queryBuilder);
+        $queryBuilder->shouldReceive('from')
+            ->with($dbName)
+            ->andReturn($queryBuilder);
+        $queryBuilder->shouldReceive('expr')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($expressionBuilder);
+        $queryBuilder->shouldReceive('add')
+            ->once()
+            ->with('where', 'id IN (1,2)')
+            ->andReturn($queryBuilder);
+
+        $connection = Mockery::mock('Doctrine\DBAL\Connection', [
+            'createQueryBuilder' => $queryBuilder
+        ]);
+
+        $results = [
+            [
+                'id' => 1,
+                'brand_id' => 10,
+                'name' => 'test'
+            ],
+            [
+                'id' => 2,
+                'brand_id' => 20,
+                'name' => 'test2'
+            ]
+        ];
+
+        $resultStatement = Mockery::mock('Doctrine\DBAL\Driver\ResultStatement');
+        $resultStatement->shouldReceive('fetch')
+            ->andReturn($results[0], $results[1], null);
+
+        $queryBuilder->shouldReceive('execute')
+            ->once()
+            ->andReturn($resultStatement);
+
+        // do the test
+        $repository = new DataMapper(
+            $connection,
+            'Tornado\Project\Recording',
+            $dbName
+        );
+
+        $workbooks = [];
+        for ($i = 0; $i < 2; $i++) {
+            $workbooks[] = Mockery::mock('\Tornado\Project\Workbook', [], ['getRecordingId' => $i + 1]);
+        }
+
+        $objects = $repository->findRecordingsByWorkbooks($workbooks);
+
+        $this->assertInternalType('array', $objects);
+        $this->assertCount(2, $objects);
+
+        foreach ($objects as $object) {
+            $this->assertInstanceOf('Tornado\DataMapper\DataObjectInterface', $object);
+            $this->assertInstanceOf('Tornado\Project\Recording', $object);
+        }
+    }
+
+    /**
      * @covers ::deleteRecordings
      */
     public function testDeleteRecordings()

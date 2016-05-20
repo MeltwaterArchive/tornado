@@ -2,14 +2,14 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="/assets/javascript/libs/csdl-editor/csdleditor.min.css">
+    <link rel="stylesheet" href="{{ cs_build_location }}/javascript/libs/csdl-editor/csdleditor.min.css">
 {% endblock %}
 
 {% block page_header_title %}Brand Management - Edit Recording{% endblock %}
 {% set selectedBrand = data.selectedBrand %}
 
 {% block brand_management_content %}
-    {% include 'brand/recordings/partials/header.html.twig' %}
+    {% include 'brand/partials/header.html.twig' with { 'selected': 'recordings' } %}
     <form class="single-item single-item--edit" method="post" action="{{ path('recording.update', {'recordingId': data.recording.id}) }}">
         {# Header #}
         <div class="single-item__header">
@@ -35,7 +35,7 @@
 {% endblock %}
 
 {% block javascript_additional %}
-    data-main="/assets/javascript/brand/brand.edit"
+    data-main="{{ cs_build_location }}/javascript/brand.edit"
 {% endblock %}
 
 {% block delete_templates %}

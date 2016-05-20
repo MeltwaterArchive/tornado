@@ -85,7 +85,9 @@ class BrandController
      * @param DataMapperInterface            $brandRepo
      * @param DataMapperInterface            $projectRepo
      * @param DataMapperInterface            $recordingRepo
+     * @param DataSiftRecording              $dataSiftRecording
      * @param \DataSift\Pylon\Pylon          $pylon
+     * @param UrlGenerator                   $urlGenerator
      */
     public function __construct(
         SessionInterface $session,
@@ -116,7 +118,7 @@ class BrandController
      * @return \Tornado\Controller\Result
      *
      * @throw NotFoundHttpException if Brand not found
-     * @throw AccessDeniedHttpException if Session User can not access the Brand
+     * @throw AccessDeniedHttpException if Session User cannot access the Brand
      */
     public function get(Request $request, $brandId)
     {
@@ -126,7 +128,7 @@ class BrandController
         }
 
         if (!$this->authorizationManager->isGranted($brand)) {
-            throw new AccessDeniedHttpException('You can not access this Brand.');
+            throw new AccessDeniedHttpException('You cannot access this Brand.');
         }
 
         $paginator = new Paginator(
@@ -164,7 +166,7 @@ class BrandController
      * @return \Tornado\Controller\Result
      *
      * @throw NotFoundHttpException if Brand not found
-     * @throw AccessDeniedHttpException if Session User can not access the Brand
+     * @throw AccessDeniedHttpException if Session User cannot access the Brand
      */
     public function getRecordings(Request $request, $brandId)
     {
@@ -208,7 +210,7 @@ class BrandController
      * @return \Tornado\Controller\Result
      *
      * @throw NotFoundHttpException if Brand not found
-     * @throw AccessDeniedHttpException if Session User can not access the Brand
+     * @throw AccessDeniedHttpException if Session User cannot access the Brand
      */
     public function importRecordings(Request $request, $brandId)
     {
@@ -238,7 +240,7 @@ class BrandController
                     );
                 }
             } catch (\DataSift_Exception_ApiError $ex) {
-                throw new AccessDeniedHttpException('You can not access this PYLON recording.');
+                throw new AccessDeniedHttpException('You cannot access this PYLON recording.');
             }
         }
 
@@ -282,7 +284,7 @@ class BrandController
      * @return \Tornado\Organization\Brand
      *
      * @throws NotFoundHttpException When such Brand was not found.
-     * @throws AccessDeniedHttpException if Session User can not access the Brand
+     * @throws AccessDeniedHttpException if Session User cannot access the Brand
      */
     protected function getBrand($brandId)
     {
@@ -292,7 +294,7 @@ class BrandController
         }
 
         if (!$this->authorizationManager->isGranted($brand)) {
-            throw new AccessDeniedHttpException('You can not access this Brand.');
+            throw new AccessDeniedHttpException('You cannot access this Brand.');
         }
 
         return $brand;

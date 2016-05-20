@@ -48,19 +48,19 @@ services:
             - Tornado\Project\Workbook
             - "workbook"
 
-    project.workbook.form:
-        abstract: true
-        arguments:
-            - @validator
-            - @project.workbook.repository
 
     project.workbook.form.create:
         class: Tornado\Project\Workbook\Form\Create
-        parent: project.workbook.form
+        arguments:
+            - @validator
+            - @project.workbook.repository
+            - @analyze.templated
 
     project.workbook.form.update:
         class: Tornado\Project\Workbook\Form\Update
-        parent: project.workbook.form
+        arguments:
+            - @validator
+            - @project.workbook.repository
 
     ##
     # PROJECT's WORKSHEET SERVICES
@@ -109,6 +109,8 @@ services:
         class: Tornado\Project\Worksheet\Exporter
         arguments:
             - @project.chart.repository
+            - @project.workbook.repository
+            - @project.recording.sample.repository
 
     project.worksheet.explorer:
         class: Tornado\Project\Worksheet\Explorer
@@ -166,3 +168,11 @@ services:
             - @datasift.pylon
             - @project.recording.repository
             - @monolog
+
+    project.recording.sample.repository:
+        class: Tornado\Project\Recording\Sample\DataMapper
+        arguments:
+            - @doctrine.dbal.connection
+            - Tornado\Project\Recording\Sample
+            - "recording_sample"
+            - @datasift.pylon

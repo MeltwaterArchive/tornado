@@ -69,6 +69,12 @@ class WorkbookTest extends \PHPUnit_Framework_TestCase
                 'value' => 1,
                 'getter' => 'getRank',
                 'expected' => 1
+            ],
+            [
+                'setter' => 'setStatus',
+                'value' => Workbook::STATUS_ACTIVE,
+                'getter' => 'getStatus',
+                'expected' => Workbook::STATUS_ACTIVE
             ]
         ];
     }
@@ -216,6 +222,7 @@ class WorkbookTest extends \PHPUnit_Framework_TestCase
             unset($item['getters']);
             $item['data']['worksheets'] = [];
             $item['expected']['worksheets'] = [];
+            $item['expected']['status'] = Workbook::STATUS_ACTIVE;
             $item['expected'] = json_encode($item['expected']);
         }
 
@@ -257,6 +264,7 @@ class WorkbookTest extends \PHPUnit_Framework_TestCase
                         'start' => null,
                         'end' => null,
                         'parent_worksheet_id' => null,
+                        'display_options' => new \StdClass(),
                         'created_at' => null,
                         'updated_at' => null,
                         'span' => 1,
@@ -279,6 +287,7 @@ class WorkbookTest extends \PHPUnit_Framework_TestCase
                         'start' => null,
                         'end' => null,
                         'parent_worksheet_id' => null,
+                        'display_options' => new \StdClass(),
                         'created_at' => null,
                         'updated_at' => null,
                         'span' => 1,
@@ -301,12 +310,14 @@ class WorkbookTest extends \PHPUnit_Framework_TestCase
                         'start' => null,
                         'end' => null,
                         'parent_worksheet_id' => null,
+                        'display_options' => new \StdClass(),
                         'created_at' => null,
                         'updated_at' => null,
                         'span' => 1,
                         'interval' => 'day'
                     ]
-                ]
+                ],
+                'status' => Workbook::STATUS_ACTIVE
             ]),
         ];
         return $data;

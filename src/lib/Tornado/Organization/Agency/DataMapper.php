@@ -104,21 +104,4 @@ class DataMapper extends DoctrineRepository
 
         return $this->mapResults($qb->execute());
     }
-
-    /**
-     * Removes Agencies by ids
-     *
-     * @param array $ids
-     *
-     * @return int number of deleted items
-     */
-    public function deleteByIds(array $ids)
-    {
-        $qb = $this->createQueryBuilder();
-        $qb
-            ->delete($this->tableName)
-            ->add('where', $qb->expr()->in('id', $ids));
-
-        return $qb->execute();
-    }
 }

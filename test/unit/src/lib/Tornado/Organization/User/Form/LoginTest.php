@@ -10,6 +10,8 @@ use Tornado\Organization\User\Form\Login;
 use Test\DataSift\ApplicationBuilder;
 use Test\DataSift\ReflectionAccess;
 
+use Symfony\Component\Validator\ValidatorBuilder;
+
 /**
  * LoginTest
  *
@@ -49,8 +51,8 @@ class LoginTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->buildApplication();
-        $this->validator = $this->container->get('validator');
+        $validatorBuilder = new ValidatorBuilder();
+        $this->validator = $validatorBuilder->getValidator();
     }
 
     /**
@@ -64,7 +66,7 @@ class LoginTest extends \PHPUnit_Framework_TestCase
         $form = $this->getForm($mocks);
 
         $this->assertEquals(
-            ['login', 'password'],
+            ['login', 'password', 'redirect'],
             $form->getFields()
         );
     }

@@ -10,6 +10,8 @@ use Tornado\Project\Recording\Form\Create;
 use Test\DataSift\ApplicationBuilder;
 use Test\DataSift\ReflectionAccess;
 
+use Symfony\Component\Validator\ValidatorBuilder;
+
 /**
  * CreateTest
  *
@@ -49,8 +51,8 @@ class CreateTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->buildApplication();
-        $this->validator = $this->container->get('validator');
+        $validatorBuilder = new ValidatorBuilder();
+        $this->validator = $validatorBuilder->getValidator();
     }
 
     /**

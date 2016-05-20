@@ -76,7 +76,7 @@ trait ProjectDataAwareTrait
      * @return \Tornado\Project\Project
      *
      * @throws NotFoundHttpException When such project was not found.
-     * @throws AccessDeniedHttpException if Session User can not access the Project
+     * @throws AccessDeniedHttpException if Session User cannot access the Project
      */
     protected function getProject($projectId)
     {
@@ -86,7 +86,7 @@ trait ProjectDataAwareTrait
         }
 
         if (!$this->authorizationManager->isGranted($project)) {
-            throw new AccessDeniedHttpException('You can not access this Project.');
+            throw new AccessDeniedHttpException('You cannot access this Project.');
         }
 
         return $project;

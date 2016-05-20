@@ -131,9 +131,9 @@ class RecordingController
             $recording->setDatasiftRecordingId($hash);
             $recording->setCreatedAt(time());
             $recording->setStatus(Recording::STATUS_STOPPED);
-            $recording->setBrandId($brand->getId());
         }
 
+        $recording->setBrandId($brand->getId());
         $recording->setName($name);
 
         $this->recordingRepo->upsert($recording);

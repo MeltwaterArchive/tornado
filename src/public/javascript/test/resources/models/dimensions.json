@@ -1,0 +1,250 @@
+{
+	"data": {
+		"groups": [{
+			"name": "People",
+			"items": [{
+				"target": "fb.author.age",
+				"is_analysable": true,
+				"is_filterable": true,
+				"requires_threshold": false,
+				"cardinality": 7,
+				"description": "One of \u002718-24\u0027, \u002725-34\u0027, \u002735-44\u0027, \u002745-54\u0027, \u002755-64\u0027, \u002765+\u0027 or \u0027unknown\u0027",
+				"label": "Author Age"
+			}, {
+				"target": "fb.author.gender",
+				"is_analysable": true,
+				"is_filterable": true,
+				"requires_threshold": false,
+				"cardinality": 3,
+				"description": "One of \u0027female\u0027, \u0027male\u0027, \u0027unknown\u0027",
+				"label": "Author Gender"
+			}, {
+				"target": "fb.author.country",
+				"is_analysable": true,
+				"is_filterable": true,
+				"cardinality": 249,
+				"description": "The country in which a story author\u0027s Current City is located",
+				"label": "Author Country"
+			}, {
+				"target": "fb.author.country_region",
+				"is_analysable": true,
+				"is_filterable": true,
+				"is_tokenized": true,
+				"description": "Country \u0026 region pairs for stories",
+				"label": "Author Country \u0026 Region"
+			}, {
+				"target": "fb.author.type",
+				"is_analysable": true,
+				"is_filterable": true,
+				"requires_threshold": false,
+				"cardinality": 2,
+				"description": "Breakdown of stories created by people vs. Pages",
+				"label": "Author Type"
+			}, {
+				"target": "fb.parent.author.age",
+				"is_analysable": true,
+				"is_filterable": true,
+				"requires_threshold": false,
+				"cardinality": 7,
+				"description": "Engagements by age of the author of their parent stories",
+				"label": "Parent Author Age"
+			}, {
+				"target": "fb.parent.author.country",
+				"is_analysable": true,
+				"is_filterable": true,
+				"cardinality": 249,
+				"description": "Engagements by country of the author of their parent stories",
+				"label": "Parent Author Country"
+			}, {
+				"target": "fb.parent.author.gender",
+				"is_analysable": true,
+				"is_filterable": true,
+				"requires_threshold": false,
+				"cardinality": 3,
+				"description": "Engagements by gender of the authors of their parent stories",
+				"label": "Parent Author Gender"
+			}, {
+				"target": "fb.parent.author.country_region",
+				"is_analysable": true,
+				"is_filterable": true,
+				"is_tokenized": true,
+				"description": "Country and region pairs for engagements",
+				"label": "Parent Author Country\/Region"
+			}, {
+				"target": "fb.parent.author.type",
+				"is_analysable": true,
+				"is_filterable": true,
+				"requires_threshold": false,
+				"cardinality": 2,
+				"description": "Breakdown of engagements on stories created by people vs. Pages",
+				"label": "Engaged Author Type"
+			}]
+		}, {
+			"name": "Stories",
+			"items": [{
+				"target": "fb.language",
+				"is_analysable": true,
+				"is_filterable": true,
+				"description": "The language in which a story is written",
+				"label": "Story Language"
+			}, {
+				"target": "fb.link",
+				"is_analysable": true,
+				"is_filterable": true,
+				"is_tokenized": true,
+				"description": "links included in stories",
+				"label": "Story Links"
+			}, {
+				"target": "fb.topics.category",
+				"is_analysable": true,
+				"is_filterable": true,
+				"is_tokenized": true,
+				"description": "a category assigned to a topic, such as \u0027company\u0027 or \u0027musician\/band\u0027",
+				"label": "Topic Category"
+			}, {
+				"target": "fb.topics.category_name",
+				"is_analysable": true,
+				"is_filterable": true,
+				"is_tokenized": true,
+				"description": "Category \u0026 topic pairs for stories",
+				"label": "Topic Category\/Name"
+			}, {
+				"target": "fb.sentiment",
+				"is_analysable": true,
+				"is_filterable": true,
+				"cardinality": 3,
+				"description": "Sentiment detected in stories; one of \u0027positive\u0027,\u0027negative\u0027,\u0027neutral\u0027",
+				"label": "Sentiment"
+			}, {
+				"target": "interaction.media_type",
+				"alias": ["fb.media_type"],
+				"is_analysable": true,
+				"is_filterable": true,
+				"cardinality": 7,
+				"description": "The media type of a story. One of \u0027link\u0027, \u0027photo_album\u0027, \u0027note\u0027, \u0027photo\u0027, \u0027post\u0027, \u0027reshare\u0027 or \u0027video\u0027",
+				"label": "Story Media Type"
+			}, {
+				"target": "interaction.subtype",
+				"alias": ["fb.type"],
+				"is_analysable": true,
+				"is_filterable": true,
+				"cardinality": 4,
+				"description": "One of \u0027story\u0027, \u0027comment\u0027, \u0027like\u0027 or \u0027reshare\u0027",
+				"label": "Message Subtype"
+			}, {
+				"target": "fb.topic_ids",
+				"is_analysable": true,
+				"is_filterable": true,
+				"description": "Stories by Facebook IDs of inferred topics",
+				"label": "Topic IDs"
+			}, {
+				"target": "interaction.hashtags",
+				"alias": ["fb.hashtags"],
+				"is_analysable": true,
+				"is_filterable": true,
+				"description": "Hashtags in stories",
+				"label": "Hashtags"
+			}]
+		}, {
+			"name": "Engagements",
+			"items": [{
+				"target": "fb.parent.hashtags",
+				"is_analysable": true,
+				"is_filterable": true,
+				"description": "Engagements on stories with hashtags",
+				"label": "Engaged Hashtags"
+			}, {
+				"target": "fb.parent.language",
+				"is_analysable": true,
+				"is_filterable": true,
+				"description": "Engagements on stories by language",
+				"label": "Engaged Languages"
+			}, {
+				"target": "fb.parent.link",
+				"is_analysable": true,
+				"is_filterable": true,
+				"is_tokenized": true,
+				"description": "Engagements on stories containing links",
+				"label": "Engaged Links"
+			}, {
+				"target": "fb.parent.media_type",
+				"is_analysable": true,
+				"is_filterable": true,
+				"cardinality": 7,
+				"description": "Engagements on stories by media type",
+				"label": "Parent Post Type"
+			}, {
+				"target": "fb.parent.topics.category_name",
+				"is_analysable": true,
+				"is_filterable": true,
+				"is_tokenized": true,
+				"description": "Category \u0026 topic pairs for engagements",
+				"label": "Parent Topic Category\/Name"
+			}, {
+				"target": "fb.parent.sentiment",
+				"is_analysable": true,
+				"is_filterable": true,
+				"cardinality": 3,
+				"description": "Engagements by sentiment detected in parent stories; one of \u0027positive\u0027,\u0027negative\u0027,\u0027neutral\u0027",
+				"label": "Sentiment Engagement"
+			}, {
+				"target": "fb.parent.topic_ids",
+				"is_analysable": true,
+				"is_filterable": true,
+				"description": "Facebook IDs of topics inferred in stories",
+				"label": "Engaged Topic IDs"
+			}, {
+				"target": "fb.parent.topics.category",
+				"is_analysable": true,
+				"is_filterable": true,
+				"is_tokenized": true,
+				"description": "a category assigned to a topic, such as \u0027company\u0027 or \u0027musician\/band\u0027",
+				"label": "Engaged Topic Categories"
+			}]
+		}, {
+			"name": "Stories \u0026 Engagements",
+			"items": [{
+				"target": "interaction.tags",
+				"is_analysable": true,
+				"is_filterable": true,
+				"description": "Tags defined in your Filter which are not part of a hierarchical tag structure",
+				"label": "Message Tags"
+			}, {
+				"target": "links.domain",
+				"is_analysable": true,
+				"is_filterable": true,
+				"description": "The web domains from which URLs are shared in stories",
+				"label": "Links Domain"
+			}, {
+				"target": "links.normalized_url",
+				"is_analysable": true,
+				"is_filterable": true,
+				"is_tokenized": true,
+				"description": "URLs shared in stories with UTM codes and anchor tags removed",
+				"label": "Cleaned URLs"
+			}, {
+				"target": "links.url",
+				"is_analysable": true,
+				"is_filterable": true,
+				"is_tokenized": true,
+				"description": "Breakdown of stories with links and their engagements",
+				"label": "All Links"
+			}]
+		}, {
+			"name": "Other",
+			"items": [{
+				"target": "time",
+				"label": "Time",
+				"description": "Volume of interactions and authors over time",
+				"cardinality": 100,
+				"is_analysable": true,
+				"is_time": true,
+				"applicable_charts": ["timeseries"]
+			}]
+		}]
+	},
+	"meta": {
+		"dimensions_count": 32,
+		"groups_count": 5
+	}
+}

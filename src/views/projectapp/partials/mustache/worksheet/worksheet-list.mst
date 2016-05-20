@@ -10,6 +10,7 @@
                     {{ /showOptions }}
                     <li data-worksheet-action="edit" data-modallica="Edit Worksheet:worksheet-edit-modal" class="dropdown__item">Edit worksheet</li>
                     <li data-spinner data-worksheet-action="export" class="dropdown__item">Export worksheet</li>
+                    <li data-worksheet-action="duplicate" class="dropdown__item">Duplicate worksheet</li>
                 </ul>
             </li>
         </li>

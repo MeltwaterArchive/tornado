@@ -1,0 +1,85 @@
+
+<% if (typeof(query) !== 'undefined') { %>
+	<p><strong>What do you want to explore?</strong></p>
+
+	<p>Show me a
+		<select class="chart-types">
+			<option value="breakdown" <%= chartType === 'breakdown' ? 'selected' : '' %>>breakdown of</option>
+			<option value="sample" <%= chartType === 'sample' ? 'selected' : '' %>>sample</option>
+		</select>
+	<% if (query.length <= 3 && chartType === 'breakdown') { %>
+		
+		<% query.forEach(function (section, i) { %>
+			<select>
+				<option value=""></option>
+				<% dimensions[i].attributes.groups.forEach(function (group) { %>
+					<optgroup label="<%= group.name %>">
+						<% group.items.forEach(function (item) { %>
+							<option value="<%= item.target %>" <%= item.target === query[i] ? 'selected' : '' %>>
+									<%= item.label %>
+							</option>
+						<% }) %>
+					</optgroup>
+				<% }) %>
+			</select>
+
+			<% if (query[0] === 'time' && i < 1) { %>
+				<span class="append">with</span>
+			<% } else if (query[0] === 'time' && i == 1) { %>
+				<span class="append">intervals</span>
+			<% } else if (i < 2 && i !== query.length - 1) { %>
+				<span class="append">by</span>
+			<% } %>
+
+		<% }); %>
+
+		<% if (query.length === 0) { %>
+			<select>
+				<option value=""></option>
+				<% dimensions[0].attributes.groups.forEach(function (group) { %>
+					<optgroup label="<%= group.name %>">
+						<% group.items.forEach(function (item) { %>
+							<option value="<%= item.target %>"><%= item.label %></option>
+						<% }) %>
+					</optgroup>
+				<% }) %>
+			</select>
+		<% } else if (query[0] === 'time' && showNext) { %>
+			<select>
+				<option value=""></option>
+				<% dimensions[query.length].attributes.groups.forEach(function (group) { %>
+					<optgroup label="<%= group.name %>">
+						<% group.items.forEach(function (item) {
+							var qi = query.indexOf(item.target);
+							if (qi === -1) { %>
+								<option value="<%= item.target %>"><%= item.label %></option>
+								<% 
+							}
+						}) %>
+					</optgroup>
+				<% }) %>
+			</select>
+		<% } else if (query.length !== 3 && showNext) { %>
+			<span class="add" title="Add a new dimension">+</span>
+			<select class="hidden">
+				<option value=""></option>
+				<% dimensions[query.length].attributes.groups.forEach(function (group) { %>
+					<optgroup label="<%= group.name %>">
+						<% group.items.forEach(function (item) {
+							var qi = query.indexOf(item.target);
+							if (qi === -1) { %>
+								<option value="<%= item.target %>"><%= item.label %></option>
+								<% 
+							}
+						}) %>
+					</optgroup>
+				<% }) %>
+			</select>
+		<% } %>
+	<% } %> 
+
+	</p>
+
+	<div class="clear-button">Reset</div>
+	<div class="submit-button">Create</div>
+<% } %>

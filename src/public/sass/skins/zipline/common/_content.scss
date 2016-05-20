@@ -1,0 +1,21 @@
+/**
+ * Zipline ~ Common ~ Content
+ *
+ * The content block styles of a page (common/main)
+ */
+
+html {
+    border: 1px solid #d3d6dc;
+}
+
+/** Content style overrides */
+.content-wrapper {
+    .main-menu ~ .page & {
+        padding: 15px;
+    }
+}
+
+/** Highlighted border in chart selection pane */
+.create-worksheet__chart-type--active {
+    border-color: #215b73;
+}

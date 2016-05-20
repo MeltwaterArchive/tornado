@@ -1,0 +1,116 @@
+$action-button-color: #fff;
+$border-color: #d3d6db;
+
+.admin {
+    h1 {
+        font-size: 1.1rem;
+        a {
+            font-size: inherit;
+        }
+    }
+
+    a {
+        font-size: 0.75rem;
+        color: $link-colour;
+    }
+
+    .list-action--new-project a {
+        color: $action-button-color;
+    }
+
+    .pagination {
+        margin-top: 15px;
+        padding: 10px 0;
+    }
+
+    .admin-item {
+        display: inline-block;
+        height: 170px;
+        width: 150px;
+        padding: 10px;
+        line-height: 270px;
+        font-size: 0.8rem;
+        text-align: center;
+        border: 1px solid $border-color;
+        margin-right: 20px;
+        margin-bottom: 20px;
+        opacity: 0.8;
+        background: url("#{$image-path}/admin/settings.png") 25px 25px no-repeat;
+
+        &:hover {
+            opacity: 1;
+        }
+
+        &-users {
+            background-image: url("#{$image-path}/images/admin/users.png");
+        }
+    }
+
+    .radio-list {
+
+        label {
+            font-size: 0.8rem;
+        }
+
+        input[type="checkbox"] {
+            display: inline-block;
+            margin: 0 10px 10px 0;
+            width: auto;
+        }
+    }
+
+    .manage-link, .manage-link a {
+        font-size: 0.9rem;
+    }
+
+    .manage-link a {
+        float: right; clear: none;
+    }
+
+    /*# sourceMappingURL=tornado.css.map */
+    &-tabs {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+
+        li {
+            display: inline-block;
+            padding: 7px 10px;
+            border: 1px solid $border-color;
+            border-left: none;
+            background-color: #f6f6f6;
+            position: relative;
+            top: 1px;
+
+            &:first-child {
+                border-left: 1px solid $border-color;
+            }
+
+            &.selected {
+                padding-bottom: 7px;
+                border-bottom: 1px solid transparent;
+                background-color: #fff;
+            }
+        }
+
+    }
+
+    .permission-list {
+        list-style: none;
+
+        .permission {
+            label {
+                font-size: 0.8rem;
+                line-height: 12px;
+            }
+
+            input[type="checkbox"] {
+                vertical-align: middle;
+                margin: 0px 0 0 10px;
+                padding: 0;
+                width: auto;
+                display: inline-block;
+            }
+        }
+    }
+}

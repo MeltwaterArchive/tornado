@@ -4,7 +4,7 @@
         <div data-form="dimensions-threshold" class="modallica__content">
             <div data-form-field="threshold">
                 <label class="input-label" for="dimension-threshold">Threshold</label>
-                <input type="number" placeholder="Set dimension threshold..." id="dimension-threshold" value="{{ dimension.threshold }}">
+                <input type="number" placeholder="Set dimension threshold..." id="dimension-threshold" value="{{ dimension.threshold }}" min="1">
             </div>
             <div class="modallica__actions">
                 <button data-modallica-action="close" class="clear-button" type="button">Cancel</button>

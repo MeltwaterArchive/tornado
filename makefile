@@ -5,10 +5,11 @@
 # ------------------------------------------------------------------------------
 
 # List special make targets that are not associated with files
+
 .PHONY: help all test btest consoletest composertest docs jscs phpcs scss \
         scss_lint phpcs_test phpcbf phpcbf_test phpmd phpmd_test phpcpd phploc \
         phpdep phpcmpinfo report qa qa_test qa_all clean build build_dev \
-        update install uninstall rpm
+        update install rpm mastersql mastermysql mastersqlite
 
 # Project version
 VERSION=`cat VERSION`
@@ -53,6 +54,8 @@ PORT?=8000
 # Composer executable (disable APC to as a work-around of a bug)
 COMPOSER=$(shell which php) -d "apc.enable_cli=0" $(shell which composer)
 
+BUILD_DEV_COMMAND=(rm -rf ./src/vendor/ && (cd src && $(COMPOSER) -n install --no-interaction --ignore-platform-reqs) && (cd src && bower install --force))
+
 # --- MAKE TARGETS ---
 
 # Display general help about this command
@@ -91,6 +94,10 @@ help:
 	@echo "    make phpcmpinfo  : Find out the minimum version and extensions required"
 	@echo "    make report      : Run the targets: phpcpd, phploc and phpdep"
 	@echo ""
+	@echo "    make mastersql   : Generate and overwrite the MySQL and SQLite master.sql"
+	@echo "    make mastermysql : Generate and overwrite the MySQL master.sql"
+	@echo "    make mastersqlite: Generate and overwrite the SQLite master.sql"
+	@echo ""
 	@echo "    make docs        : Generate source code documentation"
 	@echo ""
 	@echo "    make server     : Run the development server at http://localhost:"$(PORT)
@@ -101,21 +108,32 @@ help:
 	@echo "    make update      : Update composer dependencies"
 	@echo ""
 	@echo "    make install     : Install this library"
-	@echo "    make uninstall   : Remove all installed files"
 	@echo ""
 	@echo "    make rpm         : Build an RPM package"
 	@echo ""
+	@echo "    make btest-api   : Run the Behat tests for public API endpoints"
+	@echo "    make btest-app   : Run the Behat tests for the Tornado application"
+	@echo ""
+
 
 # alias for help target
 all: help
 
-# run the PHPUnit tests
-test:
-	APP_ENV=test ./src/vendor/bin/phpunit test/unit
+# Chef Delivery targets
 
-# Run the Behat tests (behavior test)
-btest:
-	APP_ENV=test ./src/vendor/bin/behat --config ./behat.yml -f pretty,junit,html --out ,target/behat,target/behat.html
+bootstrap:
+	@test -d "src/vendor" || $(BUILD_DEV_COMMAND)
+
+# Make the target directory
+createtarget:
+	@mkdir -p ./target/report/
+
+# Chef Delivery targets
+lint: build_dev phpcs phpcs_test
+quality: build_dev phpmd phpmd_test phpcpd phploc phpdep
+test: bootstrap composertest consoletest cs_build phpunit
+btest: build_dev btest-api btest-app
+report: build_dev phpcpd phploc phpdep phpcmpinfo
 
 # tests the console application
 consoletest:
@@ -143,6 +161,11 @@ scss:
 scss_lint:
 	@scss-lint -c ./.scss-lint.yml src/public/assets/scss/
 
+
+# run the PHPUnit tests
+phpunit:
+	APP_ENV=test ./src/vendor/bin/phpunit test/unit
+
 # run PHPCS on the source code and show any style violations
 phpcs:
 	@./src/vendor/bin/phpcs --standard=psr2 src/app src/lib
@@ -161,7 +184,7 @@ phpcbf_test:
 
 # Run PHP Mess Detector on the source code
 phpmd:
-	@./src/vendor/bin/phpmd src text ./phpmd.xml,unusedcode,design --exclude vendor
+	@./src/vendor/bin/phpmd src text ./phpmd.xml,unusedcode,design --exclude "vendor,app/migrations"
 
 # run PHP Mess Detector on the test code
 phpmd_test:
@@ -173,23 +196,32 @@ cs_build:
 	@grunt --gruntfile ./src/Gruntfile.js build
 
 # run PHP Copy/Paste Detector
-phpcpd:
-	@mkdir -p ./target/report/
+phpcpd: createtarget
 	@./src/vendor/bin/phpcpd src --exclude vendor > ./target/report/phpcpd.txt || true
 
 # run PHPLOC to analyze the structure of the project
-phploc:
-	@mkdir -p ./target/report/
+phploc: createtarget
 	@./src/vendor/bin/phploc src --exclude vendor > ./target/report/phploc.txt
 
 # PHP static analysis
-phpdep:
-	@mkdir -p ./target/report/
+phpdep: createtarget
 	@./src/vendor/bin/pdepend --jdepend-xml=./target/report/dependencies.xml \
 	--summary-xml=./target/report/metrics.xml \
 	--jdepend-chart=./target/report/dependecies.svg \
 	--overview-pyramid=./target/report/overview-pyramid.svg \
 	--ignore=vendor ./src
+
+# Run the Behat tests for public API endpoints
+btest-app: createtarget
+	APP_ENV=behat_config $(shell which php) -t src/public -S localhost:$(PORT) src/public/test.php > target/server.log 2>&1 & echo $$! > target/server.pid
+	APP_ENV=behat_config ./src/node_modules/phantomjs-prebuilt/bin/phantomjs --remote-debugger-port=9003 --webdriver=8643 > target/phantomjs.log 2>&1 & echo $$! > target/phantomjs.pid
+	APP_ENV=behat_config ./src/vendor/bin/behat --profile=app --config ./behat.yml -f pretty $(FEATURE) ; echo $$? > target/behat.exit; kill -15 `cat target/server.pid`; kill -15 `cat target/phantomjs.pid`; exit `cat target/behat.exit`
+
+# Run the Behat tests for public API endpoints
+btest-api: createtarget
+	APP_ENV=behat_config $(shell which php) -t src/public -S localhost:$(PORT) src/public/test.php > target/server.log 2>&1 & echo $$! > target/server.pid
+	APP_ENV=behat_config ./src/vendor/bin/behat --profile=api --config ./behat.yml -f pretty $(FEATURE) ; echo $$? > target/behat.exit; kill -15 `cat target/server.pid`; exit `cat target/behat.exit`
+
 
 # parse any data source to find out the minimum version and extensions required for it to run
 phpcmpinfo:
@@ -197,12 +229,9 @@ phpcmpinfo:
 	./src/vendor/bartlett/php-compatinfo/bin/phpcompatinfo --no-ansi \
 	analyser:run --alias source > ./target/report/phpcompatinfo.txt
 
-# run the targets: phpcpd, phploc and phpdep
-report: phpcpd phploc phpdep phpcmpinfo
-
 # alias to run various tests and code style checks
 #qa: test btest phpcs phpmd jscs scss
-qa: test btest cs_build phpcs phpmd
+qa: phpunit cs_build phpcs phpmd btest-api btest-app
 
 # alias to run code style tests on the unit test
 qa_test: phpcs_test phpmd_test
@@ -212,23 +241,38 @@ qa_all: qa qa_test consoletest composertest
 
 # Run the development server
 server:
-	APP_ENV=development php -t src/public -S localhost:$(PORT)
+	APP_ENV=behat_config php -t src/public -S localhost:$(PORT) src/public/test.php
 
 # delete the vendor and target directory
 clean:
 	@rm -rf ./src/vendor/
 
+mastersql: mastermysql mastersqlite
+
+mastermysql:
+	php ./src/app/console migrations:mastersql --write-sql=database/master.sql --type=mysql
+
+mastersqlite:
+	php ./src/app/console migrations:mastersql --write-sql=database/test_db/master.sql --type=sqlite
+
 # clean and download the composer dependencies
 build:
 	rm -rf ./src/vendor/
 	cd src && $(COMPOSER) -n install --no-dev --no-interaction
-	cd src && bower install
+	cd src && bundler install --path vendor/bundle
+	cd src && npm install
+	cd src && bower install --force
+	cd src && grunt build
+	cd src && rm node_modules -r
 
 # clean and download the composer dependencies including dev ones
 build_dev:
 	rm -rf ./src/vendor/
 	cd src && $(COMPOSER) -n install --no-interaction
-	cd src && bower install
+	cd src && bundler install --path vendor/bundle
+	cd src && npm install
+	cd src && bower install --force
+	cd src && grunt sass:dev
 
 # update composer dependencies
 update:
@@ -238,7 +282,7 @@ example:
 	cd src/ && ls
 
 # Install this application
-install: uninstall
+install:
 	mkdir -p $(PATHINSTBIN)
 	cp -rf ./src/* $(PATHINSTBIN)
 	rm -rf $(PATHINSTBIN)/public/assets/javascript/test/
@@ -251,12 +295,6 @@ install: uninstall
 	cp -f ./VERSION $(PATHINSTDOC)
 	cp -f ./RELEASE $(PATHINSTDOC)
 	chmod -R 644 $(PATHINSTDOC)*
-
-# Remove all installed files
-uninstall:
-	@rm -rf $(PATHINSTBIN)
-	@rm -rf $(PATHINSTDOC)
-	@rm -rf $(PATHINSTLOG)
 
 # --- PACKAGING ---
 
@@ -273,3 +311,5 @@ rpm:
 	--define "_docpath /$(DOCPATH)" \
 	--define "_configpath /$(CONFIGPATH)" \
 	--define "_logpath /$(LOGPATH)" -bb resources/rpm/rpm.spec
+
+

@@ -1,0 +1,39 @@
+<h1>
+	<span class="project-name"><%= project_name %></span>
+	<% if (name) { %>
+		<span class="workbook-name"><%= name %></span>
+	<% } else { %>
+		<span class="workbook-name" data-modallica="New Workbook:workbook-create-modal">Create Workbook</span>
+	<% } %>
+</h1>
+<% if (worksheets && worksheets.length > 0) { %>
+<div class="worksheets">
+	<div class="add-worksheet"></div>
+	<div class="wrapper">
+		<ul class="menu" style="left: -1px">
+			<% worksheets.forEach(function (worksheet) { %>
+			<li class="worksheet <%= worksheet.get('selected') ? 'selected' : '' %>">
+				<% if (worksheet.get('selected')) { %>
+					<div class="actions">
+	                	<span class="toggle"></span>
+	                	<ul>
+	                		<% if (worksheet.get('chart_type') !== 'timeseries') { %>
+		                    <li data-worksheet-action="options" data-modallica="Display options:worksheet-options-modal" class="dropdown__item">Display options</li>
+		                    <% } %>
+		                    <li data-worksheet-action="edit" data-modallica="Edit Worksheet:worksheet-edit-modal" class="dropdown__item">Edit worksheet</li>
+		                    <li data-spinner="" data-worksheet-action="export" class="dropdown__item">Export worksheet</li>
+		                    <li data-worksheet-action="duplicate" class="dropdown__item">Duplicate worksheet</li>
+	                	</ul>
+	            	</div>
+	            <% } %>
+	            <a data-id="<%= worksheet.get('id') %>" href="/projects/<%= project_id %>/worksheet/<%= worksheet.get('id') %>"><%= worksheet.get('name') %></a>
+			</li>
+			<% }) %>
+		</ul>
+	</div>
+	<div class="scroll-worksheet">
+		<div class="left disabled"></div><div class="right"></div>
+	</div>
+</div>
+<% } %>
+<span class="workbook-sidebar__button workbook-sidebar__button--open" data-workbook-sidebar-toggle>Workbooks</span>

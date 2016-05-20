@@ -13,16 +13,31 @@ services:
         class: Tornado\Analyze\DataSet\Generator
 
     analyze.dataset.repository:
-        class: Tornado\DataMapper\DoctrineRepository
+        class: Tornado\Analyze\DataSet\StoredDataSet\DataMapper
         arguments:
             - @doctrine.dbal.connection
             - Tornado\Analyze\DataSet\StoredDataSet
             - "dataset"
+            - @analyze.dimension.factory.nouser
+
+    analyze.dataset.form:
+        class: Tornado\Analyze\DataSet\StoredDataSet\Form
+        arguments:
+            - @validator
+            - @analyze.dataset.repository
+            - @project.recording.repository
+            - @pylon.schema.provider
+            - @analyze.dimension.factory.nouser
 
     analyze.dimension.factory:
         class: Tornado\Analyze\Dimension\Factory
         arguments:
             - @pylon.schema.provider
+
+    analyze.dimension.factory.nouser:
+        class: Tornado\Analyze\Dimension\Factory
+        arguments:
+            - @pylon.schema.provider.nouser
 
     analyze.templated.loader:
         class: DataSift\Loader\Json

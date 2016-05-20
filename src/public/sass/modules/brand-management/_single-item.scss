@@ -1,0 +1,62 @@
+/**
+ * Module ~ Single Item
+ *
+ * Refers to individual recordings/projects
+ * in the brand management page. Used in the
+ * `create` and `edit` pages
+ */
+
+/**
+ * Single Item variables
+ */
+
+/**
+ * Single Item styles
+ */
+.single-item {
+    @extend %brand-management__column-content;
+    &--edit {
+        .single-item__actions {
+            min-width: 190px;
+        }
+        .single-item__title {
+            @include ellipsis(calc(100% - 190px));
+        }
+    }
+    .input-wrapper {
+        display: inline-block;
+        width: 100%;
+    }
+}
+
+.single-item__header {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.single-item__title {
+    display: inline-block;
+    margin: 0;
+    line-height: 32px;
+}
+
+.single-item__actions {
+    float: right;
+    width: auto;
+    text-align: right;
+}
+
+.single-item__action {
+    @extend %brand-management__content-action;
+    &--create,
+    &--update {
+        float: right;
+        a {
+            @extend %submit-button;
+        }
+    }
+    &--delete {
+        @extend %clear-button;
+    }
+}

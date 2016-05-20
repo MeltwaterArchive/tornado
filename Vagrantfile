@@ -13,7 +13,7 @@ Vagrant.require_version ">= 1.7.0", "< 2.0.0"
 
   Vagrant::Plugin::Manager.instance.installed_specs.any? do |s|
     req = Gem::Requirement.new([plugin[:version]])
-    if (not req.satisfied_by?(s.version)) && plugin[:name] == s.name 
+    if (not req.satisfied_by?(s.version)) && plugin[:name] == s.name
       raise "#{plugin[:name]} #{plugin[:version]} is required. Please run `vagrant plugin install #{plugin[:name]}`"
     end
   end
@@ -40,7 +40,7 @@ Vagrant.configure(2) do |config|
   config.vm.synced_folder ".", "/var/www/tornado", :nfs => true
 
   # Provisioning
-  config.omnibus.chef_version = "11.10.4"
+  config.omnibus.chef_version = "12.10.24"
 
   config.berkshelf.berksfile_path = "chef/cookbook/Berksfile"
   config.berkshelf.enabled = true
@@ -49,7 +49,7 @@ Vagrant.configure(2) do |config|
     chef.run_list = [
       "recipe[tornado]",
     ]
-    chef.nodes_path = "cookbook"
+    chef.nodes_path = "chef/cookbook"
     chef.log_level = :info
   end
 

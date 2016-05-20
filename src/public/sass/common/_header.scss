@@ -1,0 +1,82 @@
+/**
+ * Common ~ Header
+ *
+ * Top header that hosts the brand logo/name
+ * and the user settings dropdown
+ */
+
+/**
+ * Header variables
+ */
+$header-padding-top: 15px !default;
+$logo-height: 30px !default;
+// Used in common/main to add top margin, because our header is fixed
+$header-height: ($header-padding-top * 2) + $logo-height !default;
+$header-background-colour: $colour-blue-facebook !default;
+$logo-colour: #fff !default;
+$profile-name-colour: #fff !default;
+$profile-dropdown-arrow-colour: #fff !default;
+
+/**
+ * Header styles
+ */
+.header {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: $header-padding-top 15px;
+    background-color: $header-background-colour;
+    z-index: 6;
+}
+
+.logo {
+    display: inline-block;
+    height: $logo-height;
+    padding-left: 35px;
+    color: $logo-colour;
+    font-size: rem(18);
+    line-height: 30px;
+    background: {
+        image: url("#{$image-path}/common/logo-datasift.png");
+        size: auto 22px;
+        position: left center;
+        repeat: no-repeat;
+    }
+    @include hidpi {
+        background-image: url("#{$image-path}/common/logo-datasift@2x.png");
+    }
+}
+
+.profile {
+    display: inline-block;
+    float: right;
+}
+
+.profile__image {
+    float: left;
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    border-radius: 3px;
+}
+
+.profile__name {
+    position: relative;
+    float: left;
+    padding-right: 8px;
+    font-size: rem(14);
+    line-height: 30px;
+    color: $profile-name-colour;
+    &::after {
+        position: relative;
+        top: 12px;
+        left: 8px;
+        @include triangle(10px, $profile-dropdown-arrow-colour, down);
+        content: "";
+    }
+}
+
+.dropdown__content--profile {
+    top: 35px;
+}

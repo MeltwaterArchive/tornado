@@ -16,9 +16,11 @@
 require __DIR__ . '/../vendor/autoload.php';
 
 try {
+    $configPath = realpath(__DIR__ . '/../config/console');
+    $resourcesPath = (is_dir('/etc/tornado')) ? '/etc/tornado' : realpath(__DIR__ . '/../../resources/config');
     $bootstrap = new \DataSift\Silex\Bootstrap(
-        realpath(__DIR__.'/../config/console'),
-        realpath(__DIR__.'/../../resources/config') ?: '/etc/ms-app-tornado',
+        $configPath,
+        $resourcesPath,
         getenv('APP_ENV') ?: 'production'
     );
 

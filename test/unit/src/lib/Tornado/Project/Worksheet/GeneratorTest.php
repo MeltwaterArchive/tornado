@@ -56,7 +56,8 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
                             'span' => 1,
                             'interval' => 'day',
                             'start' => '1 week ago',
-                            'end' => '1 day ago'
+                            'end' => '1 day ago',
+                            'filters' => ['csdl' => '']
                         ]
                     ]
                 ],
@@ -72,7 +73,8 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
                         'span' => 1,
                         'interval' => 'day',
                         'start' => '1 week ago',
-                        'end' => '1 day ago'
+                        'end' => '1 day ago',
+                        'filters' => ['csdl' => '']
                     ]
                 ]
             ],
@@ -90,7 +92,8 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
                             'span' => 1,
                             'interval' => 'day',
                             'start' => '1 week ago',
-                            'end' => '1 day ago'
+                            'end' => '1 day ago',
+                            'filters' => ['csdl' => '']
                         ],
                         [
                             'title' => 'Countries',
@@ -102,7 +105,8 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
                             'span' => 1,
                             'interval' => 'day',
                             'start' => '1 week ago',
-                            'end' => 'yesterday'
+                            'end' => 'yesterday',
+                            'filters' => ['csdl' => '']
                         ],
                         [
                             'title' => 'Time Series',
@@ -114,7 +118,8 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
                             'span' => 1,
                             'interval' => 'day',
                             'start' => '2 weeks ago',
-                            'end' => '1 week ago'
+                            'end' => '1 week ago',
+                            'filters' => ['csdl' => '']
                         ]
                     ]
                 ],
@@ -130,7 +135,8 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
                         'span' => 1,
                         'interval' => 'day',
                         'start' => '1 week ago',
-                        'end' => '1 day ago'
+                        'end' => '1 day ago',
+                        'filters' => ['csdl' => '']
                     ],
                     [
                         'worksheet_id' => 0,
@@ -142,7 +148,8 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
                         'span' => 1,
                         'interval' => 'day',
                         'start' => '1 week ago',
-                        'end' => 'yesterday'
+                        'end' => 'yesterday',
+                        'filters' => ['csdl' => '']
                     ],
                     [
                         'worksheet_id' => 0,
@@ -154,7 +161,8 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
                         'span' => 1,
                         'interval' => 'day',
                         'start' => '2 weeks ago',
-                        'end' => '1 week ago'
+                        'end' => '1 week ago',
+                        'filters' => ['csdl' => '']
                     ]
                 ]
             ],
@@ -172,7 +180,8 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
                             'span' => 1,
                             'interval' => 'day',
                             'start' => null,
-                            'end' => null
+                            'end' => null,
+                            'filters' => ['csdl' => '']
                         ],
                         [
                             'title' => 'Time Series',
@@ -184,7 +193,8 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
                             'span' => 1,
                             'interval' => 'day',
                             'start' => null,
-                            'end' => null
+                            'end' => null,
+                            'filters' => ['csdl' => '']
                         ]
                     ]
                 ],
@@ -198,7 +208,8 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
                             ['target' => 'fb.author.age']
                         ],
                         'span' => 1,
-                        'interval' => 'day'
+                        'interval' => 'day',
+                        'filters' => ['csdl' => '']
                     ],
                     [
                         'worksheet_id' => 0,
@@ -208,7 +219,8 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
                             ['target' => 'time']
                         ],
                         'span' => 1,
-                        'interval' => 'day'
+                        'interval' => 'day',
+                        'filters' => ['csdl' => '']
                     ]
                 ]
             ],
@@ -242,7 +254,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
 
             $mocks['analyzeForm']->shouldReceive('submit')
                 ->with($data, Mockery::type(Worksheet::class), $mocks['recording']);
-            
+
             $worksheet = new Worksheet();
             $worksheet->setChartType($data['chart_type']);
             $worksheet->setDimensions($data['dimensions']);

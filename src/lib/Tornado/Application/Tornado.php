@@ -64,11 +64,19 @@ class Tornado extends Application
         // flash
         $this->registerFlashProvider($container);
 
+        $twigOptions = ($container->hasParameter('twig.options')) ? $container->getParameter('twig.options') : [];
+        
         // twig
         $this->register(new TwigServiceProvider(), [
             'twig.path' => $container->getParameter('twig.path'),
+            'twig.options' => $twigOptions
         ]);
         $container->set('twig', $this['twig']);
+
+        $this->registerClientSide($container);
+        $this->registerKissmetrics($container);
+        $this->registerZendesk($container);
+        $this->registerGa($container);
     }
 
     /**
@@ -89,6 +97,7 @@ class Tornado extends Application
         }
 
         $this->register(new SessionServiceProvider(), $sessionConfig);
+        $this['session.storage.handler'] = $container->get('session.storage.handler');
         $container->set('session', $this['session']);
     }
 
@@ -145,6 +154,7 @@ class Tornado extends Application
         $this->on(KernelEvents::EXCEPTION, function ($event) {
             /** @var $event \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent */
             $exception = $event->getException();
+
             $code = method_exists($exception, 'getStatusCode') ? $exception->getStatusCode() : 500;
 
             $this->rootContainer->get('monolog')->error(
@@ -152,15 +162,20 @@ class Tornado extends Application
                 $exception->getTraceAsString()
             );
 
-            $content = $this->rootContainer->get('twig')->render(
-                $this->rootContainer->getParameter('template.error'),
-                [
-                    'statusCode' => $code,
-                    'errorMessage' => $exception->getMessage()
-                ]
-            );
+            $message = $exception->getMessage();
 
-            $event->setResponse(new Response($content, $code));
+            if ($event->getRequest()->isXmlHttpRequest()) {
+                $event->setResponse(new \Symfony\Component\HttpFoundation\JsonResponse(['error' => $message], $code));
+            } else {
+                $content = $this->rootContainer->get('twig')->render(
+                    $this->rootContainer->getParameter('template.error'),
+                    [
+                        'statusCode' => $code,
+                        'errorMessage' => $message
+                    ]
+                );
+                $event->setResponse(new Response($content, $code));
+            }
         });
     }
 
@@ -234,10 +249,14 @@ class Tornado extends Application
             // sets agency Tornado app theme
             $request->attributes->set('skin', $agency->getSkin());
 
+            $datasiftUsername = empty($brand->getDatasiftUsername())
+                ? $agency->getDatasiftUsername()
+                : $brand->getDatasiftUsername();
+
             $container->set(
                 'datasift.user',
                 $container->get('datasift.api.user_provider')
-                    ->setUsername($agency->getDatasiftUsername())
+                    ->setUsername($datasiftUsername)
                     ->setApiKey($brand->getDatasiftApiKey())
                     ->getInstance()
             );
@@ -262,5 +281,62 @@ class Tornado extends Application
                 throw new AccessDeniedHttpException('You are not granted to access this resource.');
             }
         });
+    }
+
+    protected function registerClientSide(ContainerInterface $container)
+    {
+        $twig = $container->get('twig');
+
+        if ($container->hasParameter('cs.build.location')) {
+            $twig->addGlobal('cs_build_location', $container->getParameter('cs.build.location'));
+        }
+
+        if ($container->hasParameter('cs.javascript.location')) {
+            $twig->addGlobal('cs_javascript_location', $container->getParameter('cs.javascript.location'));
+        }
+
+        if ($container->hasParameter('cs.bower.location')) {
+            $twig->addGlobal('cs_bower_location', $container->getParameter('cs.bower.location'));
+        }
+    }
+
+    /**
+     * Registers the Kissmetrics key in Twig
+     *
+     *
+     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+     */
+    protected function registerKissmetrics(ContainerInterface $container)
+    {
+        if ($container->hasParameter('kissmetrics.key')) {
+            $twig = $container->get('twig');
+            $twig->addGlobal('kissmetrics_key', $container->getParameter('kissmetrics.key'));
+        }
+    }
+
+    /**
+     * Registers the Zendesk key in Twig
+     *
+     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+     */
+    protected function registerZendesk(ContainerInterface $container)
+    {
+        if ($container->hasParameter('zendesk.url')) {
+            $twig = $container->get('twig');
+            $twig->addGlobal('zendesk_url', $container->getParameter('zendesk.url'));
+        }
+    }
+
+    /**
+     * Registers the GA key in Twig
+     *
+     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+     */
+    protected function registerGa(ContainerInterface $container)
+    {
+        if ($container->hasParameter('ga.key')) {
+            $twig = $container->get('twig');
+            $twig->addGlobal('ga_key', $container->getParameter('ga.key'));
+        }
     }
 }

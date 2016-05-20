@@ -3,25 +3,25 @@ parameters:
 
     kernel.name: default
 
-    routes.path:      %config_dir%
-    twig.path:        %root_dir%/views
-    twig.base_url:   "http://tornado.dev" # include scheme; no trailing slash
+    routes.path: "%config_dir%"
+    twig.path: "%root_dir%/views"
+    twig.base_url: "http://tornado.dev" # include scheme; no trailing slash
     monolog.log_file: /var/log/tornado/%env%.log
 
     cache.service_name: cache.memcached
-    cache_dir: %root_dir%/.cache
+    cache_dir: "%root_dir%/.cache"
 
     tornado.cache.namespace: "datasift.tornado"
     api.cache.namespace: "datasift.tornado.api"
 
     # you can define this param either as string or array (array casting)
     pylon.schema.fb:
-        - %root_dir%/config/pylon/fb_pylon_schema.json
-        - %root_dir%/config/pylon/fb_pylon_labels.json
-    pylon.schema.groups.json: %root_dir%/config/pylon/fb_pylon_groups.json
-    pylon.regions.json: %root_dir%/config/pylon/regions.json
+        - "%root_dir%/config/pylon/fb_pylon_schema.json"
+        - "%root_dir%/config/pylon/fb_pylon_labels.json"
+    pylon.schema.groups.json: "%root_dir%/config/pylon/fb_pylon_groups.json"
+    pylon.regions.json: "%root_dir%/config/pylon/regions.json"
 
-    analyzer.templates: %root_dir%/config/analyzer/templates.json
+    analyzer.templates: "%root_dir%/config/analyzer/templates.json"
     analyzer.templates.default: "default"
 
     db.driver: "doctrine.dbal.connection.mysql"
@@ -32,10 +32,13 @@ parameters:
     db.database: tornado
     db.unix_socket: ~
     db.charset: UTF8
-    db.path: /tmp/tornado.sqlite
+    db.path: /tmp/tornado.db
     db.memory: false
 
+    db.migrations.path: "%root_dir%/app/migrations"
+
     # session configuration options @see http://silex.sensiolabs.org/doc/providers/session.html
+    session.storage.driver: memcached
     session.storage.save_path: /tmp
     session.storage.options:
         name: tornado_sess
@@ -58,3 +61,13 @@ parameters:
     workbook.lock.ttl_reset: 30 #iteration
 
     mailer.from: "tornado@datasift.com"
+
+    # metrics and support keys
+    # kissmetrics.key: 'some-kissmetrics-key'
+    # ga.key: 'UA-some-test-key-1'
+    # zendesk.url: 'datasiftsupporttest.zendesk.com'
+
+    # client side variables
+    cs.build.location: 
+    cs.javascript.location: /javascript
+    cs.bower.location: /bower

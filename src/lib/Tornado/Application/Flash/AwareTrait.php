@@ -75,6 +75,21 @@ trait AwareTrait
     }
 
     /**
+     * Some flash messages are not for the next request, but the current.
+     *
+     * @param string $message
+     * @param string $level
+     * @param array $meta
+     */
+    protected function setRequestFlash($message, $level, array &$meta)
+    {
+        $meta['__notification'] = [
+            'message' => $message,
+            'level' => $level
+        ];
+    }
+
+    /**
      * Sets the Flash provider
      *
      * @param \Tornado\Application\Flash\ServiceProvider $flash

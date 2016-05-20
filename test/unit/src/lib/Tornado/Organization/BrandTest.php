@@ -105,6 +105,7 @@ class BrandTest extends \PHPUnit_Framework_TestCase
                     'id' => 10,
                     'agency_id' => 20,
                     'name' => 'newName',
+                    'datasift_username' => 'Override Username',
                     'datasift_identity_id' => 'def456',
                     'datasift_apikey' => 'abc123',
                     'target_permissions' => 'premium,internal'
@@ -113,6 +114,7 @@ class BrandTest extends \PHPUnit_Framework_TestCase
                     'getId' => 10,
                     'getAgencyId' => 20,
                     'getName' => 'newName',
+                    'getDatasiftUsername' => 'Override Username',
                     'getDatasiftIdentityId' => 'def456',
                     'getDatasiftApiKey' => 'abc123',
                     'getTargetPermissions' => ['premium', 'internal']
@@ -121,6 +123,7 @@ class BrandTest extends \PHPUnit_Framework_TestCase
                     'id' => 10,
                     'agency_id' => 20,
                     'name' => 'newName',
+                    'datasift_username' => 'Override Username',
                     'datasift_identity_id' => 'def456',
                     'datasift_apikey' => 'abc123',
                     'target_permissions' => 'premium,internal'
@@ -131,6 +134,7 @@ class BrandTest extends \PHPUnit_Framework_TestCase
                     'id' => 10,
                     'agencyId' => 20,
                     'name' => 'newName',
+                    'datasiftUsername' => 'Override Username',
                     'datasiftIdentityId' => 'def456',
                     'datasiftApikey' => 'abc123',
                     'targetPermissions' => 'premium,internal'
@@ -139,6 +143,7 @@ class BrandTest extends \PHPUnit_Framework_TestCase
                     'getId' => 10,
                     'getAgencyId' => 20,
                     'getName' => 'newName',
+                    'getDatasiftUsername' => 'Override Username',
                     'getDatasiftIdentityId' => 'def456',
                     'getDatasiftApiKey' => 'abc123',
                     'getTargetPermissions' => ['premium', 'internal']
@@ -147,6 +152,7 @@ class BrandTest extends \PHPUnit_Framework_TestCase
                     'id' => 10,
                     'agency_id' => 20,
                     'name' => 'newName',
+                    'datasift_username' => 'Override Username',
                     'datasift_identity_id' => 'def456',
                     'datasift_apikey' => 'abc123',
                     'target_permissions' => 'premium,internal'

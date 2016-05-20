@@ -45,5 +45,70 @@ services:
             - @doctrine.dbal.configuration
         private: true
 
+    doctrine.dbal.connection.dummy.mysql:
+        class: Doctrine\DBAL\Connection
+        arguments:
+            - user: dummy
+            - @doctrine.dbal.driver.pdo_mysql
+            - @doctrine.dbal.configuration
+        private: true
+
+    doctrine.dbal.connection.dummy.sqlite:
+        class: Doctrine\DBAL\Connection
+        arguments:
+            - user: dummy
+            - @doctrine.dbal.driver.pdo_sqlite
+            - @doctrine.dbal.configuration
+        private: true
+
+    doctrine.dbal.platform.mysql:
+        class: Doctrine\DBAL\Platforms\MySqlPlatform
+        private: true
+    
+    doctrine.dbal.platform.sqlite:
+        class: Doctrine\DBAL\Platforms\SqlitePlatform
+        private: true
+
+    doctrine.dbal.schema_manager.mysql:
+        class: Doctrine\DBAL\Schema\MySqlSchemaManager
+        arguments:
+            - @doctrine.dbal.connection.dummy.mysql
+            - @doctrine.dbal.platform.mysql
+        private: true
+    
+    doctrine.dbal.schema_manager.sqlite:
+        class: Doctrine\DBAL\Schema\SqliteSchemaManager
+        arguments:
+            - @doctrine.dbal.connection.dummy.sqlite
+            - @doctrine.dbal.platform.sqlite
+        private: true
+
+    doctrine.dbal.schema_diff_provider.mysql:
+        class: Doctrine\DBAL\Migrations\Provider\SchemaDiffProvider
+        arguments:
+            - @doctrine.dbal.schema_manager.mysql
+            - @doctrine.dbal.platform.mysql
+        private: true
+    
+    doctrine.dbal.schema_diff_provider.sqlite:
+        class: Doctrine\DBAL\Migrations\Provider\SchemaDiffProvider
+        arguments:
+            - @doctrine.dbal.schema_manager.sqlite
+            - @doctrine.dbal.platform.sqlite
+        private: true
+
+    doctrine.dbal.lazy_schema_diff_provider.mysql:
+        class: Tornado\Organization\User
+        factory: [Doctrine\DBAL\Migrations\Provider\LazySchemaDiffProvider, fromDefaultProxyFacyoryConfiguration]
+        arguments:
+            - @doctrine.dbal.schema_diff_provider.mysql
+
+    doctrine.dbal.lazy_schema_diff_provider.sqlite:
+        class: Tornado\Organization\User
+        factory: [Doctrine\DBAL\Migrations\Provider\LazySchemaDiffProvider, fromDefaultProxyFacyoryConfiguration]
+        arguments:
+            - @doctrine.dbal.schema_diff_provider.sqlite
+
+
     doctrine.dbal.connection:
         synthetic: true

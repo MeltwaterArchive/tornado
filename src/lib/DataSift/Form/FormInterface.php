@@ -20,6 +20,8 @@ use Tornado\DataMapper\DataObjectInterface;
  */
 interface FormInterface
 {
+    const NOTIFICATION_KEY = '__notification';
+
     /**
      * Submits data for this Form to validate them against the constraints
      *

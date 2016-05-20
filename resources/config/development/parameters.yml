@@ -3,6 +3,8 @@ parameters:
 
     routes.path:      %config_dir%
     twig.path:        %root_dir%/views
+    twig.options:
+      strict_variables: false
     monolog.log_file: /var/log/tornado/%env%.log
 
     cache.service_name: cache.memcached
@@ -49,3 +51,6 @@ parameters:
 
     workbook.lock.ttl: 120 #seconds
     workbook.lock.ttl_reset: 30 #iteration
+
+    datasift.public_api_url: false
+    datasift.public_api_ssl: true

@@ -12,6 +12,13 @@ services:
             - @cache
             - @monolog
 
+    pylon.schema.provider.nouser:
+        class: DataSift\Pylon\Schema\Provider
+        arguments:
+            - [@pylon.schema.loader.json]
+            - @cache
+            - @monolog
+
     pylon.schema.tags_loader:
         class: DataSift\Pylon\Schema\Loader\Tags
         arguments:

@@ -169,23 +169,6 @@ class DataMapper extends DoctrineRepository
     }
 
     /**
-     * Removes Brands by ids
-     *
-     * @param array $ids
-     *
-     * @return int number of deleted items
-     */
-    public function deleteByIds(array $ids)
-    {
-        $qb = $this->createQueryBuilder();
-        $qb
-            ->delete($this->tableName)
-            ->add('where', $qb->expr()->in('id', $ids));
-
-        return $qb->execute();
-    }
-
-    /**
      * Returns a count of Brands for the given Agency
      *
      * @param \Tornado\Organization\Agency $agency

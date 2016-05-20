@@ -2,6 +2,7 @@
 
 namespace DataSift\Api;
 
+use DataSift\Pylon\Pylon;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\NullLogger;
@@ -196,6 +197,81 @@ class UserProvider implements LoggerAwareInterface
     {
         return $this->apiUrl;
     }
+
+    /**
+     * Validates the credentials for this user
+     * by calling the getUsage endpoint, if credentials
+     * are incorrect an exception will be thrown.
+     *
+     * @return boolean
+     *
+     * @throws \DataSift_Exception_AccessDenied
+     * @throws \Exception
+     */
+    public function validateCredentials()
+    {
+        if (empty($this->username) || empty($this->apiKey)) {
+            throw new \DataSift_Exception_AccessDenied('Username and/or api key are missing');
+        }
+        $user = $this->getInstance();
+        $user->getUsage();
+        return true;
+    }
+
+    /**
+     * Validates the identity
+     *
+     * @param DataSift\Pylon\Pylon $pylonClient
+     *
+     * @return bool
+     *
+     * @throws \DataSift_Exception_AccessDenied
+     * @throws \DataSift_Exception_CompileFailed
+     * @throws \Exception
+     */
+    public function identityHasPremiumPermissions(Pylon $pylonClient = null)
+    {
+        if (empty($this->username) || empty($this->apiKey)) {
+            throw new \DataSift_Exception_AccessDenied('Username and/or api key are missing');
+        }
+
+        try {
+            $user = $this->getInstance();
+            if (empty($pylonClient)) {
+                $pylonClient = new Pylon($user);
+            }
+
+            try {
+                $pylonClient->validate($user, 'fb.author.highest_education exists');
+            } catch (\Exception $ex) {
+                throw $ex;
+            }
+        } catch (\DataSift_Exception_InvalidData $e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns true if an Identity with the passed id exists
+     *
+     * @param string $identityId
+     * @param \DataSift\Pylon\Pylon $pylonClient
+     *
+     * @return boolean
+     */
+    public function identityExists($identityId, Pylon $pylonClient = null)
+    {
+        $user = $this->getInstance();
+        if (empty($pylonClient)) {
+            $pylonClient = new Pylon($user);
+        }
+
+        $identity = $pylonClient->getIdentity($identityId);
+        return (boolean)(count($identity));
+    }
+
 
     /**
      * Creates new instance of datasift user with given user credentials

@@ -1,0 +1,121 @@
+/**
+ * Module ~ Sample
+ */
+
+/**
+ * Sample variables
+ */
+$sample-title-border-colour: $colour-grey-light !default;
+
+/**
+ * Sample styles
+ */
+.sample-wrapper {
+  @include span-columns(12);
+  position: relative;
+
+  .emoji {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.interaction-wrapper {
+  padding-top: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
+  border: 1px solid $chart-title-border-colour;
+  margin-bottom: 10px;
+  font-size: .7em;
+
+  .emoji {
+    height: 1em;
+    width: 1em;
+  }
+
+  .interaction-avatar {
+    float: left;
+    border: 1px solid $chart-title-border-colour;
+  }
+
+  .interaction__container {
+    padding-left: 65px;
+    background: url('#{$image-path}/common/profile-default.png') no-repeat;
+    background-size: 50px;
+
+    dl {
+      padding: 0.5em;
+    }
+    dt {
+      float: left;
+      clear: left;
+      width: 100px;
+      text-align: left;
+      color: $placeholder-colour;
+      margin-bottom: 10px;
+    }
+
+    dd {
+      margin: 0 0 0 110px;
+      padding: 0 0 0.5em 0;
+      margin-bottom: 10px;
+      min-height: 1rem;
+
+      .external-link {
+        width: 10px;
+        height: 10px;
+        background: url('#{$image-path}/common/external-link.png');
+        background-size: 10px;
+        display: inline-block;
+      }
+
+      span.tag {
+        border-radius: 3px;
+        background-color: #e3ebf2;
+        padding: 5px;
+        color: #314886;
+        margin-left: 10px;
+        margin-bottom: 10px;
+        display: inline-block;
+        margin-top: -5px;
+      }
+
+    }
+
+    .interaction__content {
+      font-size: 13px;
+      margin-top: 5px;
+    }
+
+    .interaction__details {
+      display: inline-block;
+    }
+  }
+}
+
+.sample__title {
+  @include ellipsis();
+  position: relative;
+  width: 100%;
+  padding: 0 30px 10px;
+  text-align: center;
+  font-size: 14px;
+  &::after {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-bottom: 1px solid $chart-title-border-colour;
+    content: "";
+  }
+}
+
+.sample__small-text {
+  color: $placeholder-colour;
+  font-size: 12px;
+}
+
+.worksheet__action-show-more-posts {
+  width: auto !important;
+  float: right !important;
+}

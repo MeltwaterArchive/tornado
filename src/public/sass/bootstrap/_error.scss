@@ -1,0 +1,38 @@
+/**
+ * DataSift BootStrap Error styling
+ */
+
+.error-tooltip {
+	background: $colour-red-error;
+	color: $colour-red-error-text;
+	padding: 10px;
+	position: absolute;
+	width: 200px;
+	z-index: 99;
+	font-size: 0.8125rem;
+
+	&::before {
+		position: absolute;
+        content: "";
+	}
+
+	&.top::before {
+		@include triangle(12px, $colour-red-error, down);
+		bottom: -6px;
+	}
+
+	&.right::before {
+		@include triangle(12px, $colour-red-error, right);
+		right: -6px;
+	}
+
+	&.bottom::before {
+		@include triangle(12px, $colour-red-error, up);
+		top: -6px;
+	}
+
+	&.left::before {
+		@include triangle(12px, $colour-red-error, left);
+		left: -6px;
+	}
+}

@@ -37,7 +37,7 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
      * @var string
      */
     protected $database;
-    
+
     public function setUp()
     {
         $this->buildApplication(Tornado::class, '/src/config/tornado');
@@ -63,11 +63,11 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->assertNull($this->dbconn->connect_error);
-        
+
         // populate the database
         $this->executeSQL($this->rootDir .'/database/master.sql');
     }
-    
+
     public function tearDown()
     {
         // if there was an error connecting, then this isnt an object
@@ -99,7 +99,7 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
         $sql = str_replace('`tornado`', '`'.$this->database.'`', file_get_contents($sqlfile));
         $queries = $this->getQueriesFromSQL($sql);
         foreach ($queries as $query) {
-            $this->assertTrue($this->dbconn->query($query));
+            $this->assertTrue($this->dbconn->query($query), $query);
         }
     }
 

@@ -18,6 +18,8 @@ use Tornado\Analyze\Dimension\Factory as DimensionFactory;
 use Test\DataSift\ApplicationBuilder;
 use Test\DataSift\ReflectionAccess;
 
+use Symfony\Component\Validator\ValidatorBuilder;
+
 /**
  * UpdateTest
  *
@@ -57,8 +59,8 @@ class UpdateTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->buildApplication();
-        $this->validator = $this->container->get('validator');
+        $validatorBuilder = new ValidatorBuilder();
+        $this->validator = $validatorBuilder->getValidator();
     }
 
     /**
@@ -70,7 +72,7 @@ class UpdateTest extends \PHPUnit_Framework_TestCase
         $mocks = $this->getMocks();
         $form = $this->getForm($mocks);
 
-        $this->assertEquals(['workbook_id', 'name'], $form->getFields());
+        $this->assertEquals(['workbook_id', 'name', 'display_options'], $form->getFields());
     }
 
     /**

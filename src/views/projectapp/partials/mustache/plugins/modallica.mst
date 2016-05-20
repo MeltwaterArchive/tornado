@@ -8,6 +8,6 @@
                 </div>
                 <div data-modallica-content-wrapper class="modallica__content-wrapper"></div>
             </div>
-        </script>
+        </div>
     </script>
 {% endraw %}

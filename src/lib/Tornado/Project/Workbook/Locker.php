@@ -2,13 +2,11 @@
 
 namespace Tornado\Project\Workbook;
 
-use Doctrine\Common\Cache\Cache;
-
 use Tornado\Organization\User;
 use Tornado\Project\Workbook;
 
 /**
- * Locker
+ * An interface to model a worksheet locker
  *
  * LICENSE: This software is the intellectual property of MediaSift Ltd.,
  * and is covered by retained intellectual property rights, including
@@ -21,98 +19,36 @@ use Tornado\Project\Workbook;
  * @license     http://mediasift.com/licenses/internal MediaSift Internal License
  * @link        https://github.com/datasift/tornado
  */
-class Locker
+interface Locker
 {
-    /**
-     * TTL Default locking time, represented in seconds
-     */
-    const LOCKING_TTL = 120;
-
-    /**
-     * Default top limit value for resetting the TTL for particular key
-     */
-    const TTL_RESET_LIMIT = 30;
-
-    /**
-     * @var \Doctrine\Common\Cache\MemcachedCache
-     */
-    protected $cache;
-
-    /**
-     * TTL locking time, represented in seconds
-     *
-     * @var int
-     */
-    protected $ttl;
-
-    /**
-     * Top limit value for resetting the TTL for single key
-     *
-     * @var int
-     */
-    protected $ttlResetLimit;
-
-    /**
-     * Remaining TTL reset limit
-     *
-     * @var int
-     */
-    protected $remainingLimit;
-
-    /**
-     * Workbook's locking User
-     *
-     * @var User
-     */
-    protected $lockingUser = null;
-
-    public function __construct(Cache $cache, $ttl = self::LOCKING_TTL, $ttlResetLimit = self::TTL_RESET_LIMIT)
-    {
-        $this->cache = $cache;
-        $this->ttl = $ttl;
-        $this->ttlResetLimit = $ttlResetLimit;
-        $this->remainingLimit = $ttlResetLimit;
-    }
 
     /**
      * Retrieves Workbook's locking User
      *
      * @return \Tornado\Organization\User
      */
-    public function getLockingUser()
-    {
-        return $this->lockingUser;
-    }
+    public function getLockingUser();
 
     /**
      * Gets this Workbook TTL
      *
      * @return int
      */
-    public function getTtl()
-    {
-        return $this->ttl;
-    }
+    public function getTtl();
 
     /**
      * Gets this Workbook TTL reset limit
      *
      * @return int
      */
-    public function getTtlResetLimit()
-    {
-        return $this->ttlResetLimit;
-    }
+    public function getTtlResetLimit();
 
     /**
      * Gets this Workbook remaining TTL reset limit
      *
      * @return int
      */
-    public function getRemainingLimit()
-    {
-        return $this->remainingLimit;
-    }
+    public function getRemainingLimit();
 
     /**
      * Checks if given Workbook is locked
@@ -121,10 +57,7 @@ class Locker
      *
      * @return bool
      */
-    public function isLocked(Workbook $workbook)
-    {
-        return $this->cache->contains($this->generateLockKey($workbook));
-    }
+    public function isLocked(Workbook $workbook);
 
     /**
      * Fetches Workbook's lock object
@@ -133,10 +66,7 @@ class Locker
      *
      * @return false|mixed
      */
-    public function fetch(Workbook $workbook)
-    {
-        return $this->cache->fetch($this->generateLockKey($workbook));
-    }
+    public function fetch(Workbook $workbook);
 
     /**
      * Locks given Workbook for given user by using lock storage.
@@ -146,19 +76,7 @@ class Locker
      *
      * @return bool
      */
-    public function lock(Workbook $workbook, User $user)
-    {
-        return $this->cache->save(
-            $this->generateLockKey($workbook),
-            [
-                'workbook' => $workbook,
-                'user' => $user,
-                // ttlResetLimit may be 0, prevent that by opposite clause stmt
-                'reset_limit' => $this->remainingLimit
-            ],
-            $this->ttl
-        );
-    }
+    public function lock(Workbook $workbook, User $user);
 
     /**
      * Checks if given User is granted to access the given Workbook
@@ -168,15 +86,7 @@ class Locker
      *
      * @return bool
      */
-    public function isGranted(Workbook $workbook, User $user)
-    {
-        $lockingUser = $this->fetchLockingUser($workbook);
-        if (!$lockingUser) {
-            return false;
-        }
-
-        return $lockingUser->getId() === $user->getId();
-    }
+    public function isGranted(Workbook $workbook, User $user);
 
     /**
      * Retrieves Workbook's locking User
@@ -185,16 +95,7 @@ class Locker
      *
      * @return mixed
      */
-    public function fetchLockingUser(Workbook $workbook)
-    {
-        $lockData = $this->fetch($workbook);
-        if (!$lockData || !isset($lockData['user']) || !$lockData['user'] instanceof User) {
-            return null;
-        }
-
-        $this->lockingUser = $lockData['user'];
-        return $this->lockingUser;
-    }
+    public function fetchLockingUser(Workbook $workbook);
 
     /**
      * Resets lock entry TTL for given workbook.
@@ -208,20 +109,7 @@ class Locker
      * @return int|false if TTL limit was reached, returns false and does not reset it.
      * Otherwise, returns remaining counter
      */
-    public function resetTtl(Workbook $workbook, User $user)
-    {
-        $lockData = $this->fetch($workbook);
-        $resetLimit = $lockData['reset_limit'];
-
-        if (!($resetLimit > 0)) {
-            return false;
-        }
-
-        $this->remainingLimit = $resetLimit - 1;
-        $this->lock($workbook, $user);
-
-        return $this->remainingLimit;
-    }
+    public function resetTtl(Workbook $workbook, User $user);
 
     /**
      * Unlocks given Workbook
@@ -230,20 +118,5 @@ class Locker
      *
      * @return bool
      */
-    public function unlock(Workbook $workbook)
-    {
-        return $this->cache->delete($this->generateLockKey($workbook));
-    }
-
-    /**
-     * Generates a lock key for given workbook
-     *
-     * @param \Tornado\Project\Workbook $workbook
-     *
-     * @return string
-     */
-    protected function generateLockKey(Workbook $workbook)
-    {
-        return sprintf('workbook:lock:%d', $workbook->getId());
-    }
+    public function unlock(Workbook $workbook);
 }

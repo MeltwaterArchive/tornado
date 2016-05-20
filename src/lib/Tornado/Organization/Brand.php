@@ -45,6 +45,13 @@ class Brand implements DataObjectInterface
      *
      * @var string
      */
+    protected $datasiftUsername;
+
+    /**
+     * The id of this Brand's DataSift Identity
+     *
+     * @var string
+     */
     protected $datasiftIdentityId;
 
     /**
@@ -123,6 +130,26 @@ class Brand implements DataObjectInterface
 
     /**
      * Gets the id of this Brand's DataSift Identity
+     *
+     * @return string
+     */
+    public function getDatasiftUsername()
+    {
+        return $this->datasiftUsername;
+    }
+
+    /**
+     * Sets the DataSift username to override the Agency one
+     *
+     * @param string $datasiftUsername
+     */
+    public function setDatasiftUsername($datasiftUsername)
+    {
+        $this->datasiftUsername = $datasiftUsername;
+    }
+
+    /**
+     * Gets the DataSift username that overrides the Agency one
      *
      * @return string
      */
@@ -249,6 +276,8 @@ class Brand implements DataObjectInterface
             'agency_id' => 'setAgencyId',
             'agencyId' => 'setAgencyId',
             'name' => 'setName',
+            'datasift_username' => 'setDatasiftUsername',
+            'datasiftUsername' => 'setDatasiftUsername',
             'datasift_identity_id' => 'setDatasiftIdentityId',
             'datasiftIdentityId' => 'setDatasiftIdentityId',
             'datasift_apikey' => 'setDatasiftApiKey',
@@ -273,6 +302,7 @@ class Brand implements DataObjectInterface
             'id' => 'getId',
             'agency_id' => 'getAgencyId',
             'name' => 'getName',
+            'datasift_username' => 'getDatasiftUsername',
             'datasift_identity_id' => 'getDatasiftIdentityId',
             'datasift_apikey' => 'getDatasiftApiKey',
             'target_permissions' => 'getRawTargetPermissions'

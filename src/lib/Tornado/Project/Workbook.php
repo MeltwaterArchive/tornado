@@ -22,6 +22,14 @@ use Tornado\Project\Worksheet;
  */
 class Workbook implements DataObjectInterface
 {
+
+    /**
+     * Workbook statuses; currently only for marking a Workbook as archived if the Recording is
+     * not available
+     */
+    const STATUS_ACTIVE = 'active';
+    const STATUS_ARCHIVED = 'archived';
+
     /**
      * The ID of this Workbook.
      *
@@ -63,6 +71,13 @@ class Workbook implements DataObjectInterface
      * @var array
      */
     protected $worksheets = [];
+
+    /**
+     * The status of this Workbook
+     *
+     * @var string
+     */
+    protected $status = self::STATUS_ACTIVE;
 
     /**
      * Gets the id of this Workbook.
@@ -162,6 +177,26 @@ class Workbook implements DataObjectInterface
     public function setRank($rank)
     {
         $this->rank = $rank;
+    }
+
+    /**
+     * Gets the status of this Workbook
+     *
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Sets the status of this Workbook
+     *
+     * @param string $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
     }
 
     /**
@@ -286,6 +321,7 @@ class Workbook implements DataObjectInterface
         $data = $this->toArray();
         // also serialize worksheets array
         $data['worksheets'] = $this->worksheets;
+        $data['status'] = $this->getStatus();
         return $data;
     }
 }

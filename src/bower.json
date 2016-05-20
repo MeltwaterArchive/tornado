@@ -1,15 +1,22 @@
 {
   "name": "tornado",
+  "ignore": [],
   "private": true,
   "dependencies": {
     "requirejs": "latest",
     "backbone": "latest",
     "lodash": "3.10.1",
-    "jquery": "latest",
+    "jquery": "2.1.4",
     "mustache": "latest",
     "d3": "latest",
+    "chosen": "git@github.com:dtsn/bower-chosen.git#master",
     "moment": "~2.11.1",
-    "text": "latest"
+    "text": "latest",
+    "trace": "latest",
+    "datasift-bootstrap": "git@github.com:datasift/bootstrap.git",
+    "handlebars": "^4.0.5",
+    "require-handlebars-plugin": "^1.0.0",
+    "animate.css": "^3.5.1"
   },
   "devDependencies": {
     "qunit": "~1.20.0"

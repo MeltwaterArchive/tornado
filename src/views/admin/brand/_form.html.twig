@@ -1,0 +1,32 @@
+        <label class="input-label" for="brand-name">Name</label>
+        {% if meta.name is defined %}
+            <span class="input-error">{{ meta.name }}</span>
+        {% endif %}
+        <input id="brand-name" type="text" name="name" value="{{ data.brand.name }}" placeholder="" />
+
+        <label class="input-label" for="agency-datasiftUsername">Override DataSift Username (optional)</label>
+        {% if meta.datasiftUsername is defined %}
+            <span class="input-error">{{ meta.datasiftUsername }}</span>
+        {% endif %}
+        <input id="user-datasiftUsername" type="text" name="datasiftUsername" value="{{ data.brand.datasiftUsername }}" placeholder="DataSift Username" />
+
+        <label class="input-label" for="brand-datasiftIdentityId">DataSift Identity Id</label>
+        {% if meta.datasiftIdentityId is defined %}
+            <span class="input-error">{{ meta.datasiftIdentityId }}</span>
+        {% endif %}
+        <input id="brand-datasiftIdentityId" type="text" name="datasiftIdentityId" value="{{ data.brand.datasiftIdentityId }}" placeholder="DataSift Identity Id" />
+
+        <label class="input-label" for="brand-datasiftApikey">Identity API Key</label>
+        {% if meta.datasiftApikey is defined %}
+            <span class="input-error">{{ meta.datasiftApikey }}</span>
+        {% endif %}
+        <input id="brand-datasiftApikey" type="text" name="datasiftApikey" value="{{ data.brand.datasiftApikey }}" placeholder="Identity API Key" />
+
+        {# Footer #}
+        <hr class="divider">
+        <div class="single-item__header">
+            <a href="{{ orgPath('brands', data.agency.id, data.organization.id) }}">Cancel</a>
+            <div class="single-item__actions">
+                <button class="single-item__action single-item__action--create" type="submit" data-spinner>{{ buttonText }}</button>
+            </div>
+        </div>

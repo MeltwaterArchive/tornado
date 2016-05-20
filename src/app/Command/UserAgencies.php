@@ -139,7 +139,7 @@ EOT
         foreach ($agenciesIds as $agencyId) {
             if (!in_array($agencyId, $allowedAgenciesIds)) {
                 throw new \InvalidArgumentException(sprintf(
-                    'User "%s" can not be added to the Agency with ID "%s". Allowed Agencies IDs: %s.',
+                    'User "%s" cannot be added to the Agency with ID "%s". Allowed Agencies IDs: %s.',
                     $user->getEmail(),
                     $agencyId,
                     implode(',', $allowedAgenciesIds)

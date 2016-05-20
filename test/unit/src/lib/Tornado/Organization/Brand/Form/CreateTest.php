@@ -40,6 +40,7 @@ class CreateTest extends \PHPUnit_Framework_TestCase
                     'agencyId' => 10,
                     'name' => 'BrandName',
                     'datasiftIdentityId' => 'identityId',
+                    'datasiftUsername' => '',
                     'datasiftApikey' => 'apikey'
                 ],
                 'agencyId' => 10,
@@ -49,6 +50,27 @@ class CreateTest extends \PHPUnit_Framework_TestCase
                 'getters' => [
                     'getAgencyId' => 10,
                     'getName' => 'BrandName',
+                    'getDatasiftUsername' => '',
+                    'getDatasiftIdentityId' => 'identityId',
+                    'getDatasiftApikey' => 'apikey'
+                ]
+            ],
+            'Happy path with DS username' => [
+                'data' => [
+                    'agencyId' => 10,
+                    'name' => 'BrandName',
+                    'datasiftIdentityId' => 'identityId',
+                    'datasiftUsername' => 'dsUsernameOverride',
+                    'datasiftApikey' => 'apikey'
+                ],
+                'agencyId' => 10,
+                'brandName' => 'BrandName',
+                'identityId' => 'identityId',
+                'valid' => true,
+                'getters' => [
+                    'getAgencyId' => 10,
+                    'getName' => 'BrandName',
+                    'getDatasiftUsername' => 'dsUsernameOverride',
                     'getDatasiftIdentityId' => 'identityId',
                     'getDatasiftApikey' => 'apikey'
                 ]
@@ -58,6 +80,7 @@ class CreateTest extends \PHPUnit_Framework_TestCase
                     'agencyId' => 10,
                     'name' => 'BrandName',
                     'datasiftIdentityId' => '',
+                    'datasiftUsername' => '',
                     'datasiftApikey' => 'apikey'
                 ],
                 'agencyId' => 10,
@@ -68,6 +91,7 @@ class CreateTest extends \PHPUnit_Framework_TestCase
                     'getAgencyId' => 10,
                     'getName' => 'BrandName',
                     'getDatasiftIdentityId' => '',
+                    'getDatasiftUsername' => '',
                     'getDatasiftApikey' => 'apikey'
                 ],
                 'expectedErrors' => ['datasiftIdentityId']
@@ -76,6 +100,7 @@ class CreateTest extends \PHPUnit_Framework_TestCase
                 'data' => [
                     'agencyId' => 10,
                     'name' => 'BrandName',
+                    'datasiftUsername' => '',
                     'datasiftIdentityId' => '',
                     'datasiftApikey' => 'apikey'
                 ],
@@ -87,6 +112,7 @@ class CreateTest extends \PHPUnit_Framework_TestCase
                     'getAgencyId' => 10,
                     'getName' => 'BrandName',
                     'getDatasiftIdentityId' => '',
+                    'getDatasiftUsername' => '',
                     'getDatasiftApikey' => 'apikey'
                 ],
                 'expectedErrors' => ['agencyId', 'datasiftIdentityId'],
@@ -96,6 +122,7 @@ class CreateTest extends \PHPUnit_Framework_TestCase
                 'data' => [
                     'agencyId' => 10,
                     'name' => 'BrandName',
+                    'datasiftUsername' => '',
                     'datasiftIdentityId' => '',
                     'datasiftApikey' => 'apikey'
                 ],
@@ -107,30 +134,33 @@ class CreateTest extends \PHPUnit_Framework_TestCase
                     'getAgencyId' => 10,
                     'getName' => 'BrandName',
                     'getDatasiftIdentityId' => '',
+                    'getDatasiftUsername' => '',
                     'getDatasiftApikey' => 'apikey'
                 ],
                 'expectedErrors' => ['name', 'datasiftIdentityId'],
                 'agencyFound' => true,
                 'brandFound' => true
             ],
-            'Identity found' => [
+            'Identity found (allow)' => [
                 'data' => [
                     'agencyId' => 10,
                     'name' => 'BrandName',
+                    'datasiftUsername' => '',
                     'datasiftIdentityId' => 'abcd',
                     'datasiftApikey' => 'apikey'
                 ],
                 'agencyId' => 10,
                 'brandName' => 'BrandName',
                 'identityId' => 'abcd',
-                'valid' => false,
+                'valid' => true,
                 'getters' => [
                     'getAgencyId' => 10,
                     'getName' => 'BrandName',
+                    'getDatasiftUsername' => '',
                     'getDatasiftIdentityId' => 'abcd',
                     'getDatasiftApikey' => 'apikey'
                 ],
-                'expectedErrors' => ['datasiftIdentityId'],
+                'expectedErrors' => [],
                 'agencyFound' => true,
                 'brandFound' => false,
                 'identityIdFound' => true
@@ -149,7 +179,6 @@ class CreateTest extends \PHPUnit_Framework_TestCase
      * @dataProvider submitProvider
      *
      * @param array $data
-     * @param \Tornado\DataMapper\DataObjectInterface $object
      * @param integer $agencyId
      * @param string $brandName
      * @param string $identityId

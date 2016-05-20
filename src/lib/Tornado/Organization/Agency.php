@@ -158,7 +158,7 @@ class Agency implements DataObjectInterface
     /**
      * Gets the skin for this Agency
      *
-     * @param string $skin
+     * @return null|string
      */
     public function getSkin()
     {

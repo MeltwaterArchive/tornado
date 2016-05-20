@@ -2,10 +2,17 @@
 
 namespace Tornado\Project\Workbook\Form;
 
+use Tornado\DataMapper\DataMapperInterface;
 use Tornado\DataMapper\DataObjectInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Validator\Constraints\Required;
+use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Validator\Constraints\Choice;
 
 use Tornado\Project\Workbook\Form;
 use Tornado\Project\Workbook;
+
+use Tornado\Analyze\TemplatedAnalyzer;
 
 /**
  * Workbook Create form.
@@ -23,6 +30,26 @@ use Tornado\Project\Workbook;
  */
 class Create extends Form
 {
+    /**
+     * The templated analyzer for this form
+     *
+     * @var \Tornado\Analyze\TemplatedAnalyzer
+     */
+    private $templatedAnalyzer;
+
+    /**
+     * {@inheritdoc}
+     * @param \Tornado\Analyze\TemplatedAnalyzer $templatedAnalyzer
+     */
+    public function __construct(
+        ValidatorInterface $validator,
+        DataMapperInterface $workbookRepo,
+        TemplatedAnalyzer $templatedAnalyzer
+    ) {
+        parent::__construct($validator, $workbookRepo);
+        $this->templatedAnalyzer = $templatedAnalyzer;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -51,5 +78,23 @@ class Create extends Form
         $this->modelData->setProjectId($this->normalizedData['project_id']);
 
         return parent::getData();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getConstraints()
+    {
+        $constraints = parent::getConstraints();
+
+        $constraints->fields['template'] = new Required([
+            new Type(['type' => 'string']),
+            new Choice([
+                'choices' => array_merge([''], array_keys($this->templatedAnalyzer->getTemplates())),
+                'message' => 'Invalid template selected'
+            ])
+        ]);
+
+        return $constraints;
     }
 }

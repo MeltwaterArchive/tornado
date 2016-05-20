@@ -227,7 +227,6 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
             ->andReturn(false);
         $mocks['createForm']->shouldReceive('getErrors')
             ->once()
-            ->withNoArgs()
             ->andReturn(['name' => 'Invalid name.']);
         $mocks['createForm']->shouldReceive('getData')
             ->never();
@@ -348,21 +347,18 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
             ->withNoArgs()
             ->andReturn(['name' => $mocks['projectName']]);
 
+        $redirectUrl = 'testUrl';
+
+        $mocks['urlGenerator']->shouldReceive('generate')
+            ->with('project.update', ['projectId' => $mocks['projectId']])
+            ->andReturn($redirectUrl);
+
         $controller = $this->getController($mocks);
 
         $result = $controller->update($mocks['request'], $mocks['projectId']);
 
-        $this->assertInstanceOf('Tornado\Controller\Result', $result);
-
-        $resultData = $result->getData();
-        $this->assertEquals(200, $result->getHttpCode());
-        $this->assertInternalType('array', $resultData);
-
-        $this->assertArrayHasKey('selectedBrand', $resultData);
-        $this->assertSame($mocks['brands'][0], $resultData['selectedBrand']);
-
-        $this->assertArrayHasKey('brands', $resultData);
-        $this->assertEquals($mocks['brands'], $resultData['brands']);
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $result);
+        $this->assertEquals($redirectUrl, $result->getTargetUrl());
     }
 
     /**
@@ -397,7 +393,6 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
             ->never();
         $mocks['updateForm']->shouldReceive('getErrors')
             ->once()
-            ->withNoArgs()
             ->andReturn(['name' => 'Invalid name.']);
         $mocks['request']->shouldReceive('getMethod')
             ->once()

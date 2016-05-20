@@ -18,7 +18,7 @@ use Tornado\Project\Chart;
  * @license     http://mediasift.com/licenses/internal MediaSift Internal License
  * @link        https://github.com/datasift/tornado
  *
- * @covers      \Tornado\Project\Chart
+ * @coversDefaultClass \Tornado\Project\Chart
  */
 class ChartTest extends \PHPUnit_Framework_TestCase
 {
@@ -227,6 +227,28 @@ class ChartTest extends \PHPUnit_Framework_TestCase
         $obj->loadFromArray($data);
 
         $this->assertEquals($expected, json_encode($obj));
+    }
+
+    /**
+     * @dataProvider toFromArrayProvider
+     *
+     * @covers       ::__clone
+     *
+     * @param array $data
+     * @param array $getters
+     * @param array $expected
+     */
+    public function testClone(array $data, array $getters, array $expected)
+    {
+        unset($getters);
+        $obj = new Chart();
+        $obj->loadFromArray($data);
+
+        $expected['id'] = null;
+
+        $newChart = clone($obj);
+
+        $this->assertEquals($expected, $newChart->toArray());
     }
 
     /**

@@ -4,6 +4,7 @@ namespace Tornado\Organization\Organization\Form;
 
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\Collection;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Optional;
 use Symfony\Component\Validator\Constraints\Required;
@@ -83,11 +84,14 @@ class Create extends Form
      */
     public function getData()
     {
-        if (!$this->isSubmitted() || !$this->isValid()) {
-            return null;
+        if (!$this->isSubmitted()) {
+            return $this->modelData;
         }
 
-        $this->modelData = new Organization();
+        if (!$this->modelData) {
+            $this->modelData = new Organization();
+        }
+        
         $this->modelData->setName($this->inputData['name']);
 
         if (isset($this->inputData['jwt_secret'])) {
@@ -96,6 +100,14 @@ class Create extends Form
 
         if (isset($this->inputData['skin'])) {
             $this->modelData->setSkin($this->inputData['skin']);
+        }
+
+        if (isset($this->inputData['account_limit'])) {
+            $this->modelData->setAccountLimit($this->inputData['account_limit']);
+        }
+
+        if (isset($this->inputData['permissions'])) {
+            $this->modelData->setPermissions($this->inputData['permissions']);
         }
 
         return $this->modelData;
@@ -120,7 +132,11 @@ class Create extends Form
             ]),
             'skin' => new Optional([
                 new Type(['type' => 'string'])
-            ])
+            ]),
+            'account_limit' => new Optional([
+                new GreaterThanOrEqual(0)
+            ]),
+            'permissions' => new Optional()
         ]);
     }
 

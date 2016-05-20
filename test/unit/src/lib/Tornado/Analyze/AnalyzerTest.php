@@ -195,9 +195,9 @@ class AnalyzerTest extends \PHPUnit_Framework_TestCase
      */
     public function providePerformArguments()
     {
-        // precalculate expected "rounded" start and end for timeseries analysis
-        $roundedStart = mktime(-4, 0, 0); // 8:00 PM yesterday
-        $roundedEnd = mktime(-1, 5, 0); // 11:55 PM yesterday (to make sure its lower than now)
+
+        $start = time();
+        $end = time();
 
         return [
             [
@@ -287,10 +287,8 @@ class AnalyzerTest extends \PHPUnit_Framework_TestCase
                 ],
                 'arguments' => [
                     'analysis_type' => Analysis::TYPE_TIME_SERIES,
-                    // subtract random number of seconds (up to 5 min) to make sure the rounding works
-                    'start' => $roundedStart - rand(1, 60 * 5 - 1),
-                    // add random number of seconds (up to 5 min) to make sure the rounding works
-                    'end' => $roundedEnd + rand(1, 60 * 5 - 1),
+                    'start' => $start,
+                    'end' => $end,
                     'threshold' => null,
                     'interval' => 'minute',
                     'span' => 5
@@ -301,8 +299,8 @@ class AnalyzerTest extends \PHPUnit_Framework_TestCase
                         'getters' => [
                             'getType' => Analysis::TYPE_TIME_SERIES,
                             'getTarget' => 'fb.author.age',
-                            'getStart' => $roundedStart,
-                            'getEnd' => $roundedEnd,
+                            'getStart' => $start,
+                            'getEnd' => $end,
                             'getInterval' => 'minute',
                             'getSpan' => 5
                         ]
@@ -310,5 +308,58 @@ class AnalyzerTest extends \PHPUnit_Framework_TestCase
                 ]
             ]
         ];
+    }
+
+    /**
+     * @covers \Tornado\Analyze\Analyzer::fromStoredDataSet
+     */
+    public function testFromStoredDataSet()
+    {
+        $analyzer = Mockery::mock(
+            '\Tornado\Analyze\Analyzer[buildAnalysis,analyzeCollection]',
+            [],
+            [Mockery::mock('\DataSift_Pylon'), Mockery::mock('\DataSift\Stats\Collector')]
+        );
+
+        $analysis = Mockery::mock('\Tornado\Analyze\Analysis');
+        $recording = Mockery::mock('\Tornado\Project\Recording');
+
+        $dimensions = Mockery::mock('\Tornado\Analyze\Dimension\Collection');
+        $analysisType = Analysis::TYPE_FREQUENCY_DISTRIBUTION;
+        $start = time();
+        $end = $start + 10;
+        $filter = 'test filter';
+
+        $dataset = Mockery::mock(
+            '\Tornado\Analyze\DataSet\StoredDataSet',
+            [
+                'getDimensions' => $dimensions,
+                'getAnalysisType' => $analysisType,
+                'getStart' => $start,
+                'getEnd' => $end,
+                'getFilter' => $filter
+            ]
+        );
+
+        $analyzer->shouldReceive('buildAnalysis')
+            ->once()
+            ->with(
+                $recording,
+                $dimensions,
+                $analysisType,
+                $start,
+                $end,
+                [],
+                $filter
+            )
+            ->andReturn($analysis);
+
+        $analyzer->shouldReceive('analyzeCollection')
+            ->once();
+
+        $result = $analyzer->fromStoredDataSet($dataset, $recording);
+
+        $this->assertInstanceOf('\Tornado\Analyze\Analysis\Collection', $result);
+        $this->assertEquals(1, count($result->getAnalyses()));
     }
 }
